@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "lovepik-color-gradient-maze-png-image_401055298_wh1200-removebg-preview.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "lovepik-color-gradient-maze-png-image_401055298_wh1200-removebg-preview 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "lovepik-color-gradient-maze-png-image_401055298_wh1200-removebg-preview 2.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
