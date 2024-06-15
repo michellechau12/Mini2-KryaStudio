@@ -27,10 +27,8 @@ struct ContentView: View {
                         .frame(width: 1000)
                         .offset(y: textPosition)
                         .onAppear {
-                            // Animate the text after a 1-second delay
                             withAnimation(.easeOut(duration: 1).delay(1)) {
-                                textPosition = -100 // Move text to the center
-                            }
+                                textPosition = -100                            }
                         }
                     
                     Spacer()

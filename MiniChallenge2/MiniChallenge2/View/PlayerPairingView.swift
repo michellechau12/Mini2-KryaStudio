@@ -117,9 +117,9 @@ struct AvailablePlayerCard: View {
     }
 }
 
-#Preview {
-    PlayerPairingView()
-}
-
-
+//#Preview {
+//    PlayerPairingView()
+//}
+//
+//
 
