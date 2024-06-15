@@ -9,31 +9,54 @@ import SwiftUI
 
 struct ContentView: View {
     @State var startGame: Bool = false
+    @State private var textPosition: CGFloat = -500
     
     var body: some View {
         NavigationStack {
-            VStack {
-                Button {
-                    startGame = true
-                } label: {
-                    Image(systemName: "play.circle.fill")
+            ZStack {
+                Image("bg-img")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                
+                VStack {
+                    Spacer()
+                    Image("title-img")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .padding()
+                        .frame(width: 1000)
+                        .offset(y: textPosition)
+                        .onAppear {
+                            // Animate the text after a 1-second delay
+                            withAnimation(.easeOut(duration: 1).delay(1)) {
+                                textPosition = -100 // Move text to the center
+                            }
+                        }
+                    
+                    Spacer()
+                    Button {
+                        startGame = true
+                    } label: {
+                        Image("playbutton-img")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 300, height: 100)
+                            .padding()
+                    }
+                    Spacer()
+                        .frame(height:50)
                 }
-                .buttonStyle(BorderedProminentButtonStyle())
-                .tint(.green)
+                .onAppear() {
+                    startGame = false
+                    //mpManager.availablePlayers.removeAll()
+                    //mpManager.stopBrowsing()
+                    //mpManager.stopAdvertising()
+                }
+                
+                .navigationBarBackButtonHidden(true)
+                .navigationDestination(isPresented: $startGame) {
+                    PlayerPairingView()
             }
-            .onAppear() {
-                startGame = false
-                //mpManager.availablePlayers.removeAll()
-                //mpManager.stopBrowsing()
-                //mpManager.stopAdvertising()
-            }
-            .navigationBarBackButtonHidden(true)
-            .navigationDestination(isPresented: $startGame) {
-                PlayerPairingView()
             }
         }
     }
