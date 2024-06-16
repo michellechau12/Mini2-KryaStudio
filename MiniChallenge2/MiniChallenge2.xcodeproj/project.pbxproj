@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B0F36272C1E88DE009A2629 /* PlayerPairingView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */; };
 		0BD4EF982C1DABE6009B814E /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD4EF972C1DABE6009B814E /* PairingView.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPairingView2.swift; sourceTree = "<group>"; };
 		0BD4EF972C1DABE6009B814E /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 			children = (
 				ECCC18A12C1833140059276B /* ContentView.swift */,
 				0BD4EF972C1DABE6009B814E /* PairingView.swift */,
+				0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */,
 				ECCC19332C1A3F890059276B /* GameView.swift */,
 				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
 			);
@@ -199,6 +202,7 @@
 				ECCC18AF2C18364E0059276B /* MazeScene.swift in Sources */,
 				ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */,
 				ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */,
+				0B0F36272C1E88DE009A2629 /* PlayerPairingView2.swift in Sources */,
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
 				0BD4EF982C1DABE6009B814E /* PairingView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,

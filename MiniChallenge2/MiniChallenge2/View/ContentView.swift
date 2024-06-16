@@ -53,7 +53,7 @@ struct ContentView: View {
                 
                 .navigationBarBackButtonHidden(true)
                 .navigationDestination(isPresented: $startGame) {
-                    PlayerPairingView()
+                    PlayerPairingView2()
             }
             }
         }
