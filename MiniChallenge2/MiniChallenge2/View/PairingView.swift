@@ -10,7 +10,7 @@ import SwiftUI
 struct PairingView: View {
     
     @State private var availablePlayers = ["John", "Mike", "Jack"]
-    @State private var playerImages = ["playerA-img", "playerB-img", "playerC-img"]
+    @State private var playerImages = ["playerB-img", "playerC-img", "playerA-img"]
     @State private var playerImageMapping: [String: String] = [:]
     
     
@@ -18,7 +18,6 @@ struct PairingView: View {
         
         NavigationStack {
             ZStack {
-                
                 Image("pairing-bg-img")
                     .resizable()
                     .scaledToFill()
@@ -29,8 +28,9 @@ struct PairingView: View {
                         .font(.system(size: 36, weight: .bold))
                         .foregroundStyle(.white)
                         .padding()
-                    ZStack {
                         HStack {
+                            Spacer()
+                                .frame(width: 200)
                             VStack {
                                 Image("playerA-img")
                                     .resizable()
@@ -40,34 +40,31 @@ struct PairingView: View {
                                     .font(.system(size: 56, weight: .bold))
                                     .foregroundColor(.white)
                                     .padding()
-                            } .frame(width:600)
-                            List(availablePlayers, id: \.self) { player in
+                            } .frame(width:300)
+                                Image("vs-title-img")
+                                    .resizable()
+                                    .scaledToFit()
+                                .frame(width: 200)
+                            ScrollView(.horizontal) {
                                 HStack {
-                                    if let imageName = playerImageMapping[player] {
-                                        Image(imageName)
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 200)
+                                    ForEach(availablePlayers, id: \.self) { player in
+                                        VStack {
+                                            if let imageName = playerImageMapping[player] {
+                                                Image(imageName)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 200)
+                                            }
+                                            Text(player)
+                                                .font(.system(size: 56, weight: .bold))
+                                                .foregroundColor(.white)
+                                                .padding()
+                                        }
+                                        .padding(.leading, 50)
                                     }
-                                    Text(player)
-                                        .font(.system(size: 56, weight: .bold))
-                                        .foregroundColor(.white)
-                                        .padding()
                                 }
-                                .listRowBackground(Color.clear)
                             }
-                            .listStyle(PlainListStyle())
-                            .background(Color.clear)
-                            .padding(.leading, 20)
-
                         }
-                        Image("vs-title-img")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 150)
-                            .padding()
-                            .offset(x: -50)
-                    }
                 }
             }
             .onAppear {
