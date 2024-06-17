@@ -15,7 +15,6 @@
 		2F911C682C197F180093E33C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F911C662C197F180093E33C /* Main.storyboard */; };
 		2F911C6A2C197F190093E33C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F911C692C197F190093E33C /* Assets.xcassets */; };
 		2F911C6D2C197F190093E33C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F911C6B2C197F190093E33C /* LaunchScreen.storyboard */; };
-		2FE630AF2C1AE7B800BD5014 /* myTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2FE630AE2C1AE7B800BD5014 /* myTileSet.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +27,6 @@
 		2F911C672C197F180093E33C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2F911C692C197F190093E33C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F911C6C2C197F190093E33C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2FE630AE2C1AE7B800BD5014 /* myTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = myTileSet.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +67,6 @@
 				2F911C662C197F180093E33C /* Main.storyboard */,
 				2F911C692C197F190093E33C /* Assets.xcassets */,
 				2F911C6B2C197F190093E33C /* LaunchScreen.storyboard */,
-				2FE630AE2C1AE7B800BD5014 /* myTileSet.sks */,
 			);
 			path = miniChallenge2;
 			sourceTree = "<group>";
@@ -136,7 +133,6 @@
 				2F911C5F2C197F180093E33C /* GameScene.sks in Resources */,
 				2F911C6A2C197F190093E33C /* Assets.xcassets in Resources */,
 				2F911C6D2C197F190093E33C /* LaunchScreen.storyboard in Resources */,
-				2FE630AF2C1AE7B800BD5014 /* myTileSet.sks in Resources */,
 				2F911C612C197F180093E33C /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

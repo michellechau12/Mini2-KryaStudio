@@ -21,7 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var cropNode: SKCropNode?
 
 
-    var speedMultiplierTerrorist = 0.03
+    var speedMultiplierTerrorist = 0.015
     var speedMultiplierFBI = Int.self
 
     
@@ -59,8 +59,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createMaze()
         createCharacter()
         createJoystick()
-       //setupCamera()
-        //setupMask()
+        //sabotagedView()
         
         physicsWorld.contactDelegate = self
         
@@ -152,40 +151,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createJoystick() {
         
-        //Otak-atik posisi Joystick
-        let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
-            joystickBase.position = CGPoint(x: -550, y: -400)
-            joystickBase.setScale(0.5)
+            //Otak-atik posisi Joystick
+            let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
+            joystickBase.position = CGPoint(x: -550, y: -380)
+            joystickBase.setScale(1.5)
+        
+            //Alpha adalah transparency
             joystickBase.alpha = 0.5
             joystickBase.zPosition = 1
             joystickBase.name = "joystickBase2"
 
             let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
-            joystickKnob.position = CGPoint(x: -550, y: -400)
-            joystickKnob.setScale(0.5)
+            joystickKnob.position = CGPoint(x: -550, y: -380)
+            joystickKnob.setScale(1.5)
             joystickKnob.zPosition = 2
             joystickKnob.name = "joystickKnob2"
 
-        cameraNode?.addChild(joystickBase)
-        cameraNode?.addChild(joystickKnob)
+            cameraNode?.addChild(joystickBase)
+            cameraNode?.addChild(joystickKnob)
 
             self.joystick = joystickBase
             self.joystickKnob = joystickKnob
         
     }
-    
-    func setupCamera() {
-           cameraNode = SKCameraNode()
-           self.camera = cameraNode
-           if let camera = cameraNode {
-               camera.position = character?.position ?? CGPoint(x: frame.midX, y: frame.midY)
-               addChild(camera)
-               camera.setScale(0.3)
-           }
-       }
        
-       func setupMask() {
-                   maskNode = SKShapeNode(circleOfRadius: 150)
+       func sabotagedView() {
+                   maskNode = SKShapeNode(circleOfRadius: 100)
                    maskNode?.fillColor = .white
                    maskNode?.strokeColor = .clear
                    maskNode?.position = character?.position ?? CGPoint(x: frame.midX, y: frame.midY)
@@ -251,21 +242,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
+
+            if let joystick = joystick, let joystickKnob = joystickKnob, let camera = cameraNode {
+            
+            
+            //Convert Lokasi touch dari Scene ke Cam
+            let convertedLocation = camera.convert(location, from: self)
+            
         
-        if let joystick = joystick, let joystickKnob = joystickKnob {
-            let maxDistance: CGFloat = 20.0
-            let displacement = CGVector(dx: location.x - joystick.position.x, dy: location.y - joystick.position.y)
+            //Setup seberapa jauh Knob bisa ditarik
+            let maxDistance: CGFloat = 50.0
+            
+            let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
+                
             let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
-            let angle = atan2(displacement.dy, displacement.dx)
             
             if distance <= maxDistance {
-                joystickKnob.position = location
+                joystickKnob.position = convertedLocation
             } else {
+                let angle = atan2(displacement.dy, displacement.dx)
                 joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
                                                 y: joystick.position.y + sin(angle) * maxDistance)
             }
         }
     }
+    
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let joystickKnob = joystickKnob, let joystick = joystick else { return }
@@ -287,7 +288,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Camera mengikuti character
         cameraNode?.position = character.position
         
-        // Mask mengikuti character
+        // SabotageView mengikuti character
         maskNode?.position = character.position
     }
     
