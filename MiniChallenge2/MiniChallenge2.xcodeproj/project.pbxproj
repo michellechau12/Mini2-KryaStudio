@@ -11,8 +11,6 @@
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
 		ECCC18A42C1833160059276B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A32C1833160059276B /* Assets.xcassets */; };
 		ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A72C1833160059276B /* Preview Assets.xcassets */; };
-		ECCC18AF2C18364E0059276B /* MazeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18AE2C18364E0059276B /* MazeScene.swift */; };
-		ECCC18B12C1837810059276B /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18B02C1837810059276B /* MazeScene.sks */; };
 		ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19252C18C72B0059276B /* PlayerPairingView.swift */; };
 		ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19272C18CB8D0059276B /* MultipeerConnectionManager.swift */; };
 		ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19292C1941030059276B /* MultipeerModel.swift */; };
@@ -29,8 +27,6 @@
 		ECCC18A32C1833160059276B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ECCC18A52C1833160059276B /* MiniChallenge2.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiniChallenge2.entitlements; sourceTree = "<group>"; };
 		ECCC18A72C1833160059276B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		ECCC18AE2C18364E0059276B /* MazeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MazeScene.swift; sourceTree = "<group>"; };
-		ECCC18B02C1837810059276B /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
 		ECCC19252C18C72B0059276B /* PlayerPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPairingView.swift; sourceTree = "<group>"; };
 		ECCC19272C18CB8D0059276B /* MultipeerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerConnectionManager.swift; sourceTree = "<group>"; };
 		ECCC19292C1941030059276B /* MultipeerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerModel.swift; sourceTree = "<group>"; };
@@ -56,6 +52,7 @@
 			isa = PBXGroup;
 			children = (
 				ECCC19372C1AD2E30059276B /* GameSceneTest.swift */,
+				ECCC192C2C1975CB0059276B /* GameScene.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
 				ECCC189D2C1833140059276B /* Products */,
 			);
@@ -81,9 +78,6 @@
 				ECCC18A32C1833160059276B /* Assets.xcassets */,
 				ECCC18A52C1833160059276B /* MiniChallenge2.entitlements */,
 				ECCC18A62C1833160059276B /* Preview Content */,
-				ECCC18AE2C18364E0059276B /* MazeScene.swift */,
-				ECCC18B02C1837810059276B /* MazeScene.sks */,
-				ECCC192C2C1975CB0059276B /* GameScene.swift */,
 			);
 			path = MiniChallenge2;
 			sourceTree = "<group>";
@@ -181,7 +175,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
-				ECCC18B12C1837810059276B /* MazeScene.sks in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,7 +186,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ECCC18AF2C18364E0059276B /* MazeScene.swift in Sources */,
 				ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */,
 				ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */,
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,

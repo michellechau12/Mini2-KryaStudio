@@ -39,5 +39,9 @@ class PlayerModel: ObservableObject {
             playerNode.physicsBody?.categoryBitMask = 0b0
         }
     }
+    
+    func movePlayer() {
+        let player = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0)
+    }
         
 }

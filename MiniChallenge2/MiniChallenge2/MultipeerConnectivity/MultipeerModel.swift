@@ -25,7 +25,7 @@ struct MPPlayerModel: Codable {
     let action: Action
     let playerId: String
     let playerPosition: CGPoint
-    let playerTextureName: String! //FBI (pegang tang, pegang borgol); Terrorist (bomb, nothing, pentungan)
+    let playerTextureIndex: Int //FBI (pegang tang, pegang borgol); Terrorist (bomb, nothing, pentungan)
     
     func data() -> Data? {
         try? JSONEncoder().encode(self)

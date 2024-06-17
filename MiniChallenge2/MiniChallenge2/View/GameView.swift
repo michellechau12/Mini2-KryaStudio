@@ -12,11 +12,15 @@ struct GameView: View {
     @EnvironmentObject var gameScene: GameScene
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     var gameSceneTest = GameSceneTest()
+    var scene: SKScene {
+        let scene = GameSceneTest()
+        scene.size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+        scene.scaleMode = .resizeFill
+        return scene
+    }
     
     var body: some View {
-//        Text("Game View")
-        SpriteView(scene: gameSceneTest)
-            .scaledToFit()
+        SpriteView(scene: scene)
             .ignoresSafeArea()
     }
 }

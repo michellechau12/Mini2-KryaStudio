@@ -18,7 +18,7 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     
     let serviceType = String.serviceName
     let session: MCSession
-    let myConnectionId: MCPeerID
+    var myConnectionId: MCPeerID
     
     @Published var availablePlayers: [MCPeerID] = []
     @Published var inviteReceived: Bool = false
@@ -38,6 +38,19 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
                 stopAdvertising()
             }
         }
+    }
+    
+    //allow inserting name
+    init(playerName: String){
+        self.myConnectionId = MCPeerID(displayName: playerName)
+        self.session = MCSession(peer: myConnectionId)
+        self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
+        self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
+        
+        super.init()
+        session.delegate = self
+        shareVisibility.delegate = self
+        searchPlayers.delegate = self
     }
     
     init(playerId: UUID) {
