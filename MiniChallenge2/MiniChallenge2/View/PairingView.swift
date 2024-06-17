@@ -22,7 +22,6 @@ struct PairingView: View {
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
-                
                 VStack{
                     Text("Pairing with Your Enemy ...")
                         .font(.system(size: 36, weight: .bold))
