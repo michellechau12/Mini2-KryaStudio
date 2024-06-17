@@ -13,20 +13,20 @@ class PlayerModel: ObservableObject {
     @Published var playerNode: SKSpriteNode
     var cameraNode: SKCameraNode
     var playerTextures: [SKTexture]
-    var playerSpawnLocation: CGPoint!
+//    var playerSpawnLocation: CGPoint!
     var gameScene: GameScene
     
-    init(id: String, spawnLocation: CGPoint, playerTextures: [SKTexture], gameScene: GameScene) {
+    init(id: String, playerTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
         self.playerTextures = playerTextures
         self.gameScene = gameScene
         cameraNode = SKCameraNode()
-        cameraNode.position = spawnLocation
+//        cameraNode.position = spawnLocation
         cameraNode.setScale(5)
         
         playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 100, height: 200))
-        playerNode.position = spawnLocation
-        playerSpawnLocation = spawnLocation
+//        playerNode.position = spawnLocation
+//        playerSpawnLocation = spawnLocation
         
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
@@ -39,9 +39,4 @@ class PlayerModel: ObservableObject {
             playerNode.physicsBody?.categoryBitMask = 0b0
         }
     }
-    
-    func movePlayer() {
-        let player = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0)
-    }
-        
 }

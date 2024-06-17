@@ -12,8 +12,8 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     
     var mpManager: MultipeerConnectionManager?
     
-    var player1Id: String?
-    var player2Id: String?
+    var player1Id: String!
+    var player2Id: String!
     
     var playerPeerId: String!
     var thisPlayer: PlayerModel!
@@ -22,9 +22,25 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     var player2Model: PlayerModel!
     
     var host: Bool = false
+    var role: String = ""
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
+    private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
+    private var bombNode = SKSpriteNode(imageNamed: "bomb-on")
+    
+    private var fbiTextures: [SKTexture] = [
+        SKTexture(imageNamed: "fbi-borgol"),
+        SKTexture(imageNamed: "fbi-tang")
+    ]
+    private var terroristTextures: [SKTexture] = [
+        SKTexture(imageNamed: "terrorist-bomb"),
+        SKTexture(imageNamed: "terrorist-none"),
+        SKTexture(imageNamed: "terrorist-pentungan")
+    ]
+    private var bombTextures: [SKTexture] = [
+        SKTexture(imageNamed: "bomb-on"),
+        SKTexture(imageNamed: "bomb-off")
+    ]
     
     private var character: SKSpriteNode?
     private var joystick: SKSpriteNode?
@@ -40,20 +56,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         super.didMove(to: view)
- 
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
-        
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-        
-        
+   
         cameraNode = SKCameraNode()
             self.camera = cameraNode
             if let camera = cameraNode {
@@ -71,22 +74,47 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         createMaze()
         createCharacter()
+        setThisPlayer()
         createJoystick()
         //setupMask()
         
         physicsWorld.contactDelegate = self
         
     }
-
+    
+    func setThisPlayer() {
+        // temp: player1 is fbi, player 2 is terrorist
+        if playerPeerId == player1Id {
+            self.thisPlayer = player1Model
+            role = "fbi"
+        }
+        else {
+            self.thisPlayer = player2Model
+            role = "terrorist"
+        }
+    }
+    
     func createCharacter() {
-        let characterTexture = SKTexture(imageNamed: "fbi-borgol")
-        character = SKSpriteNode(texture: characterTexture)
+        var characterTexture = SKTexture(imageNamed: "fbi-borgol")
+        if (role == "fbi") {
+            characterTexture = fbiTextures[0]
+            character = SKSpriteNode(texture: characterTexture)
+        } else {
+            characterTexture = terroristTextures[0]
+            character = SKSpriteNode(texture: characterTexture)
+        }
         
            let characterWidth = characterTexture.size().width * 0.05 //
            let characterHeight = characterTexture.size().height * 0.1
            let offsetX = (frame.width - characterWidth) / 2
            let offsetY = characterHeight / 2
-           let characterPosition = CGPoint(x: frame.minX + offsetX + 15, y: frame.minY + offsetY-10)
+           var characterPosition = CGPoint(x: 0, y: 0)
+        
+        if (role == "fbi") {
+            characterPosition = CGPoint(x: frame.minX + offsetX + 15, y: frame.minY + offsetY-10)
+        } else {
+            characterPosition = CGPoint(x: frame.minX + offsetX - 15, y: frame.minY + offsetY + 10)
+        }
            
         character?.position = characterPosition
         character?.setScale(0.17)
@@ -108,7 +136,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
                character.physicsBody?.collisionBitMask = 2
                character.physicsBody?.contactTestBitMask = 2
                addChild(character)
-           }
+        }
     }
     
     func createMaze() {

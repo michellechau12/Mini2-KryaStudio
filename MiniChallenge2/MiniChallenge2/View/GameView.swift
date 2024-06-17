@@ -11,6 +11,7 @@ import SpriteKit
 struct GameView: View {
     @EnvironmentObject var gameScene: GameScene
     @EnvironmentObject var mpManager: MultipeerConnectionManager
+    @Environment (\.dismiss) var dismiss
     var gameSceneTest = GameSceneTest()
     var scene: SKScene {
         let scene = GameSceneTest()
@@ -22,6 +23,15 @@ struct GameView: View {
     var body: some View {
         SpriteView(scene: scene)
             .ignoresSafeArea()
+            .onAppear(){
+                gameScene.playerPeerId = mpManager.myConnectionId.displayName
+                print("DEBUG: this player id \(String(describing: gameScene.playerPeerId))")
+            }
+            .onReceive(mpManager.$paired, perform: { _ in
+                if mpManager.paired == false {
+                    dismiss()
+                }
+            })
     }
 }
 

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var mpManager: MultipeerConnectionManager
+    @EnvironmentObject var gameScene: GameScene
     @State var startGame: Bool = false
     
     var body: some View {
@@ -27,9 +29,9 @@ struct ContentView: View {
             }
             .onAppear() {
                 startGame = false
-                //mpManager.availablePlayers.removeAll()
-                //mpManager.stopBrowsing()
-                //mpManager.stopAdvertising()
+                mpManager.availablePlayers.removeAll()
+                mpManager.stopBrowsing()
+                mpManager.stopAdvertising()
             }
             .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $startGame) {
@@ -41,4 +43,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
+        .environmentObject(GameScene())
 }
