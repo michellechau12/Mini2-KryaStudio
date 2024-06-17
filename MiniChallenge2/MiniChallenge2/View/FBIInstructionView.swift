@@ -9,7 +9,9 @@ import SwiftUI
 
 struct FBIInstructionView: View {
     var body: some View {
-        Text("FBIInstructionView")
+        ZStack {
+            Text("FBIInstructionView")
+        }
     }
 }
 

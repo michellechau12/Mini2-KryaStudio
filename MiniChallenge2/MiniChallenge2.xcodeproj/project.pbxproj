@@ -132,10 +132,10 @@
 				0BD4EF972C1DABE6009B814E /* PairingView.swift */,
 				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
 				0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */,
-				ECCC19332C1A3F890059276B /* GameView.swift */,
 				0B0F362C2C1FEEA9009A2629 /* RandomRoleView.swift */,
-				0B0F362E2C1FF26E009A2629 /* FBIInstructionView.swift */,
 				0B0F36302C1FF286009A2629 /* TerroristInstructionView.swift */,
+				0B0F362E2C1FF26E009A2629 /* FBIInstructionView.swift */,
+				ECCC19332C1A3F890059276B /* GameView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
