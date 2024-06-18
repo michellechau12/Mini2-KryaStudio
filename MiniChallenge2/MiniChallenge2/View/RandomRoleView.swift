@@ -43,6 +43,7 @@ struct RandomRoleView: View {
                                 .scaledToFit()
                                 .frame(width: 300, height: 300)
                                 .onAppear {
+                                    // Start animation when the view appears
                                     startAnimating()
                                 }
                         }
@@ -53,6 +54,7 @@ struct RandomRoleView: View {
                                 .foregroundStyle(.white)
                                 .padding(.bottom, 10)
                             
+                            // Display image based on the role
                             if role == "fbi" {
                                 Image("fbi-img")
                                     .resizable()
@@ -69,28 +71,29 @@ struct RandomRoleView: View {
                     
                     Spacer()
                 }
-                .background(
-                    NavigationLink(destination: destinationView(), isActive: $navigateToNextView) {
-                        EmptyView()
-                    }
-                )
-                .navigationBarHidden(true)
-                .navigationBarBackButtonHidden(true)
+                .navigationDestination(isPresented: $navigateToNextView) {
+                    // Navigate to the destination view
+                    destinationView()
+                }
             }
         }
     }
     
+    // Random animation
     private func startAnimating() {
         Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
             withAnimation {
+                // Toggle between images
                 currentImage = (currentImage == "fbi-img") ? "terrorist-img" : "fbi-img"
             }
             
             if !isAnimating {
                 timer.invalidate()
+                // Randomize the role
                 role = Randomizer.randomizeRole()
                 currentImage = role == "fbi" ? "fbi-img" : "terrorist-img"
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    // Navigate to the next view
                     navigateToNextView = true
                 }
             }
@@ -102,12 +105,14 @@ struct RandomRoleView: View {
         }
     }
     
+    // Return destionationView based on role
     private func destinationView() -> some View {
         if role == "fbi" {
-            return AnyView(FBIInstructionView())
-        } else {
-            return AnyView(TerroristInstructionView())
-        }
+                   AnyView(FBIInstructionView(role: role ?? "fbi"))
+               } else {
+                   AnyView(TerroristInstructionView(role: role ?? "terrorist"))
+               }
+        
     }
 }
 

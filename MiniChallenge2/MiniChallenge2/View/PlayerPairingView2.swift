@@ -17,11 +17,7 @@ struct PlayerPairingView2: View {
     @State var startGame: Bool = false
     @State private var sendInvitation = false
     @Environment (\.dismiss) private var dismiss
-    
-    //    @State private var availablePlayers = ["John", "Mike", "Jack"]
-    @State private var playerImages = ["playerB-img", "playerC-img", "playerA-img"]
-    @State private var playerImageMapping: [String: String] = [:]
-    
+        
     var body: some View {
         
         NavigationStack {
@@ -57,8 +53,7 @@ struct PlayerPairingView2: View {
                             HStack {
                                 ForEach(mpManager.availablePlayers, id: \.self) { player in
                                     let playerName = String(player.displayName.prefix(4))
-                                    let imageName = playerImageMapping[playerName]
-                                    AvailablePlayerCard2(playerName: playerName, imageName: imageName)
+                                    AvailablePlayerCard2(playerName: playerName, imageName: "playerB-img")
                                         .padding(.leading, 50)
                                         .onTapGesture {
                                             print("DEBUG: Touch Detected on \(playerName)")
@@ -111,7 +106,6 @@ struct PlayerPairingView2: View {
                 .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil)
                 .onAppear {
                     print("DEBUG: View appeared")
-                    assignImagesToPlayers()
                     mpManager.isAvailableToPlay = true
                     mpManager.startBrowsing()
                     mpManager.startAdvertising()
@@ -134,19 +128,7 @@ struct PlayerPairingView2: View {
                 mpManager.setupGame(gameScene: gameScene)
             }
             .navigationDestination(isPresented: $startGame) {
-                GameView()
-            }
-        }
-    }
-    
-    private func assignImagesToPlayers() {
-        print("DEBUG: Assigning images to players")
-        for (index, player) in mpManager.availablePlayers.enumerated() {
-            let playerName = String(player.displayName.prefix(4)) // Extract first 4 characters of player name
-            if playerImageMapping[playerName] == nil {
-                let imageIndex = index % playerImages.count
-                playerImageMapping[playerName] = playerImages[imageIndex]
-                print("DEBUG: Assigned \(playerImages[imageIndex]) to \(playerName)")
+                RandomRoleView()
             }
         }
     }

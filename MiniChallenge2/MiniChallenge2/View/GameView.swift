@@ -9,6 +9,7 @@ import SwiftUI
 import SpriteKit
 
 struct GameView: View {
+    var role: String
     @EnvironmentObject var gameScene: GameScene
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     var gameSceneTest = GameSceneTest()
@@ -22,7 +23,7 @@ struct GameView: View {
 }
 
 #Preview{
-    GameView()
+    GameView(role: "terrorist")
         .environmentObject(MultipeerConnectionManager(playerId: UUID()))
         .environmentObject(GameScene())
 }

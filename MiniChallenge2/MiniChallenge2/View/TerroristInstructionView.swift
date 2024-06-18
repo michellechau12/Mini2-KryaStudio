@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TerroristInstructionView: View {
+    @State private var navigateToGameView: Bool = false
+    let role: String // Receive the role data from RandomRoleView
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -53,6 +56,7 @@ struct TerroristInstructionView: View {
                                 .padding(.bottom, 16)
                             .padding(.trailing, 96)
                             Button {
+                                navigateToGameView = true
                             } label: {
                                 Image("playbutton-img")
                                     .resizable()
@@ -64,10 +68,14 @@ struct TerroristInstructionView: View {
                     Spacer()
                 }
             }
+            .navigationDestination(isPresented: $navigateToGameView) {
+                GameView(role: role) // Pass the role data to GameView
+            }
         }
+        .navigationBarBackButtonHidden(true) // Hide the back button
     }
 }
 
 #Preview {
-    TerroristInstructionView()
+    TerroristInstructionView(role: "terrorist")
 }
