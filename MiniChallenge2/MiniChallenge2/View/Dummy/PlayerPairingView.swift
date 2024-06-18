@@ -95,7 +95,7 @@ struct PlayerPairingView: View {
             }
             .navigationDestination(
                 isPresented: $startGame) {
-                    GameView()
+//                    GameView()
                 }
         }
         
