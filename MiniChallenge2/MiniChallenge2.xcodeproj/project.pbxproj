@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DAFEA26B2C21E13200AF36AB /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */; };
+		DAFEA26D2C21E19300AF36AB /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DAFEA26C2C21E19300AF36AB /* MazeScene.sks */; };
+		DAFEA26F2C21E32200AF36AB /* GameSceneMaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFEA26E2C21E32200AF36AB /* GameSceneMaze.swift */; };
+		DAFEA2712C21E3BA00AF36AB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
 		ECCC18A42C1833160059276B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A32C1833160059276B /* Assets.xcassets */; };
@@ -21,6 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
+		DAFEA26C2C21E19300AF36AB /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
+		DAFEA26E2C21E32200AF36AB /* GameSceneMaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneMaze.swift; sourceTree = "<group>"; };
+		DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
 		ECCC18A12C1833140059276B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -48,6 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DAFEA2722C21EB5F00AF36AB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		ECCC18932C1833140059276B = {
 			isa = PBXGroup;
 			children = (
@@ -73,9 +89,11 @@
 				ECCC18A12C1833140059276B /* ContentView.swift */,
 				ECCC19362C1AA9B50059276B /* View */,
 				ECCC19352C1AA9A20059276B /* Model */,
-				ECCC19322C1A38BB0059276B /* Info.plist */,
+				DAFEA2722C21EB5F00AF36AB /* Controllers */,
 				ECCC192B2C194FA70059276B /* MultipeerConnectivity */,
+				ECCC19322C1A38BB0059276B /* Info.plist */,
 				ECCC18A32C1833160059276B /* Assets.xcassets */,
+				DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */,
 				ECCC18A52C1833160059276B /* MiniChallenge2.entitlements */,
 				ECCC18A62C1833160059276B /* Preview Content */,
 			);
@@ -112,6 +130,8 @@
 			children = (
 				ECCC19332C1A3F890059276B /* GameView.swift */,
 				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
+				DAFEA26C2C21E19300AF36AB /* MazeScene.sks */,
+				DAFEA26E2C21E32200AF36AB /* GameSceneMaze.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -175,6 +195,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
+				DAFEA26B2C21E13200AF36AB /* MazeTileSet.sks in Resources */,
+				DAFEA26D2C21E19300AF36AB /* MazeScene.sks in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -195,6 +217,8 @@
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
+				DAFEA2712C21E3BA00AF36AB /* GameViewController.swift in Sources */,
+				DAFEA26F2C21E32200AF36AB /* GameSceneMaze.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,10 +345,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MiniChallenge2/MiniChallenge2.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = H68BB9ZMUS;
+				DEVELOPMENT_TEAM = 9UQ7N78T5D;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -342,7 +367,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.taniaCresentia.MiniChallenge2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -360,10 +385,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MiniChallenge2/MiniChallenge2.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = H68BB9ZMUS;
+				DEVELOPMENT_TEAM = 9UQ7N78T5D;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -381,7 +407,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.1;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.3;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.taniaCresentia.MiniChallenge2;
 				PRODUCT_NAME = "$(TARGET_NAME)";

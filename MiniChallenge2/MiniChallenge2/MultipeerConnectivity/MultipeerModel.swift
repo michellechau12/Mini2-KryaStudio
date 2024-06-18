@@ -64,3 +64,8 @@ struct MPBombModel: Codable {
         try? JSONEncoder().encode(self)
     }
 }
+
+struct BombSiteModel {
+    let position: CGPoint
+    let size: CGSize
+}
