@@ -19,15 +19,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
+    
+    private var buttonNode: SKSpriteNode?
+    private var timerLabel: SKLabelNode?
+    var timerIsRunning = false
+
+       
+       var timer: Timer?
+       var timeLeft = 60
 
 
-    var speedMultiplierTerrorist = 0.015
+    var speedMultiplierTerrorist = 0.05
     var speedMultiplierFBI = Int.self
 
     
     override func didMove(to view: SKView) {
         super.didMove(to: view)
- 
+
         let w = (self.size.width + self.size.height) * 0.05
         self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
         
@@ -52,18 +60,58 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 camera.setScale(1.5)
                 
                 //Supaya bisa abrupt view dari mapnya (Animation)
-                let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
+                let zoomInAction = SKAction.scale(to: 1, duration: 0.5)
                 camera.run(zoomInAction)
             }
         
         createMaze()
         createCharacter()
         createJoystick()
-        //sabotagedView()
+        createButton()
+        //setupMask()
         
         physicsWorld.contactDelegate = self
         
     }
+    
+    func createButton() {
+           buttonNode = SKSpriteNode(imageNamed: "circleButton")
+           buttonNode?.position = CGPoint(x: frame.midX, y: frame.midY)
+           buttonNode?.setScale(0.5)
+           buttonNode?.zPosition = 10
+           buttonNode?.name = "circleButton"
+           addChild(buttonNode!)
+         
+           timerLabel = SKLabelNode(fontNamed: "Arial")
+           timerLabel?.fontSize = 45
+           timerLabel?.fontColor = .white
+           timerLabel?.position = CGPoint(x: frame.midX, y: frame.midY + 100)
+           timerLabel?.zPosition = 10
+           timerLabel?.isHidden = true
+           addChild(timerLabel!)
+       }
+
+    func startTimer() {
+            timeLeft = 30
+            timerLabel?.text = "\(timeLeft)"
+            timerLabel?.isHidden = false
+
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+                guard let self = self else { return }
+                self.timeLeft -= 1
+                self.timerLabel?.text = "\(self.timeLeft)"
+                
+                if self.timeLeft <= 0 {
+                    timer.invalidate()
+                    self.timerLabel?.isHidden = true
+                    
+                    //Logic untuk pindah scene misalnya (Kalah atau poin Terrorist bertambah nanti jika tidak didefuse)
+                }
+            }
+        }
+    
+    
+    
 
     func createCharacter() {
         let characterTexture = SKTexture(imageNamed: "characterTest")
@@ -121,12 +169,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
            let scale = min(scaleX, scaleY)
            
            maze.setScale(scale)
-           
-//        maze.physicsBody = SKPhysicsBody(texture: mazeTexture, size: mazeTexture.size())
-        
-//        maze.physicsBody = SKPhysicsBody(texture: mazeTexture, alphaThreshold: 0.5, size: CGSize(width: 1000, height: 1000))
-        
-//        maze.physicsBody = SKPhysicsBody(texture: mazeTexture, size: CGSize(width: 1000, height: 1000))
         
         let walls = [
             CGRect(x: 30, y: -505, width: 480, height: 20),
@@ -175,24 +217,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
        
-       func sabotagedView() {
-                   maskNode = SKShapeNode(circleOfRadius: 100)
-                   maskNode?.fillColor = .white
-                   maskNode?.strokeColor = .clear
-                   maskNode?.position = character?.position ?? CGPoint(x: frame.midX, y: frame.midY)
-                   
-                   cropNode = SKCropNode()
-                   cropNode?.maskNode = maskNode
-                   cropNode?.zPosition = 10
-                   addChild(cropNode!)
-                   
-                   // Create a black background
-                   let background = SKSpriteNode(color: .black, size: self.size)
-                   background.position = CGPoint(x: frame.midX, y: frame.midY)
-                   background.zPosition = 5
-                   cropNode?.addChild(background)  // Added to cropNode instead of scene
-       }
-    
+    func setupMask() {
+        maskNode = SKShapeNode(circleOfRadius: 100)
+        maskNode?.fillColor = .clear
+        maskNode?.strokeColor = .white
+        maskNode?.lineWidth = 50
+        maskNode?.position = character?.position ?? CGPoint(x: frame.midX, y: frame.midY)
+
+        cropNode = SKCropNode()
+        cropNode?.maskNode = maskNode
+        cropNode?.zPosition = 10
+        addChild(cropNode!)
+
+        let background = SKSpriteNode(color: .black, size: self.size)
+        background.position = CGPoint(x: frame.midX, y: frame.midY)
+        background.zPosition = 5
+        cropNode?.addChild(background)
+    }
 
     func didBegin(_ contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
@@ -201,38 +242,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Collision Detected: Character has hit the wall.")
         }
     }
-    
-    
-    
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
+        
+        if let buttonNode = buttonNode, buttonNode.contains(location) {
+            if timerIsRunning == false {
+                timerIsRunning = true
+                Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+                    self?.startTimer()
+                    self?.timerIsRunning = false
+                }
+            }
+            
+            }
         
         if let joystickKnob = joystickKnob, joystickKnob.contains(location) {
             joystickKnob.position = location
