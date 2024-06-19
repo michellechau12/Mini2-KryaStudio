@@ -12,20 +12,15 @@ struct GameView: View {
     @EnvironmentObject var gameScene: GameScene
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @Environment (\.dismiss) var dismiss
-    var gameSceneTest = GameSceneTest()
-    var scene: SKScene {
-        let scene = GameSceneTest()
-        scene.size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        scene.scaleMode = .resizeFill
-        return scene
-    }
     
     var body: some View {
-        SpriteView(scene: scene)
+        SpriteView(scene: gameScene)
+            .environmentObject(gameScene)
+            .environmentObject(mpManager)
             .ignoresSafeArea()
             .onAppear(){
                 gameScene.playerPeerId = mpManager.myConnectionId.displayName
-                print("DEBUG: this player id \(String(describing: gameScene.playerPeerId))")
+                print("DEBUG: this player id \(gameScene.playerPeerId ?? "none")")
             }
             .onReceive(mpManager.$paired, perform: { _ in
                 if mpManager.paired == false {

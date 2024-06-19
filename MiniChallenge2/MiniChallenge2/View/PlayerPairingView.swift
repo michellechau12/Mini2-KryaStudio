@@ -33,9 +33,12 @@ struct PlayerPairingView: View {
                                 mpManager.searchPlayers.invitePeer(player, to: mpManager.session, withContext: nil, timeout: 20)
                                 gameScene.player1Id = mpManager.myConnectionId.displayName
                                 gameScene.player2Id = player.displayName
-                                print("DEBUG: player1Id \(mpManager.myConnectionId.displayName)")
-                                print("DEBUG: player2Id \(player.displayName)")
+                                
+                                print("===========================")
+                                print("DEBUG: player1Id \( gameScene.player1Id ?? "none")")
+                                print("DEBUG: player2Id \( gameScene.player2Id ?? "none")")
                                 print("DEBUG: inviteReceived \(mpManager.inviteReceived)")
+                                print("===========================")
                             }
                             .listStyle(.plain)
                             .alert("Received invitation from  \(mpManager.inviteReceivedFrom? .displayName ?? "Unknown")", isPresented: $mpManager.inviteReceived) {

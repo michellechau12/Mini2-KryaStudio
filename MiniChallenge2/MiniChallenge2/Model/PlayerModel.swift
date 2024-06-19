@@ -13,7 +13,7 @@ class PlayerModel: ObservableObject {
     @Published var playerNode: SKSpriteNode
     var cameraNode: SKCameraNode
     var playerTextures: [SKTexture]
-//    var playerSpawnLocation: CGPoint!
+    var playerSpawnLocation: CGPoint!
     var gameScene: GameScene
     
     init(id: String, playerTextures: [SKTexture], gameScene: GameScene) {
@@ -30,6 +30,7 @@ class PlayerModel: ObservableObject {
         
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
+            playerNode.position = playerSpawnLocation
         } else {
             playerNode.name = "Player2"
         }
@@ -39,4 +40,7 @@ class PlayerModel: ObservableObject {
             playerNode.physicsBody?.categoryBitMask = 0b0
         }
     }
+    
+        //movememt
+    //position
 }

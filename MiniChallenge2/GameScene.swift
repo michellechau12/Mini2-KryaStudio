@@ -10,19 +10,19 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     
-    var mpManager: MultipeerConnectionManager?
+    var mpManager: MultipeerConnectionManager!
     
     @Published var player1Id: String!
     @Published var player2Id: String!
     
     @Published var playerPeerId: String!
-    var thisPlayer: PlayerModel!
+    @Published var thisPlayer: PlayerModel!
     
-    var player1Model: PlayerModel!
-    var player2Model: PlayerModel!
+    @Published var player1Model: PlayerModel!
+    @Published var player2Model: PlayerModel!
     
-    var host: Bool = false
-    var role: String = ""
+    @Published var host: Bool = false
+    @Published var role: String = ""
     
     private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
     private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
@@ -49,10 +49,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
     
-    
     var speedMultiplierTerrorist = 0.015
     var speedMultiplierFBI = Int.self
-    
     
     override func didMove(to view: SKView) {
         super.didMove(to: view)
@@ -71,10 +69,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
             let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
             camera.run(zoomInAction)
         }
+        print("DEBUG Player1id, player2id, playerpeerid")
+        print(player1Id ?? "none")
+        print(player2Id ?? "none")
+        print(playerPeerId ?? "none")
+        print("==============")
+        // Initialize player models
+               if let player1Id = player1Id, let player2Id = player2Id {
+                   player1Model = PlayerModel(id: player1Id, playerTextures: fbiTextures, gameScene: self)
+                   player2Model = PlayerModel(id: player2Id, playerTextures: terroristTextures, gameScene: self)
+               } else {
+                   print("DEBUG: Player IDs are not set correctly.")
+               }
         
+        setThisPlayer()
         createMaze()
         createCharacter()
-        setThisPlayer()
         createJoystick()
         //setupMask()
         
@@ -83,17 +93,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     }
     
     func setThisPlayer() {
-        player1Model = PlayerModel(id: player1Id, playerTextures: fbiTextures, gameScene: self)
-        player2Model = PlayerModel(id: player2Id, playerTextures: terroristTextures, gameScene: self)
         // temp: player1 is fbi, player 2 is terrorist
-        print("DEBUG: playerpeerid \(String(describing: playerPeerId))")
-        print("DEBUG: player1id \(String(describing: player1Id))")
-        print("DEBUG: player2id \(player2Id ?? "unkown")")
+        
+        guard let playerPeerId = playerPeerId,
+                      let player1Id = player1Id,
+                      let player2Id = player2Id else {
+                    print("DEBUG: Player IDs are not set correctly.")
+                    return
+                }
+        print("DEBUG: playerPeerId = \(playerPeerId)")
+                print("DEBUG: player1Id = \(player1Id)")
+                print("DEBUG: player2Id = \(player2Id)")
         if playerPeerId == player1Id {
             self.thisPlayer = player1Model
             role = "fbi"
         }
-        else {
+        else if playerPeerId == player2Id {
             self.thisPlayer = player2Model
             role = "terrorist"
         }
@@ -104,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         if (role == "fbi") {
             characterTexture = fbiTextures[0]
             character = SKSpriteNode(texture: characterTexture)
-        } else {
+        } else if (role == "terrorist") {
             characterTexture = terroristTextures[0]
             character = SKSpriteNode(texture: characterTexture)
         }
@@ -117,8 +132,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         if (role == "fbi") {
             characterPosition = CGPoint(x: frame.minX + offsetX + 15, y: frame.minY + offsetY-10)
-        } else {
-            characterPosition = CGPoint(x: frame.minX + offsetX - 15, y: frame.minY + offsetY + 10)
+        } else if (role == "terrorist"){
+            characterPosition = CGPoint(x: frame.minX + offsetX + 15, y: frame.minY - offsetY + 10)
         }
         
         character?.position = characterPosition
@@ -287,8 +302,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         let moveBack = SKAction.move(to: joystick.position, duration: 0.1)
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
-        
-        
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -297,6 +310,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * speedMultiplierTerrorist, dy: displacement.dy * speedMultiplierTerrorist)
         
+        // ubah ke apply force
         character.position = CGPoint(x: character.position.x + velocity.dx, y: character.position.y + velocity.dy)
         
         //Camera mengikuti character
@@ -307,17 +321,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     }
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
-        if player.playerId == player1Id {
-            fbiNode.position = player.playerPosition
-            fbiNode.texture = fbiTextures[player.playerTextureIndex]
-        } else if player.playerId == player2Id {
-            terroristNode.position = player.playerPosition
-            terroristNode.texture = terroristTextures[player.playerTextureIndex]
+//        if player.playerId == player1Id {
+//            fbiNode.position = player.playerPosition
+//            fbiNode.texture = fbiTextures[player.playerTextureIndex]
+//        } else if player.playerId == player2Id {
+//            terroristNode.position = player.playerPosition
+//            terroristNode.texture = terroristTextures[player.playerTextureIndex]
+//        }
+        switch player.action {
+        case .start:
+            print("Start")
+        case .move:
+            print("Start")
+        case .collide:
+            print("Start")
+        case .sabotagedView:
+            print("Start")
+        case .plantBomb:
+            print("Start")
+        case .defuseBomb:
+            print("Start")
+        case .death:
+            print("Start")
+        case .reset:
+            print("Start")
+        case .end:
+            print("Start")
         }
     }
     
     func handleBomb(bomb: MPBombModel, mpManager: MultipeerConnectionManager) {
-        
+//        let bombNode = SKSpriteNode(imageNamed: "bomb-on")
+//        bombNode.position = CGPoint(x: 0, y: 0)
+//        addChild(bombNode)
+        switch bomb.bomb {
+        case .unplanted:
+            print("unplanted")
+        case .planted:
+            print("planted")
+        case .defused:
+            print("defused")
+        }
     }
     
 }

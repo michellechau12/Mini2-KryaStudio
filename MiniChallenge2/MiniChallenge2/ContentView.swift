@@ -36,6 +36,8 @@ struct ContentView: View {
             .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $startGame) {
                 PlayerPairingView()
+                    .environmentObject(mpManager)
+                    .environmentObject(gameScene)
             }
         }
     }
