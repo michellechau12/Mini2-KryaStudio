@@ -13,15 +13,27 @@ struct GameView: View {
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @Environment (\.dismiss) var dismiss
     var gameSceneTest = GameSceneTest()
-    var scene: SKScene {
-        let scene = GameSceneTest()
-        scene.size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-        scene.scaleMode = .resizeFill
-        return scene
-    }
+    
+    let scene = GameScene(fileNamed: "MazeScene")
+    
+//    var scene: SKScene {
+//        let skView = self.view as! SKView
+//        scene = SKScene(fileNamed: "MazeScene")
+//        
+//        scene.scaleMode = .aspectFill
+//        skView.showsPhysics = true
+//        skView.showsFPS = true
+//        skView.showsNodeCount = true
+//        skView.ignoresSiblingOrder = true
+//        skView.presentScene(scene)
+//        let scene = GameSceneTest()
+//        scene.size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
+//        scene.scaleMode = .resizeFill
+//        return scene
+//    }
     
     var body: some View {
-        SpriteView(scene: scene)
+        SpriteView(scene: scene!)
             .ignoresSafeArea()
             .onAppear(){
                 gameScene.playerPeerId = mpManager.myConnectionId.displayName

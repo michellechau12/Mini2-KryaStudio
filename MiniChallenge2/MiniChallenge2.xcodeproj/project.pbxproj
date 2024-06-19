@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		DAFEA26B2C21E13200AF36AB /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */; };
 		DAFEA26D2C21E19300AF36AB /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DAFEA26C2C21E19300AF36AB /* MazeScene.sks */; };
-		DAFEA26F2C21E32200AF36AB /* GameSceneMaze.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFEA26E2C21E32200AF36AB /* GameSceneMaze.swift */; };
 		DAFEA2712C21E3BA00AF36AB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
@@ -27,7 +26,6 @@
 /* Begin PBXFileReference section */
 		DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
 		DAFEA26C2C21E19300AF36AB /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
-		DAFEA26E2C21E32200AF36AB /* GameSceneMaze.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneMaze.swift; sourceTree = "<group>"; };
 		DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
@@ -131,7 +129,6 @@
 				ECCC19332C1A3F890059276B /* GameView.swift */,
 				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
 				DAFEA26C2C21E19300AF36AB /* MazeScene.sks */,
-				DAFEA26E2C21E32200AF36AB /* GameSceneMaze.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -218,7 +215,6 @@
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
 				DAFEA2712C21E3BA00AF36AB /* GameViewController.swift in Sources */,
-				DAFEA26F2C21E32200AF36AB /* GameSceneMaze.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

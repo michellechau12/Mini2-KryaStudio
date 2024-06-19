@@ -144,6 +144,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         }
     }
     
+    
+    
     func createMaze() {
         // Create an SKSpriteNode with the maze image
         let mazeTexture = SKTexture(imageNamed: "mazePercobaan")
