@@ -24,6 +24,15 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     var host: Bool = false
     var role: String = ""
     
+    private var timerLabel: SKLabelNode?
+    var timerIsRunning = false
+
+    var timer: Timer?
+    var timeLeft = 30
+    
+    private var bombPlantTimer: Timer?
+    private var bombPlantTimerStartTime: Date?
+    
     private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
     private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
     private var bombNode = SKSpriteNode(imageNamed: "bomb-on")
@@ -50,12 +59,12 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     private var cropNode: SKCropNode?
     
     
-    var speedMultiplierTerrorist = 0.015
+    var speedMultiplierTerrorist = 0.05
     var speedMultiplierFBI = Int.self
     
     private var bombSites: [BombSiteModel] = []
     private let playerCatNode = SKSpriteNode(imageNamed: "player_cat")
-    private let plantButton = SKSpriteNode(imageNamed: "plant_button")
+    private let plantButton = SKSpriteNode(imageNamed: "plantButton")
     private var isBombPlanted = false
     
     override func didMove(to view: SKView) {
@@ -157,12 +166,39 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     
     //Setup plant button
     func setupPlantButton() {
-        plantButton.size = CGSize(width: 150, height: 150)
+        plantButton.size = CGSize(width: 100, height: 70)
         plantButton.zPosition = 2
         plantButton.alpha = 0.7
         addChild(plantButton)
         plantButton.isHidden = true
+        
+        timerLabel = SKLabelNode(fontNamed: "Arial")
+        timerLabel?.fontSize = 45
+        timerLabel?.fontColor = .white
+        timerLabel?.position = CGPoint(x: frame.midX, y: frame.midY + 100)
+        timerLabel?.zPosition = 10
+        timerLabel?.isHidden = true
+        addChild(timerLabel!)
     }
+    
+    func startTimer() {
+            timeLeft = 30
+            timerLabel?.text = "\(timeLeft)"
+            timerLabel?.isHidden = false
+
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+                guard let self = self else { return }
+                self.timeLeft -= 1
+                self.timerLabel?.text = "\(self.timeLeft)"
+                
+                if self.timeLeft <= 0 {
+                    timer.invalidate()
+                    self.timerLabel?.isHidden = true
+                    
+                    //Logic untuk pindah scene misalnya (Kalah atau poin Terrorist bertambah nanti jika tidak didefuse)
+                }
+            }
+        }
     
     //Check if player enters the bombsite area
     func isPlayerInBombSite() -> Bool {
@@ -260,12 +296,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         maze.setScale(scale)
         
-        //        maze.physicsBody = SKPhysicsBody(texture: mazeTexture, size: mazeTexture.size())
-        
-        //        maze.physicsBody = SKPhysicsBody(texture: mazeTexture, alphaThreshold: 0.5, size: CGSize(width: 1000, height: 1000))
-        
-        //        maze.physicsBody = SKPhysicsBody(texture: mazeTexture, size: CGSize(width: 1000, height: 1000))
-        
         let walls = [
             CGRect(x: 30, y: -505, width: 480, height: 20),
             CGRect(x: -505, y: -505, width: 480, height: 20),
@@ -331,6 +361,21 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         cropNode?.addChild(background)  // Added to cropNode instead of scene
     }
     
+    func addBombNode() {
+        let bombNode = SKSpriteNode(imageNamed: "bomb-on")
+        bombNode.size = CGSize(width: 50, height: 50)
+        bombNode.position = character.position
+        bombNode.zPosition = 5
+        bombNode.name = "bomb"
+        addChild(bombNode)
+
+        isBombPlanted = true //Set to true so that player cant place multiple bombs
+        plantButton.isHidden = true // Hide plant button after planting
+
+        // Debugging print:
+        print("Bomb planted at position: \(bombNode.position)")
+    }
+    
     
     func didBegin(_ contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
@@ -344,25 +389,23 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         
-        if let joystickKnob = joystickKnob, joystickKnob.contains(location) {
-            joystickKnob.position = location
-        }
+        if let joystick = joystick, joystick.contains(location) {
+               let convertedLocation = camera?.convert(location, from: self) ?? location
+               joystickKnob?.position = convertedLocation
+           }
         
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
-            let bombNode = SKSpriteNode(imageNamed: "bomb-on")
-            bombNode.size = CGSize(width: 50, height: 50)
-            bombNode.position = character.position
-            bombNode.zPosition = 5
-            bombNode.name = "bomb"
-            addChild(bombNode)
-            
-            isBombPlanted = true //Set to true so that player cant place multiple bombs
-            plantButton.isHidden = true // Hide plant button after planting
-            
-            // Debugging print:
-            print("Bomb planted at position: \(bombNode.position)")
-        }
+               bombPlantTimerStartTime = Date()
+               bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+                   self?.addBombNode()
+                   self?.bombPlantTimer = nil
+                   self?.bombPlantTimerStartTime = nil
+               }
+           }
+        
     }
+    
+    
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
@@ -394,10 +437,18 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
         guard let joystickKnob = joystickKnob, let joystick = joystick else { return }
         let moveBack = SKAction.move(to: joystick.position, duration: 0.1)
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
+        
+        guard let bombPlantTimer = bombPlantTimer, bombPlantTimerStartTime != nil else { return }
+        let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime!)
+            if elapsedTime < 2.0 {
+                bombPlantTimer.invalidate()
+                bombPlantTimerStartTime = nil
+            }
         
         
     }

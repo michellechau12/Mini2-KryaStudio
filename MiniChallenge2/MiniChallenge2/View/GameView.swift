@@ -15,23 +15,7 @@ struct GameView: View {
     var gameSceneTest = GameSceneTest()
     
     let scene = GameScene(fileNamed: "MazeScene")
-    
-//    var scene: SKScene {
-//        let skView = self.view as! SKView
-//        scene = SKScene(fileNamed: "MazeScene")
-//        
-//        scene.scaleMode = .aspectFill
-//        skView.showsPhysics = true
-//        skView.showsFPS = true
-//        skView.showsNodeCount = true
-//        skView.ignoresSiblingOrder = true
-//        skView.presentScene(scene)
-//        let scene = GameSceneTest()
-//        scene.size = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
-//        scene.scaleMode = .resizeFill
-//        return scene
-//    }
-    
+        
     var body: some View {
         SpriteView(scene: scene!)
             .ignoresSafeArea()
