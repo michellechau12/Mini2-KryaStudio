@@ -14,7 +14,7 @@ struct GameView: View {
     @Environment (\.dismiss) var dismiss
     var gameSceneTest = GameSceneTest()
     
-    let scene = GameScene(fileNamed: "MazeScene")
+    let scene = GameSceneTest(fileNamed: "MazeScene")
         
     var body: some View {
         SpriteView(scene: scene!)

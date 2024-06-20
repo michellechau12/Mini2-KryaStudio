@@ -51,7 +51,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     
     
     var speedMultiplierTerrorist = 0.015
-    var speedMultiplierFBI = Int.self
+    var speedMultiplierFBI = 0.017
     
     
     override func didMove(to view: SKView) {

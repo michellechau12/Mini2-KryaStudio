@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2FDDA8E62C243FCE00181290 /* bombTimerSound.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FDDA8E52C243FCE00181290 /* bombTimerSound.mp3 */; };
+		2FDDA8E82C2442B000181290 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA8E72C2442B000181290 /* AudioManager.swift */; };
 		DAFEA26B2C21E13200AF36AB /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */; };
 		DAFEA26D2C21E19300AF36AB /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DAFEA26C2C21E19300AF36AB /* MazeScene.sks */; };
 		DAFEA2712C21E3BA00AF36AB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */; };
@@ -24,6 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2FDDA8E52C243FCE00181290 /* bombTimerSound.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = bombTimerSound.mp3; path = ../../../../../bombTimerSound.mp3; sourceTree = "<group>"; };
+		2FDDA8E72C2442B000181290 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
 		DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
 		DAFEA26C2C21E19300AF36AB /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
 		DAFEA2702C21E3BA00AF36AB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -38,7 +42,7 @@
 		ECCC19292C1941030059276B /* MultipeerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerModel.swift; sourceTree = "<group>"; };
 		ECCC192C2C1975CB0059276B /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		ECCC192E2C19790E0059276B /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
-		ECCC19322C1A38BB0059276B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		ECCC19322C1A38BB0059276B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ECCC19332C1A3F890059276B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		ECCC19372C1AD2E30059276B /* GameSceneTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -54,6 +58,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2FDDA8E92C24509E00181290 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		DAFEA2722C21EB5F00AF36AB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -65,8 +76,10 @@
 		ECCC18932C1833140059276B = {
 			isa = PBXGroup;
 			children = (
+				2FDDA8E52C243FCE00181290 /* bombTimerSound.mp3 */,
 				ECCC19372C1AD2E30059276B /* GameSceneTest.swift */,
 				ECCC192C2C1975CB0059276B /* GameScene.swift */,
+				2FDDA8E72C2442B000181290 /* AudioManager.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
 				ECCC189D2C1833140059276B /* Products */,
 			);
@@ -89,8 +102,9 @@
 				ECCC19352C1AA9A20059276B /* Model */,
 				DAFEA2722C21EB5F00AF36AB /* Controllers */,
 				ECCC192B2C194FA70059276B /* MultipeerConnectivity */,
-				ECCC19322C1A38BB0059276B /* Info.plist */,
+				2FDDA8E92C24509E00181290 /* Components */,
 				ECCC18A32C1833160059276B /* Assets.xcassets */,
+				ECCC19322C1A38BB0059276B /* Info.plist */,
 				DAFEA26A2C21E13200AF36AB /* MazeTileSet.sks */,
 				ECCC18A52C1833160059276B /* MiniChallenge2.entitlements */,
 				ECCC18A62C1833160059276B /* Preview Content */,
@@ -194,6 +208,7 @@
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
 				DAFEA26B2C21E13200AF36AB /* MazeTileSet.sks in Resources */,
 				DAFEA26D2C21E19300AF36AB /* MazeScene.sks in Resources */,
+				2FDDA8E62C243FCE00181290 /* bombTimerSound.mp3 in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -214,6 +229,7 @@
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
+				2FDDA8E82C2442B000181290 /* AudioManager.swift in Sources */,
 				DAFEA2712C21E3BA00AF36AB /* GameViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
