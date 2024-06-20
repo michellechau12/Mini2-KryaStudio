@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
 		ECCC18A42C1833160059276B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A32C1833160059276B /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
 		ECCC18A12C1833140059276B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 		ECCC18932C1833140059276B = {
 			isa = PBXGroup;
 			children = (
+				ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */,
 				ECCC19372C1AD2E30059276B /* GameSceneTest.swift */,
 				ECCC192C2C1975CB0059276B /* GameScene.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
@@ -194,6 +197,7 @@
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
+				ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */,
 				ECCC19382C1AD2E30059276B /* GameSceneTest.swift in Sources */,
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,

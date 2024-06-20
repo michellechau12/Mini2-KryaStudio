@@ -8,7 +8,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
+class GameScene: SKScene, ObservableObject {
     
     var mpManager: MultipeerConnectionManager!
     
@@ -23,6 +23,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     
     @Published var host: Bool = false
     @Published var role: String = ""
+    
+    private var timerLabel: SKLabelNode?
+    var timerIsRunning = false
+
+    var timer: Timer?
+    var timeLeft = 30
+    
+    private var bombPlantTimer: Timer?
+    private var bombPlantTimerStartTime: Date?
     
     private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
     private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
@@ -214,46 +223,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         cropNode?.addChild(background)  // Added to cropNode instead of scene
     }
     
-    
-    func didBegin(_ contact: SKPhysicsContact) {
-        let bodyA = contact.bodyA
-        let bodyB = contact.bodyB
-        
-        // Determine the categories involved in the collision
-        let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
-        
-        switch collision {
-        case 1 | 2:
-            // FBI and terrorist collided
-            print("FBI and terrorist collided")
-            handlePlayerCollision()
-        case 1 | 3:
-            // FBI and maze collided
-            print("FBI and maze collided")
-        case 2 | 3:
-            // Terrorist and maze collided
-            print("Terrorist and maze collided")
-        default:
-            break
-        }
-    }
-    
-    func handlePlayerCollision() {
-        if(thisPlayer.role == "fbi"){
-            if(thisPlayer.isVulnerable == true){
-                print("you (fbI) lose")
-            } else if (thisPlayer.isVulnerable == false){
-                print("you (fbi) win")
-            }
-        } else if(thisPlayer.role == "terrorist"){
-            if(thisPlayer.isVulnerable == true){
-                print("you (terrorist) lose")
-            } else if (thisPlayer.isVulnerable == false){
-                print("you (terrorist) win")
-            }
-        }
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -303,7 +272,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         self.thisPlayer.movePlayer(displacement: displacement, mpManager: mpManager)
         
-        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
+//        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
         
         //Camera mengikuti character
         cameraNode?.position = thisPlayer.playerNode.position
@@ -317,7 +286,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
             case .start:
                 print("Start")
             case .farFromBomb:
-                print("Move")
+//                print("Move")
                 self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition)
             case .collide:
                 print("Start")
@@ -350,6 +319,48 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
             print("planted")
         case .defused:
             print("defused")
+        }
+    }
+}
+
+extension GameScene: SKPhysicsContactDelegate{
+    func didBegin(_ contact: SKPhysicsContact) {
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        // Determine the categories involved in the collision
+        let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
+        print("DEBUG: bodyA = \(bodyA.categoryBitMask), bodyB = \(bodyB.categoryBitMask)")
+        print("DEBUG: bodyA = \(BitMaskCategory.player1), bodyB = \(BitMaskCategory.player2)")
+        switch collision {
+            case BitMaskCategory.player1 | BitMaskCategory.player2:
+                // FBI and terrorist collided
+                print("FBI and terrorist collided")
+                handlePlayerCollision()
+            case BitMaskCategory.player1 | BitMaskCategory.maze:
+                // FBI and maze collided
+                print("FBI and maze collided")
+            case BitMaskCategory.player2 | BitMaskCategory.maze:
+                // Terrorist and maze collided
+                print("Terrorist and maze collided")
+            default:
+                break
+        }
+    }
+    
+    func handlePlayerCollision() {
+        if(thisPlayer.role == "fbi"){
+            if(thisPlayer.isVulnerable == true){
+                print("you (fbI) lose")
+            } else if (thisPlayer.isVulnerable == false){
+                print("you (fbi) win")
+            }
+        } else if(thisPlayer.role == "terrorist"){
+            if(thisPlayer.isVulnerable == true){
+                print("you (terrorist) lose")
+            } else if (thisPlayer.isVulnerable == false){
+                print("you (terrorist) win")
+            }
         }
     }
 }

@@ -36,13 +36,13 @@ class PlayerModel: ObservableObject {
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
             playerNode.position = CGPoint(x: 557.45, y: 825.29)
-            speedMultiplier = 0.045
+            speedMultiplier = 2
             isVulnerable = false
             role = "fbi"
         } else {
             playerNode.name = "Player2"
             playerNode.position = CGPoint(x: 594.05, y: -1.89)
-            speedMultiplier = 0.0303
+            speedMultiplier = 1.5
             isVulnerable = true
             role = "terrorist"
         }
@@ -52,19 +52,19 @@ class PlayerModel: ObservableObject {
         // 1 = player 1 (fbi)
         // 2 = player 2 (terrorist)
         // 3 = player 3 (maze)
+        playerNode.physicsBody = SKPhysicsBody(circleOfRadius: playerNode.size.width / 2)
         if(self.id == gameScene.player1Id){
             playerNode.texture = playerTextures[0]
-            playerNode.physicsBody?.categoryBitMask = 1
-            playerNode.physicsBody?.contactTestBitMask = 2 | 3
-            playerNode.physicsBody?.collisionBitMask = 2 | 3
+            playerNode.physicsBody?.categoryBitMask = BitMaskCategory.player1
+            playerNode.physicsBody?.contactTestBitMask = BitMaskCategory.player2 | BitMaskCategory.maze
+            playerNode.physicsBody?.collisionBitMask = BitMaskCategory.player2 | BitMaskCategory.maze
         } else if (self.id == gameScene.player2Id){
             playerNode.texture = playerTextures[0]
-            playerNode.physicsBody?.categoryBitMask = 2
-            playerNode.physicsBody?.contactTestBitMask = 1 | 3
-            playerNode.physicsBody?.collisionBitMask = 1 | 3
+            playerNode.physicsBody?.categoryBitMask = BitMaskCategory.player2
+            playerNode.physicsBody?.contactTestBitMask = BitMaskCategory.player1 | BitMaskCategory.maze
+            playerNode.physicsBody?.collisionBitMask = BitMaskCategory.player1 | BitMaskCategory.maze
         }
-        playerNode.anchorPoint = CGPoint(x: 0.495, y: 0.6)
-        playerNode.physicsBody = SKPhysicsBody(circleOfRadius: playerNode.size.width / 2)
+//        playerNode.anchorPoint = CGPoint(x: 0.495, y: 0.6)
         playerNode.physicsBody?.affectedByGravity = false
         playerNode.physicsBody?.isDynamic = true
         playerNode.physicsBody?.allowsRotation = false
