@@ -247,14 +247,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         if let joystick = joystick, let joystickKnob = joystickKnob, let camera = cameraNode {
             
-            
             //Convert Lokasi touch dari Scene ke Cam
             let convertedLocation = camera.convert(location, from: self)
             
-            
             //Setup seberapa jauh Knob bisa ditarik
             let maxDistance: CGFloat = 50.0
-            
             
             let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
             let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
@@ -282,8 +279,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
 
-        self.thisPlayer.movePlayer(displacement: displacement, speedMultiplier: 3, mpManager: mpManager)
-        // speed multiplier dikasi atribut
+        self.thisPlayer.movePlayer(displacement: displacement, mpManager: mpManager)
+        
         print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
         
         //Camera mengikuti character

@@ -42,6 +42,8 @@ struct PlayerPairingView: View {
                             }
                             .listStyle(.plain)
                             .alert("Received invitation from  \(mpManager.inviteReceivedFrom? .displayName ?? "Unknown")", isPresented: $mpManager.inviteReceived) {
+                                
+                                // if invite rejected
                                 Button {
                                     if let invitationHandler = mpManager.invitationHandler {
                                         invitationHandler(false, nil)
@@ -50,6 +52,7 @@ struct PlayerPairingView: View {
                                     Text("Decline Invite")
                                 }
                                 
+                                // if invite accepted
                                 Button {
                                     if let invitationHandler = mpManager.invitationHandler {
                                         invitationHandler(true, mpManager.session)
@@ -62,8 +65,8 @@ struct PlayerPairingView: View {
                             }
                     }
                 }
-                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
-                )
+//                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
+//                )
                 .onAppear(){
                     mpManager.isAvailableToPlay = true
                     mpManager.startBrowsing()
@@ -79,6 +82,7 @@ struct PlayerPairingView: View {
                     sendInvitation = false
                 }
                 
+                // the red button to go back to start page
                 Button(
                     role: .cancel,
                     action: {

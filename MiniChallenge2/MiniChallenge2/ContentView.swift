@@ -45,6 +45,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
+        .environmentObject(MultipeerConnectionManager(playerName: "sample"))
         .environmentObject(GameScene())
 }
