@@ -117,7 +117,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         setThisPlayer()
         createJoystick()
         setupPlantButton()
-       // sabotagedView()
+        sabotagedView()
         
         
         
@@ -236,6 +236,8 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
                 print("Player is in bomb site: \(character.position)")
                 return true
             }
+            
+            
         }
         return false
     }
@@ -279,7 +281,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         print("Terrorist Character Position: x = \(frame.minX + offsetX + 5), y = \(frame.minY + offsetY + 1360)")
         
         character.position = characterPosition
-        character.setScale(0.317)
+        character.setScale(0.3)
         character.zPosition = 3
         
         let scaledRadius = (characterWidth / 2) * 1.2
@@ -529,6 +531,10 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             
             // Debugging print:
             print("Plant button is visible")
+        }
+        
+        else {
+            plantButton.isHidden = true
         }
     }
     
