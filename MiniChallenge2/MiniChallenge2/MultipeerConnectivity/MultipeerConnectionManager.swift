@@ -41,7 +41,9 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     }
 
     init(playerName: String){
-        self.myConnectionId = MCPeerID(displayName: playerName)
+//        self.myConnectionId = MCPeerID(displayName: playerName)
+        self.myConnectionId = MCPeerID(displayName: UIDevice.current.name)
+        print("DEBUG: my ui device: \(self.myConnectionId)")
         self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
         self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
         self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
@@ -52,17 +54,17 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
         searchPlayers.delegate = self
     }
 
-    init(playerId: UUID) {
-        self.myConnectionId = MCPeerID(displayName: playerId.uuidString)
-        self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
-        self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
-        self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
-
-        super.init()
-        session.delegate = self
-        shareVisibility.delegate = self
-        searchPlayers.delegate = self
-    }
+//    init(playerId: UUID) {
+//        self.myConnectionId = MCPeerID(displayName: playerId.uuidString)
+//        self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
+//        self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
+//        self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
+//
+//        super.init()
+//        session.delegate = self
+//        shareVisibility.delegate = self
+//        searchPlayers.delegate = self
+//    }
 
     deinit {
         stopAdvertising()
