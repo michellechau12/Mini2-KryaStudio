@@ -62,7 +62,15 @@ class GameScene: SKScene, ObservableObject {
     private var isBombPlanted = false
     
     override func didMove(to view: SKView) {
-        super.didMove(to: view)
+//        super.didMove(to: view)
+        // Load the .sks file
+//        if let scene = SKScene(fileNamed: "MazeScene") {
+//            // Set the scale mode to scale to fit the window
+//            scene.scaleMode = .aspectFill
+//            
+//            // Add the loaded scene to the current scene
+//            self.addChild(scene)
+//        }
         
         // Initialize player models
         if let player1Id = player1Id, let player2Id = player2Id {
@@ -98,13 +106,6 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setupMapPhysics() {
-        //contact delegate:
-        
-        //fbi node physics body:
-        
-        //terrorist node physics body:
-        
-        //map physics body:
         guard let map = childNode(withName: "Maze") as? SKTileMapNode else {
             print("DEBUG: SKTileMapNode 'Maze' not found.")
             createMaze()

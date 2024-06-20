@@ -21,8 +21,11 @@ struct MiniChallenge2App: App {
             )
         )
         _gameScene = StateObject(
-            wrappedValue: GameScene(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+            wrappedValue: GameScene(fileNamed: "MazeScene") ?? GameScene()
         )
+//        _gameScene = StateObject(
+//            wrappedValue: GameScene(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+//        )
     }
     
     var body: some Scene {
