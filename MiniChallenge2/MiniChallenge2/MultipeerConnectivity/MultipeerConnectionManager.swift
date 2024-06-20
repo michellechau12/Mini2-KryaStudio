@@ -16,7 +16,7 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     @Published var gameScene: GameScene!
 
     let serviceType = String.serviceName
-    let session: MCSession
+    var session: MCSession
     var myConnectionId: MCPeerID
 
     @Published var availablePlayers: [MCPeerID] = []
@@ -25,8 +25,8 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     @Published var invitationHandler: ((Bool, MCSession?) -> Void)?
     @Published var paired: Bool = false
 
-    let shareVisibility: MCNearbyServiceAdvertiser
-    let searchPlayers: MCNearbyServiceBrowser
+    var shareVisibility: MCNearbyServiceAdvertiser
+    var searchPlayers: MCNearbyServiceBrowser
 
     var isAvailableToPlay: Bool = false {
         didSet {
@@ -41,7 +41,6 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     }
 
     init(playerName: String){
-//        self.myConnectionId = MCPeerID(displayName: playerName)
         self.myConnectionId = MCPeerID(displayName: UIDevice.current.name)
         print("DEBUG: my ui device: \(self.myConnectionId)")
         self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
@@ -54,17 +53,17 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
         searchPlayers.delegate = self
     }
 
-//    init(playerId: UUID) {
-//        self.myConnectionId = MCPeerID(displayName: playerId.uuidString)
-//        self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
-//        self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
-//        self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
-//
-//        super.init()
-//        session.delegate = self
-//        shareVisibility.delegate = self
-//        searchPlayers.delegate = self
-//    }
+    init(playerId: UUID) {
+        self.myConnectionId = MCPeerID(displayName: String(playerId.uuidString.prefix(4)))
+        self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
+        self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
+        self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
+
+        super.init()
+        session.delegate = self
+        shareVisibility.delegate = self
+        searchPlayers.delegate = self
+    }
 
     deinit {
         stopAdvertising()
@@ -128,6 +127,26 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
         } catch {
             print("DEBUG Error: \(error.localizedDescription)")
         }
+    }
+    
+    func updatePeerID(with displayName: String) {
+            // Stop current session
+            stopAdvertising()
+            stopBrowsing()
+            session.disconnect()
+            
+            // Reinitialize with new peer ID
+            self.myConnectionId = MCPeerID(displayName: displayName)
+            self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
+            self.session.delegate = self
+            self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
+            self.shareVisibility.delegate = self
+            self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
+            self.searchPlayers.delegate = self
+            
+            // Start new session
+            startAdvertising()
+            startBrowsing()
     }
 }
 

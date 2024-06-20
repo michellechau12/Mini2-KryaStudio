@@ -35,7 +35,7 @@ struct ContentView: View {
             }
             .navigationBarBackButtonHidden(true)
             .navigationDestination(isPresented: $startGame) {
-                PlayerPairingView()
+                PlayerPairingView(yourName: "Sample")
                     .environmentObject(mpManager)
                     .environmentObject(gameScene)
             }
@@ -45,6 +45,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+//        .environmentObject(MultipeerConnectionManager(playerName: "sample"))
         .environmentObject(MultipeerConnectionManager(playerId: UUID()))
         .environmentObject(GameScene())
 }

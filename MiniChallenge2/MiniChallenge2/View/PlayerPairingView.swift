@@ -17,6 +17,12 @@ struct PlayerPairingView: View {
     @State private var sendInvitation = false
     @Environment (\.dismiss) private var dismiss
     
+    @AppStorage("yourName") var yourName : String = ""
+    
+    @State private var userName = ""
+    @State private var changeName = false
+    @State private var newName = ""
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -24,6 +30,29 @@ struct PlayerPairingView: View {
                     Text("Finding Other Player...")
                         .font(.largeTitle)
                         .foregroundStyle(.blue)
+                    
+                    Text("Your name is \(userName)")
+                        .font(.largeTitle)
+                        .foregroundStyle(.yellow)
+                    
+                    if changeName {
+                        TextField("Enter new name", text: $newName)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                        
+                        Button("Save Name") {
+                            saveNewName()
+                        }
+                        .padding()
+                        .buttonStyle(BorderedButtonStyle())
+                    } else {
+                        Button("Change Name") {
+                            changeName.toggle()
+                        }
+                        .padding()
+                        .buttonStyle(BorderedButtonStyle())
+                    }
+
                     
                     List(mpManager.availablePlayers, id: \.self) { player in
                         AvailablePlayerCard(playerName: player.displayName)
@@ -68,6 +97,7 @@ struct PlayerPairingView: View {
                     mpManager.isAvailableToPlay = true
                     mpManager.startBrowsing()
                     mpManager.startAdvertising()
+                    userName = mpManager.myConnectionId.displayName
                 }
                 .onDisappear(){
                     mpManager.isAvailableToPlay = false
@@ -103,8 +133,16 @@ struct PlayerPairingView: View {
                     GameView()
                 }
         }
-        
-        
+    }
+    
+    func saveNewName() {
+        if !newName.isEmpty {
+            yourName = newName
+            userName = newName
+            changeName.toggle()
+            
+            mpManager.updatePeerID(with: newName)
+        }
     }
 }
 
@@ -123,7 +161,7 @@ struct AvailablePlayerCard: View {
 }
 
 #Preview {
-    PlayerPairingView()
+    PlayerPairingView(yourName: "Sample")
 }
 
 
