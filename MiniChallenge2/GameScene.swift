@@ -57,6 +57,10 @@ class GameScene: SKScene, ObservableObject {
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
     
+    private var bombSites: [BombSiteModel] = []
+    private let plantButton = SKSpriteNode(imageNamed: "plantButton")
+    private var isBombPlanted = false
+    
     override func didMove(to view: SKView) {
         super.didMove(to: view)
         
@@ -68,17 +72,22 @@ class GameScene: SKScene, ObservableObject {
             print("DEBUG: Player IDs are not set correctly.")
         }
         
+        setupMapPhysics()
+        setupBombSites()
+        
         setThisPlayer()
-        createMaze()
+//        createMaze()
         
         createCamera()
         createJoystick()
         
-        print("DEBUG Player1id, player2id, playerpeerid")
-        print(player1Id ?? "none")
-        print(player2Id ?? "none")
-        print(playerPeerId ?? "none")
-        print("==============")
+        setupPlantButton()
+        
+//        print("DEBUG Player1id, player2id, playerpeerid")
+//        print(player1Id ?? "none")
+//        print(player2Id ?? "none")
+//        print(playerPeerId ?? "none")
+//        print("==============")
         
         //setupMask()
         
@@ -86,6 +95,88 @@ class GameScene: SKScene, ObservableObject {
         
         addChild(player1Model.playerNode)
         addChild(player2Model.playerNode)
+    }
+    
+    func setupMapPhysics() {
+        //contact delegate:
+        
+        //fbi node physics body:
+        
+        //terrorist node physics body:
+        
+        //map physics body:
+        guard let map = childNode(withName: "Maze") as? SKTileMapNode else {
+            print("DEBUG: SKTileMapNode 'Maze' not found.")
+            createMaze()
+            return
+        }
+        
+        let tileMap = map // the tile map to be given physics body
+        let tileSize = tileMap.tileSize // the size of each tile map
+        let halfWidth = CGFloat(tileMap.numberOfColumns) / 2.0 * tileSize.width // half width of tile map
+        let halfHeight = CGFloat(tileMap.numberOfRows) / 2.0 * tileSize.height // half height of tile map
+        
+        for col in 0..<tileMap.numberOfColumns {
+            for row in 0..<tileMap.numberOfRows {
+                
+                if let tileDefinition = tileMap.tileDefinition(atColumn: col, row: row) {
+                    
+                    let isEdgeTile = tileDefinition.userData?["AddBody"] as? Int
+                    if isEdgeTile == 1 {
+                        let tileArray = tileDefinition.textures //get the tile textures in array
+                        let tileTexture = tileArray[0] //get the first texture
+                        let x = CGFloat(col) * tileSize.width - halfWidth + (tileSize.width/2)
+                        let y = CGFloat(row) * tileSize.height - halfHeight + (tileSize.height/2)
+                        let tileNode = SKNode()
+                        
+                        tileNode.position = CGPoint(x: x, y: y)
+                        tileNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: (tileTexture.size().width), height: tileTexture.size().height))
+                        tileNode.physicsBody?.affectedByGravity = false
+                        tileNode.physicsBody?.allowsRotation = false
+                        tileNode.physicsBody?.restitution = 0
+                        tileNode.physicsBody?.isDynamic = false
+                        
+                        //friction = semakin strict objectnya, sehingga lebih baik dibuat 0 saja
+                        //tileNode.physicsBody?.friction = 20.0
+                        
+                        tileNode.physicsBody?.mass = 30.0
+                        tileNode.physicsBody?.contactTestBitMask = 2
+                        tileNode.physicsBody?.categoryBitMask = 1
+                        tileNode.physicsBody?.collisionBitMask = 1
+                        
+                        tileMap.addChild(tileNode)
+                    }
+                }
+            }
+        }
+    }
+    
+    // Setup bombsite
+    func setupBombSites() {
+        for child in self.children {
+            if child.name == "BombSite" { //Di setup di MazeScene
+                if let child = child as? SKSpriteNode {
+                    let bombSitePosition = child.position
+                    let bombSiteSize = child.size
+                    let bombSite = BombSiteModel(
+                        position: bombSitePosition,
+                        size: bombSiteSize)
+                    bombSites.append(bombSite)
+                    
+                    //Debugging print:
+                    print("bombsite position is: \(bombSitePosition) and size is: \(bombSiteSize)")
+                }
+            }
+        }
+    }
+    
+    //Setup plant button
+    func setupPlantButton() {
+        plantButton.size = CGSize(width: 120, height: 70)
+        plantButton.zPosition = 2
+        plantButton.alpha = 0.7
+        addChild(plantButton)
+        plantButton.isHidden = true
     }
     
     func createCamera(){
@@ -114,9 +205,6 @@ class GameScene: SKScene, ObservableObject {
             print("DEBUG: Player IDs are not set correctly.")
             return
         }
-        print("DEBUG: playerPeerId = \(playerPeerId)")
-        print("DEBUG: player1Id = \(player1Id)")
-        print("DEBUG: player2Id = \(player2Id)")
         if playerPeerId == player1Id {
             self.thisPlayer = player1Model
         }
@@ -134,6 +222,7 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
+    // unused
     func createMaze() {
         // Create an SKSpriteNode with the maze image
         let mazeTexture = SKTexture(imageNamed: "mazePercobaan")

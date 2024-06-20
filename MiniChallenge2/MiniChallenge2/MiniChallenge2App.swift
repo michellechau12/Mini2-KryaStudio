@@ -12,7 +12,7 @@ struct MiniChallenge2App: App {
     
 //    @StateObject var mpManager = MultipeerConnectionManager(playerName: "sample")
     @StateObject var mpManager = MultipeerConnectionManager(playerId: UUID())
-    @StateObject var gameScene = GameScene()
+    @StateObject var gameScene = GameScene(fileNamed: "MazeScene")!
     
     init(){
         _mpManager = StateObject(
