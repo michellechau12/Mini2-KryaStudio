@@ -50,7 +50,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     private var cropNode: SKCropNode?
 
 
-    var speedMultiplierTerrorist = 0.015
+    var speedMultiplierTerrorist = 1.5
     var speedMultiplierFBI = Int.self
 
     
@@ -292,7 +292,9 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * speedMultiplierTerrorist, dy: displacement.dy * speedMultiplierTerrorist)
         
-        character.position = CGPoint(x: character.position.x + velocity.dx, y: character.position.y + velocity.dy)
+        character.physicsBody?.velocity = velocity
+        
+//        character.position = CGPoint(x: character.position.x + velocity.dx, y: character.position.y + velocity.dy)
         
         //Camera mengikuti character
         cameraNode?.position = character.position

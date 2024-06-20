@@ -13,17 +13,6 @@ struct MiniChallenge2App: App {
     @StateObject var mpManager = MultipeerConnectionManager(playerId: UUID())
     @StateObject var gameScene = GameScene()
     
-    init(){
-        _mpManager = StateObject(
-            wrappedValue: MultipeerConnectionManager(
-                playerId: UUID()
-            )
-        )
-        _gameScene = StateObject(
-            wrappedValue: GameScene(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-        )
-    }
-    
     var body: some Scene {
         WindowGroup {
             ContentView()

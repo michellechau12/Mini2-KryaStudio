@@ -42,7 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         SKTexture(imageNamed: "bomb-off")
     ]
     
-    private var character: SKSpriteNode?
+//    private var thisCharacter: SKSpriteNode?
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
     private var cameraNode: SKCameraNode?
@@ -55,25 +55,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     override func didMove(to view: SKView) {
         super.didMove(to: view)
         
-        cameraNode = SKCameraNode()
-        self.camera = cameraNode
-        if let camera = cameraNode {
-            // Set the initial position of the camera to be centered on the character
-            camera.position = character?.position ?? CGPoint(x: frame.midX, y: frame.midY)
-            addChild(camera)
-            
-            //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
-            camera.setScale(1.5)
-            
-            //Supaya bisa abrupt view dari mapnya (Animation)
-            let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
-            camera.run(zoomInAction)
-        }
-        print("DEBUG Player1id, player2id, playerpeerid")
-        print(player1Id ?? "none")
-        print(player2Id ?? "none")
-        print(playerPeerId ?? "none")
-        print("==============")
         // Initialize player models
                if let player1Id = player1Id, let player2Id = player2Id {
                    player1Model = PlayerModel(id: player1Id, playerTextures: fbiTextures, gameScene: self)
@@ -84,12 +65,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         setThisPlayer()
         createMaze()
-        createCharacter()
+//        createCharacter() // deleted
+        
+        
+        createCamera()
         createJoystick()
+        
+        print("DEBUG Player1id, player2id, playerpeerid")
+        print(player1Id ?? "none")
+        print(player2Id ?? "none")
+        print(playerPeerId ?? "none")
+        print("==============")
+        
         //setupMask()
         
         physicsWorld.contactDelegate = self
         
+        addChild(player1Model.playerNode)
+        addChild(player2Model.playerNode)
+    }
+    
+    func createCamera(){
+        cameraNode = SKCameraNode()
+        self.camera = cameraNode
+        if let camera = cameraNode {
+            // Set the initial position of the camera to be centered on the character
+            camera.position = thisPlayer.playerNode.position
+            addChild(camera)
+            
+            //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
+            camera.setScale(1.5)
+            
+            //Supaya bisa abrupt view dari mapnya (Animation)
+            let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
+            camera.run(zoomInAction)
+        }
     }
     
     func setThisPlayer() {
@@ -106,56 +116,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
                 print("DEBUG: player2Id = \(player2Id)")
         if playerPeerId == player1Id {
             self.thisPlayer = player1Model
-            role = "fbi"
         }
         else if playerPeerId == player2Id {
             self.thisPlayer = player2Model
-            role = "terrorist"
         }
     }
     
-    func createCharacter() {
-        var characterTexture = SKTexture(imageNamed: "fbi-borgol")
-        if (role == "fbi") {
-            characterTexture = fbiTextures[0]
-            character = SKSpriteNode(texture: characterTexture)
-        } else if (role == "terrorist") {
-            characterTexture = terroristTextures[0]
-            character = SKSpriteNode(texture: characterTexture)
+    func movePlayer(id: String, pos: CGPoint) {
+        if id == player1Id {
+            player1Model.synchronizePlayerPosition(position: pos)
         }
-        
-        let characterWidth = characterTexture.size().width * 0.05 //
-        let characterHeight = characterTexture.size().height * 0.1
-        let offsetX = (frame.width - characterWidth) / 2
-        let offsetY = characterHeight / 2
-        var characterPosition = CGPoint(x: 0, y: 0)
-        
-        if (role == "fbi") {
-            characterPosition = CGPoint(x: frame.minX + offsetX + 15, y: frame.minY + offsetY-10)
-        } else if (role == "terrorist"){
-            characterPosition = CGPoint(x: frame.minX + offsetX + 15, y: frame.minY - offsetY + 10)
-        }
-        
-        character?.position = characterPosition
-        character?.setScale(0.17)
-        character?.zPosition = 3
-        
-        let scaledRadius = (characterWidth / 2) * 0.9
-        
-        
-        //Setting manual supaya SKPhysicsBody cocok ke Character
-        character?.anchorPoint = CGPoint(x: 0.495, y: 0.6)
-        
-        if let character = character {
-            // Create a physics body that matches the visual size of the sprite
-            character.physicsBody = SKPhysicsBody(circleOfRadius: scaledRadius)
-            character.physicsBody?.affectedByGravity = false
-            character.physicsBody?.isDynamic = true
-            character.physicsBody?.allowsRotation = false
-            character.physicsBody?.categoryBitMask = 1
-            character.physicsBody?.collisionBitMask = 2
-            character.physicsBody?.contactTestBitMask = 2
-            addChild(character)
+        else {
+            player2Model.synchronizePlayerPosition(position: pos)
         }
     }
     
@@ -204,6 +176,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         maze.physicsBody?.categoryBitMask = 2
         maze.physicsBody?.collisionBitMask = 1
         addChild(maze)
+        
     }
     
     func createJoystick() {
@@ -214,14 +187,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         joystickBase.position = CGPoint(x: -480, y: -310)
         joystickBase.setScale(1.5)
         joystickBase.alpha = 0.5
-        joystickBase.zPosition = 1
+        joystickBase.zPosition = 80
         joystickBase.name = "joystickBase2"
         
         let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
         //        joystickKnob.position = CGPoint(x: size.width / 2, y: size.width/2)
         joystickKnob.position = CGPoint(x: -480, y: -310)
         joystickKnob.setScale(1.5)
-        joystickKnob.zPosition = 2
+        joystickKnob.zPosition = 88
         joystickKnob.name = "joystickKnob2"
         
         cameraNode?.addChild(joystickBase)
@@ -236,7 +209,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         maskNode = SKShapeNode(circleOfRadius: 150)
         maskNode?.fillColor = .white
         maskNode?.strokeColor = .clear
-        maskNode?.position = character?.position ?? CGPoint(x: frame.midX, y: frame.midY)
+//        maskNode?.position = thisCharacter?.position ?? CGPoint(x: frame.midX, y: frame.midY)
         
         cropNode = SKCropNode()
         cropNode?.maskNode = maskNode
@@ -305,19 +278,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        guard let character = character, let joystick = joystick, let joystickKnob = joystickKnob else { return }
+        guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
-        let velocity = CGVector(dx: displacement.dx * speedMultiplierTerrorist, dy: displacement.dy * speedMultiplierTerrorist)
-        
-        // ubah ke apply force
-        character.position = CGPoint(x: character.position.x + velocity.dx, y: character.position.y + velocity.dy)
-        
+//        let velocity = CGVector(dx: displacement.dx * speedMultiplierTerrorist, dy: displacement.dy * speedMultiplierTerrorist)
+//        
+//        character.physicsBody?.velocity = velocity
+        self.thisPlayer.movePlayer(displacement: displacement, speedMultiplier: 3, mpManager: mpManager)
+        // speed multiplier dikasi atribut
+        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
         //Camera mengikuti character
-        cameraNode?.position = character.position
+        cameraNode?.position = thisPlayer.playerNode.position
         
         // Mask mengikuti character -> sabotage view
-        maskNode?.position = character.position
+        maskNode?.position = thisPlayer.playerNode.position
     }
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
@@ -332,7 +306,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         case .start:
             print("Start")
         case .move:
-            print("Start")
+            print("Move")
+            self.movePlayer(id: player.playerId, pos: player.playerPosition)
         case .collide:
             print("Start")
         case .sabotagedView:
