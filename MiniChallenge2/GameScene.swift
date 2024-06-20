@@ -42,7 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         SKTexture(imageNamed: "bomb-off")
     ]
     
-//    private var thisCharacter: SKSpriteNode?
+    //    private var thisCharacter: SKSpriteNode?
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
     private var cameraNode: SKCameraNode?
@@ -56,16 +56,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         super.didMove(to: view)
         
         // Initialize player models
-               if let player1Id = player1Id, let player2Id = player2Id {
-                   player1Model = PlayerModel(id: player1Id, playerTextures: fbiTextures, gameScene: self)
-                   player2Model = PlayerModel(id: player2Id, playerTextures: terroristTextures, gameScene: self)
-               } else {
-                   print("DEBUG: Player IDs are not set correctly.")
-               }
+        if let player1Id = player1Id, let player2Id = player2Id {
+            player1Model = PlayerModel(id: player1Id, playerTextures: fbiTextures, gameScene: self)
+            player2Model = PlayerModel(id: player2Id, playerTextures: terroristTextures, gameScene: self)
+        } else {
+            print("DEBUG: Player IDs are not set correctly.")
+        }
         
         setThisPlayer()
         createMaze()
-//        createCharacter() // deleted
+        //        createCharacter() // deleted
         
         
         createCamera()
@@ -106,14 +106,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         // temp: player1 is fbi, player 2 is terrorist
         
         guard let playerPeerId = playerPeerId,
-                      let player1Id = player1Id,
-                      let player2Id = player2Id else {
-                    print("DEBUG: Player IDs are not set correctly.")
-                    return
-                }
+              let player1Id = player1Id,
+              let player2Id = player2Id else {
+            print("DEBUG: Player IDs are not set correctly.")
+            return
+        }
         print("DEBUG: playerPeerId = \(playerPeerId)")
-                print("DEBUG: player1Id = \(player1Id)")
-                print("DEBUG: player2Id = \(player2Id)")
+        print("DEBUG: player1Id = \(player1Id)")
+        print("DEBUG: player2Id = \(player2Id)")
         if playerPeerId == player1Id {
             self.thisPlayer = player1Model
         }
@@ -209,7 +209,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         maskNode = SKShapeNode(circleOfRadius: 150)
         maskNode?.fillColor = .white
         maskNode?.strokeColor = .clear
-//        maskNode?.position = thisCharacter?.position ?? CGPoint(x: frame.midX, y: frame.midY)
+        //        maskNode?.position = thisCharacter?.position ?? CGPoint(x: frame.midX, y: frame.midY)
         
         cropNode = SKCropNode()
         cropNode?.maskNode = maskNode
@@ -225,10 +225,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     
     
     func didBegin(_ contact: SKPhysicsContact) {
-        let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
         
-        if collision == (1 | 2) {
-            print("Collision Detected: Character has hit the wall.")
+        // Determine the categories involved in the collision
+        let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
+        
+        switch collision {
+        case 1 | 2:
+            // FBI and terrorist collided
+            print("FBI and terrorist collided")
+        case 1 | 3:
+            // FBI and maze collided
+            print("FBI and maze collided")
+        case 2 | 3:
+            // Terrorist and maze collided
+            print("Terrorist and maze collided")
+        default:
+            break
+        }
+    }
+    
+    func handlePlayerCollision() {
+        if (thisPlayer.role == "fbi"){
+            
         }
     }
     
@@ -278,7 +298,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
-
+        
         self.thisPlayer.movePlayer(displacement: displacement, mpManager: mpManager)
         
         print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
@@ -292,37 +312,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
         switch player.action {
-            case .start:
-                print("Start")
-            case .move:
-                print("Move")
-                self.movePlayer(id: player.playerId, pos: player.playerPosition)
-            case .collide:
-                print("Start")
-            case .sabotagedView:
-                print("Start")
-            case .plantBomb:
-                print("Start")
-            case .defuseBomb:
-                print("Start")
-            case .death:
-                print("Start")
-            case .reset:
-                print("Start")
-            case .end:
-                print("Start")
-            }
+        case .start:
+            print("Start")
+        case .move:
+            print("Move")
+            self.movePlayer(id: player.playerId, pos: player.playerPosition)
+        case .collide:
+            print("Start")
+        case .sabotagedView:
+            print("Start")
+        case .plantBomb:
+            print("Start")
+        case .defuseBomb:
+            print("Start")
+        case .death:
+            print("Start")
+        case .reset:
+            print("Start")
+        case .end:
+            mpManager.session.disconnect()
+        }
     }
     
     func handleBomb(bomb: MPBombModel, mpManager: MultipeerConnectionManager) {
         switch bomb.bomb {
-            case .unplanted:
-                print("unplanted")
-            case .planted:
-                print("planted")
-            case .defused:
-                print("defused")
+        case .unplanted:
+            print("unplanted")
+        case .planted:
+            print("planted")
+        case .defused:
+            print("defused")
         }
     }
-    
 }
