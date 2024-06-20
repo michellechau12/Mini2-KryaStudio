@@ -26,6 +26,7 @@ struct MPPlayerModel: Codable {
     let playerId: String
     let playerPosition: CGPoint
     let playerTextureIndex: Int //FBI (pegang tang, pegang borgol); Terrorist (bomb, nothing, pentungan)
+    let isVulnerable: Bool
     
     func data() -> Data? {
         try? JSONEncoder().encode(self)

@@ -11,21 +11,22 @@ import SpriteKit
 class PlayerModel: ObservableObject {
     @Published var id: String
     @Published var playerNode: SKSpriteNode
-//    var cameraNode: SKCameraNode
+    
     var playerTextures: [SKTexture]
     var gameScene: GameScene
+    var speedMultiplier: Double
+    var isVulnerable: Bool
+    var role: String
     
     init(id: String, playerTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
         self.playerTextures = playerTextures
         self.gameScene = gameScene
-//        cameraNode = SKCameraNode()
-//        cameraNode.position = spawnLocation
-//        cameraNode.setScale(5)
+        self.speedMultiplier = 0
+        self.isVulnerable = true
+        self.role = ""
         
         playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 10, height: 10))
-//        playerNode.position = spawnLocation
-//        playerSpawnLocation = spawnLocation
         playerNode.zPosition = 3
         print("DEBUG")
         print("===========================")
@@ -35,9 +36,15 @@ class PlayerModel: ObservableObject {
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
             playerNode.position = CGPoint(x: 557.45, y: 825.29)
+            speedMultiplier = 0.045
+            isVulnerable = false
+            role = "fbi"
         } else {
             playerNode.name = "Player2"
             playerNode.position = CGPoint(x: 594.05, y: -1.89)
+            speedMultiplier = 0.0303
+            isVulnerable = true
+            role = "terrorist"
         }
         
 //        playerNode.physicsBody = SKPhysicsBody(rectangleOf: playerNode.size)
@@ -64,15 +71,21 @@ class PlayerModel: ObservableObject {
         playerNode.physicsBody?.usesPreciseCollisionDetection = true
     }
     
-    func movePlayer(displacement: CGVector, speedMultiplier: Double, mpManager: MultipeerConnectionManager) {
+    func movePlayer(displacement: CGVector, mpManager: MultipeerConnectionManager) {
         let velocity = CGVector(dx: displacement.dx * speedMultiplier, dy: displacement.dy * speedMultiplier)
         
         playerNode.physicsBody?.velocity = velocity
-        let playerCondition = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0)
+        
+        //sending the movement to multipeer
+        let playerCondition = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: false)
         mpManager.send(player: playerCondition)
     }
     
     func synchronizePlayerPosition(position: CGPoint) {
         playerNode.position = position
+    }
+    
+    func plantBomb() {
+        
     }
 }
