@@ -237,9 +237,12 @@ extension MultipeerConnectionManager: MCSessionDelegate {
         }
     }
 
+    // mandatory function for MCSessionDelegate
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) { }
 
+    // mandatory function for MCSessionDelegate
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) { }
 
+    // mandatory function for MCSessionDelegate
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) { }
 }

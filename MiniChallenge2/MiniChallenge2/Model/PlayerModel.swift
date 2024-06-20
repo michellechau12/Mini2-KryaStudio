@@ -77,11 +77,11 @@ class PlayerModel: ObservableObject {
         playerNode.physicsBody?.velocity = velocity
         
         //sending the movement to multipeer
-        let playerCondition = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: false)
+        let playerCondition = MPPlayerModel(action: .farFromBomb, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: false)
         mpManager.send(player: playerCondition)
     }
     
-    func synchronizePlayerPosition(position: CGPoint) {
+    func synchronizeOtherPlayerPosition(position: CGPoint) {
         playerNode.position = position
     }
     

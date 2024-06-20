@@ -42,15 +42,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         SKTexture(imageNamed: "bomb-off")
     ]
     
-    //    private var thisCharacter: SKSpriteNode?
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
-    
-    var speedMultiplierTerrorist = 0.015
-    var speedMultiplierFBI = Int.self
     
     override func didMove(to view: SKView) {
         super.didMove(to: view)
@@ -65,8 +61,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         setThisPlayer()
         createMaze()
-        //        createCharacter() // deleted
-        
         
         createCamera()
         createJoystick()
@@ -122,12 +116,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         }
     }
     
-    func movePlayer(id: String, pos: CGPoint) {
+    func moveOtherPlayer(id: String, pos: CGPoint) {
         if id == player1Id {
-            player1Model.synchronizePlayerPosition(position: pos)
+            player1Model.synchronizeOtherPlayerPosition(position: pos)
         }
         else {
-            player2Model.synchronizePlayerPosition(position: pos)
+            player2Model.synchronizeOtherPlayerPosition(position: pos)
         }
     }
     
@@ -183,7 +177,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         
         //Otak-atik posisi Joystick
         let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
-        //        joystickBase.position = CGPoint(x: size.width / 2, y: size.width/2)
         joystickBase.position = CGPoint(x: -480, y: -310)
         joystickBase.setScale(1.5)
         joystickBase.alpha = 0.5
@@ -191,7 +184,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         joystickBase.name = "joystickBase2"
         
         let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
-        //        joystickKnob.position = CGPoint(x: size.width / 2, y: size.width/2)
         joystickKnob.position = CGPoint(x: -480, y: -310)
         joystickKnob.setScale(1.5)
         joystickKnob.zPosition = 88
@@ -209,7 +201,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         maskNode = SKShapeNode(circleOfRadius: 150)
         maskNode?.fillColor = .white
         maskNode?.strokeColor = .clear
-        //        maskNode?.position = thisCharacter?.position ?? CGPoint(x: frame.midX, y: frame.midY)
         
         cropNode = SKCropNode()
         cropNode?.maskNode = maskNode
@@ -235,6 +226,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
         case 1 | 2:
             // FBI and terrorist collided
             print("FBI and terrorist collided")
+            handlePlayerCollision()
         case 1 | 3:
             // FBI and maze collided
             print("FBI and maze collided")
@@ -247,8 +239,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     }
     
     func handlePlayerCollision() {
-        if (thisPlayer.role == "fbi"){
-            
+        if(thisPlayer.role == "fbi"){
+            if(thisPlayer.isVulnerable == true){
+                print("you (fbI) lose")
+            } else if (thisPlayer.isVulnerable == false){
+                print("you (fbi) win")
+            }
+        } else if(thisPlayer.role == "terrorist"){
+            if(thisPlayer.isVulnerable == true){
+                print("you (terrorist) lose")
+            } else if (thisPlayer.isVulnerable == false){
+                print("you (terrorist) win")
+            }
         }
     }
     
@@ -312,26 +314,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate, ObservableObject {
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
         switch player.action {
-        case .start:
-            print("Start")
-        case .move:
-            print("Move")
-            self.movePlayer(id: player.playerId, pos: player.playerPosition)
-        case .collide:
-            print("Start")
-        case .sabotagedView:
-            print("Start")
-        case .plantBomb:
-            print("Start")
-        case .defuseBomb:
-            print("Start")
-        case .death:
-            print("Start")
-        case .reset:
-            print("Start")
-        case .end:
-            mpManager.session.disconnect()
-        }
+            case .start:
+                print("Start")
+            case .farFromBomb:
+                print("Move")
+                self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition)
+            case .collide:
+                print("Start")
+            case .sabotagedView:
+                print("Start")
+            case .plantBomb:
+                print("Start")
+                // change terrorist texture from terrorist-bomb to terrorist-none
+            case .nearToBomb:
+                print("Start")
+                self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition)
+                // change terrorist texture from terrorist-none to terrorist-pentungan
+                // change fbi texture from fbi-borgol to fbi-tang
+                // change terrorist isVulnerable -> false
+                // change fbi isVulnerable -> true
+            case .death:
+                print("Start")
+            case .reset:
+                print("Start")
+            case .end:
+                mpManager.session.disconnect()
+            }
     }
     
     func handleBomb(bomb: MPBombModel, mpManager: MultipeerConnectionManager) {

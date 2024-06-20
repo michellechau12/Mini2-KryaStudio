@@ -11,11 +11,11 @@ import SpriteKit
 struct MPPlayerModel: Codable {
     enum Action: String, Codable {
         case start
-        case move
+        case farFromBomb
         case collide
         case sabotagedView
         case plantBomb
-        case defuseBomb // ->delay 2 second if cancelled by FBI
+        case nearToBomb // ->delay 2 second if cancelled by FBI
         case death
         case reset
         case end
