@@ -27,7 +27,7 @@ class PlayerModel: ObservableObject {
         self.isVulnerable = true
         self.role = ""
         
-        playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 10, height: 10))
+        playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 20, height: 20))
         playerNode.zPosition = 3
         print("DEBUG")
         print("===========================")
@@ -74,13 +74,21 @@ class PlayerModel: ObservableObject {
         playerNode.physicsBody?.usesPreciseCollisionDetection = true
     }
     
-    func movePlayer(displacement: CGVector, mpManager: MultipeerConnectionManager) {
-        let velocity = CGVector(dx: displacement.dx * speedMultiplier, dy: displacement.dy * speedMultiplier)
+    func movePlayer(velocity: CGVector, mpManager: MultipeerConnectionManager) {
         
         playerNode.physicsBody?.velocity = velocity
         
+        if gameScene.isPlayerNearBomb(){
+            //changing the state
+            if self.role == "fbi"{
+                self.isVulnerable = true
+            } else {
+                self.isVulnerable = false
+            }
+        }
+        
         //sending the movement to multipeer
-        let playerCondition = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: false)
+        let playerCondition = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: self.isVulnerable)
         mpManager.send(player: playerCondition)
     }
     

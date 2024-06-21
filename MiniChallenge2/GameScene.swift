@@ -44,6 +44,24 @@ class GameScene: SKScene, ObservableObject {
         SKTexture(imageNamed: "fbi-borgol"),
         SKTexture(imageNamed: "fbi-tang")
     ]
+    
+    private var fbiRightTextures: [SKTexture] = [
+        SKTexture(imageNamed: "fbi-borgol-right-1"),
+        SKTexture(imageNamed: "fbi-borgol-right-2"),
+        SKTexture(imageNamed: "fbi-borgol-right-3"),
+        SKTexture(imageNamed: "fbi-borgol-right-4"),
+        SKTexture(imageNamed: "fbi-borgol-right-5")
+    ]
+    
+    private var fbiLeftTextures: [SKTexture] = [
+        SKTexture(imageNamed: "fbi-borgol-left-1"),
+        SKTexture(imageNamed: "fbi-borgol-left-2"),
+        SKTexture(imageNamed: "fbi-borgol-left-3"),
+        SKTexture(imageNamed: "fbi-borgol-left-4"),
+        SKTexture(imageNamed: "fbi-borgol-left-5")
+    ]
+    
+    
     private var terroristTextures: [SKTexture] = [
         SKTexture(imageNamed: "terrorist-bomb"),
         SKTexture(imageNamed: "terrorist-none"),
@@ -478,8 +496,33 @@ class GameScene: SKScene, ObservableObject {
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
+        let velocity = CGVector(dx: displacement.dx * thisPlayer.speedMultiplier, dy: displacement.dy * thisPlayer.speedMultiplier)
         
-        self.thisPlayer.movePlayer(displacement: displacement, mpManager: mpManager)
+        self.thisPlayer.movePlayer(velocity: velocity, mpManager: mpManager)
+        
+        if velocity.dx > 0 {
+                        // Move Right
+            if thisPlayer.playerNode.action(forKey: "moveRight") == nil {
+                thisPlayer.playerNode.removeAction(forKey: "moveLeft")
+                            let walkToRight = SKAction.repeatForever(SKAction.animate(with: fbiRightTextures, timePerFrame: 0.1))
+                thisPlayer.playerNode.run(walkToRight, withKey: "moveRight")
+                          //  orientation = "right"
+            
+
+                        }
+                    } else if velocity.dx < 0 {
+                        // Move Left
+                        if thisPlayer.playerNode.action(forKey: "moveLeft") == nil {
+                            thisPlayer.playerNode.removeAction(forKey: "moveRight")
+                            let walkToLeft = SKAction.repeatForever(SKAction.animate(with: fbiLeftTextures, timePerFrame: 0.1))
+                            thisPlayer.playerNode.run(walkToLeft, withKey: "moveLeft")
+                    
+
+                        }
+                    } else {
+                        thisPlayer.playerNode.removeAction(forKey: "moveRight")
+                        thisPlayer.playerNode.removeAction(forKey: "moveLeft")
+                    }
         
 //        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
         
@@ -491,6 +534,7 @@ class GameScene: SKScene, ObservableObject {
         
         //If FBI near bomb, defuse button will appear
         if isPlayerNearBomb() {
+            
             // Debugging print:
             print("Defuse button should be visible")
             let offset: CGFloat = 20.0
@@ -513,7 +557,7 @@ class GameScene: SKScene, ObservableObject {
             // role terrorist
             else {
                 // kalo ga ada bomb
-                if !isBombPlanted {
+                if !isBombPlanted {//
                     // func to enable plantButton
                     let offset: CGFloat = 20.0
                     plantButton.position = CGPoint(
@@ -524,10 +568,11 @@ class GameScene: SKScene, ObservableObject {
                     
                     // Debugging print:
                     print("Plant button is visible")
+                } else {
+                    plantButton.isHidden = true
                 }
             }
         }
-
     }
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
