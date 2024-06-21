@@ -11,7 +11,7 @@ import SpriteKit
 struct MPPlayerModel: Codable {
     enum Action: String, Codable {
         case start
-        case farFromBomb
+        case move
         case collide
         case sabotagedView
         case plantBomb

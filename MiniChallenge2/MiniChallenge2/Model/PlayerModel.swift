@@ -17,6 +17,7 @@ class PlayerModel: ObservableObject {
     var speedMultiplier: Double
     var isVulnerable: Bool
     var role: String
+    var playerTextureIndex: Int = 0
     
     init(id: String, playerTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
@@ -35,13 +36,15 @@ class PlayerModel: ObservableObject {
         print("this player id: \(self.id)")
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
-            playerNode.position = CGPoint(x: 557.45, y: 825.29)
+//            playerNode.position = CGPoint(x: 3.57, y: 945.85)
+            playerNode.position = CGPoint(x: -269, y: -31)
             speedMultiplier = 2
             isVulnerable = false
             role = "fbi"
         } else {
             playerNode.name = "Player2"
-            playerNode.position = CGPoint(x: 594.05, y: -1.89)
+//            playerNode.position = CGPoint(x: 48.57, y: -354)
+            playerNode.position = CGPoint(x: -335, y: -116)
             speedMultiplier = 1.5
             isVulnerable = true
             role = "terrorist"
@@ -77,15 +80,13 @@ class PlayerModel: ObservableObject {
         playerNode.physicsBody?.velocity = velocity
         
         //sending the movement to multipeer
-        let playerCondition = MPPlayerModel(action: .farFromBomb, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: false)
+        let playerCondition = MPPlayerModel(action: .move, playerId: self.id, playerPosition: playerNode.position, playerTextureIndex: 0, isVulnerable: false)
         mpManager.send(player: playerCondition)
     }
     
     func synchronizeOtherPlayerPosition(position: CGPoint) {
         playerNode.position = position
-    }
-    
-    func plantBomb() {
+        
         
     }
 }
