@@ -96,8 +96,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
     
-    private var isPlantButtonTapped = false
-    private var isDefuseButtonTapped = false
     
     override func didMove(to view: SKView) {
         super.didMove(to: view)
@@ -388,15 +386,14 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
             bombPlantTimerStartTime = Date()
-                print("lagi plant...")
-            isPlantButtonTapped = true
-       }
+            print("lagi plant...")
+        }
         
         
         if defuseButton.contains(location) && !defuseButton.isHidden {
-                           defuseTimerStartTime = Date()
-                               isDefuseButtonTapped = true
-        } 
+            defuseTimerStartTime = Date()
+            print("lagi defuse...")
+        }
     }
     
     
@@ -434,59 +431,25 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
         
-        guard isPlantButtonTapped == false else {return}
-            if let bombPlantTimerStartTime = bombPlantTimerStartTime {
-                let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-                if elapsedTime >= 2.0 {
-                    self.addBombNode()
-                    self.timerLabel?.isHidden = false
-                    self.bombPlantTimerStartTime = nil
-                } else {
-                    self.bombPlantTimerStartTime = nil
-                }
-            }
-        
-        guard isDefuseButtonTapped == false else {return}
-        if let defuseTimerStartTime = defuseTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime >= 2.0 {
-                self.defuseButton.isHidden = true
-                if let bombNode = self.childNode(withName: "bombNode") {
-                    bombNode.removeFromParent()
-                }
-                self.timerLabel?.isHidden = true
-                self.defuseTimerStartTime = nil
-            } else {
-                self.defuseTimerStartTime = nil
-            }
-        }
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        //supaya tetap false kalau ga ditekan plant button and defuse buttonnya:
-        isPlantButtonTapped = false
-        isDefuseButtonTapped = false
-        
-//        addbomb if players already held plant button for a certain period of time
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            if elapsedTime >= 2.0 {
-                self.addBombNode()
+            if elapsedTime < 2.0 {
+                print("cancel planting")
                 self.bombPlantTimerStartTime = nil
             }
         }
         
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime >= 2.0 {
-                self.defuseButton.isHidden = true
-                if let bombNode = self.childNode(withName: "bombNode") {
-                    bombNode.removeFromParent()
-                }
-                self.timerLabel?.isHidden = true
+            if elapsedTime < 2.0 {
+                print("cancel defusing")
+                self.defuseTimerStartTime = nil
             }
         }
-        
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
+                
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
@@ -528,15 +491,13 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             
             plantButton.isHidden = false
             // Debugging print:
-            print("Plant button is visible")
+//            print("Plant button is visible")
         } else {
             plantButton.isHidden = true
         }
         
         //If FBI near bomb, defuse button will appear
         if isPlayerNearBomb() {
-            // Debugging print:
-            print("Defuse button should be visible")
             let offset: CGFloat = 20.0
             defuseButton.position = CGPoint(
                 x: character.position.x,
@@ -547,6 +508,29 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         }
         
         
+        // add bomb if players already held plant button for a certain period of time
+        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+            if elapsedTime >= 2.0 {
+                print("Success planting bomb")
+                self.addBombNode()
+                self.bombPlantTimerStartTime = nil
+            }
+        }
+        // defuse bomb if players already held defuse button for a certain period of time
+        if let defuseTimerStartTime = defuseTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+            if elapsedTime >= 2.0 {
+                print("Success defusing bomb")
+                self.defuseButton.isHidden = true
+                self.timerLabel?.isHidden = true
+                if let bombNode = self.childNode(withName: "bombNode") {
+                    bombNode.removeFromParent()
+                }
+                self.defuseTimerStartTime = nil
+            }
+        }
+
     }
     
 }
