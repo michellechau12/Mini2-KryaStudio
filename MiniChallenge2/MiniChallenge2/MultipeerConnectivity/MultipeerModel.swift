@@ -51,6 +51,7 @@ struct MPMapModel: Codable {
 struct MPBombModel: Codable {
     enum BombEvent: String, Codable {
         case planted
+        case approachedByPlayers
         case defused
     }
     

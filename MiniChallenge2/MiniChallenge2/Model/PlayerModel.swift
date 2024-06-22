@@ -125,20 +125,31 @@ class PlayerModel: ObservableObject {
                 isVulnerable: self.isVulnerable)
         }
         mpManager.send(player: playerCondition)
-        
-        // note for player textures
-        // bombContact: fbi-tang, terrorist-bomb
-        // farFromBomb: fbi-borgol, terrorist-none
-        // otherPlayerContact: fbi-borgol, terrorist-pentungan
     }
     
     func updatePlayerTextures(condition: String){
         print("DEBUG: role \(self.role)")
         print("DEBUG: condition \(condition)")
-        if self.role == "terrorist" && condition == "terrorist-planted-bomb"{
-            playerRightTextures = gameScene.getTerroristTextures(type: "none-right")
-            playerLeftTextures = gameScene.getTerroristTextures(type: "none-left")
+        if self.role == "terrorist"{
+            if condition == "terrorist-planted-bomb"{
+                playerRightTextures = gameScene.getTerroristTextures(type: "none-right")
+                playerLeftTextures = gameScene.getTerroristTextures(type: "none-left")
+            } else if condition == "terrorist-near-bomb"{
+                playerRightTextures = gameScene.getTerroristTextures(type: "pentungan-right")
+                playerLeftTextures = gameScene.getTerroristTextures(type: "pentungan-left")
+            }
         }
+        // role fbi
+        else {
+            if condition == "fbi-near-bomb"{
+                playerRightTextures = gameScene.getFBITextures(type: "tang-right")
+                playerLeftTextures = gameScene.getFBITextures(type: "tang-left")
+            } else if condition == "fbi-far-from-bomb"{
+                playerRightTextures = gameScene.getFBITextures(type: "borgol-right")
+                playerLeftTextures = gameScene.getFBITextures(type: "borgol-left")
+            }
+        }
+        
     }
     
     func animateWalking(orientation: String){

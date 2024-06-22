@@ -65,7 +65,7 @@ class GameScene: SKScene, ObservableObject {
     private let plantButton = SKSpriteNode(imageNamed: "plantButton")
     private let defuseButton = SKSpriteNode(imageNamed: "tang")
     private var isBombPlanted = false
-    private var defuseRadius: CGFloat = 50.0
+    private var defuseRadius: CGFloat = 100.0
     
     private var isPlantButtonTapped = false
     private var isDefuseButtonTapped = false
@@ -179,6 +179,10 @@ class GameScene: SKScene, ObservableObject {
             return fbiRightTang
         } else if type == "tang-left"{
             return fbiLeftTang
+        } else if type == "borgol-right"{
+            return fbiRightTextures
+        } else if type == "borgol-left"{
+            return fbiLeftTextures
         }
         return fbiRightTextures
     }
@@ -192,6 +196,10 @@ class GameScene: SKScene, ObservableObject {
             return terroristRightPentungan
         } else if type == "pentungan-left"{
             return terroristLeftPentungan
+        } else if type == "bomb-right"{
+            return terroristRightTextures
+        } else if type == "bomb-left"{
+            return terroristLeftTextures
         }
         return terroristRightTextures
     }
@@ -534,8 +542,14 @@ class GameScene: SKScene, ObservableObject {
                     x: thisPlayer.playerNode.position.x,
                     y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset)
                 defuseButton.isHidden = false
+                condition = "fbi-near-bomb"
+                
+                //sending to multipeer
+                let bombCondition = MPBombModel(bomb: .approachedByPlayers)
+                mpManager.send(bomb: bombCondition)
             } else {
                 defuseButton.isHidden = true
+                condition = "fbi-far-from-bomb"
             }
         }
         //role terrorist
@@ -548,11 +562,22 @@ class GameScene: SKScene, ObservableObject {
                     y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
                 
                 plantButton.isHidden = false
-                
                 // Debugging print:
 //                    print("Plant button is visible")
             } else {
                 plantButton.isHidden = true
+            }
+            
+            if isBombPlanted {
+                if isPlayerNearBomb() {
+                    condition = "terrorist-near-bomb"
+                    
+                    //sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .approachedByPlayers)
+                    mpManager.send(bomb: bombCondition)
+                } else {
+                    condition = "terrorist-planted-bomb"
+                }
             }
         }
         
@@ -632,8 +657,12 @@ class GameScene: SKScene, ObservableObject {
         case .planted:
             print("planted")
             synchronizeOtherPlayerBombCondition(isDefused: false)
-            updateTerroristTextures()
+//            updateTerroristTextures()
+            updateOtherPlayerTextures()
 //            updatePlayerVulnerability()
+        case .approachedByPlayers:
+            updateCondition()
+            updateOtherPlayerTextures()
         case .defused:
             print("defused")
             synchronizeOtherPlayerBombCondition(isDefused: true)
@@ -657,13 +686,58 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func updateTerroristTextures(){
+    func updateCondition(){
         if thisPlayer.role != "terrorist"{
-            // other player is terrorist
-            player2Model.playerRightTextures = terroristRightNone
-            player2Model.playerLeftTextures = terroristLeftNone
+            //other player is terrorist
+            if condition != "terrorist-near-bomb" {
+                condition = "terrorist-planted-bomb"
+            }else{
+                condition = "terrorist-near-bomb"
+            }
+        } else {
+            if condition != "fbi-near-bomb"{
+                condition = "fbi-near-bomb"
+            } else {
+                condition = "fbi-far-from-bomb"
+            }
         }
     }
+    
+    func updateOtherPlayerTextures(){
+        if thisPlayer.role != "terrorist"{
+            // other player is terrorist
+            if condition == "terrorist-planted-bomb"{
+                player2Model.playerRightTextures = terroristRightNone
+                player2Model.playerLeftTextures = terroristLeftNone
+            } else if condition == "terrorist-near-bomb"{
+                player2Model.playerRightTextures = terroristRightPentungan
+                player2Model.playerLeftTextures = terroristLeftPentungan
+            }
+        } else {
+            // other player is fbi
+            if condition == "fbi-near-bomb"{
+                player1Model.playerRightTextures = fbiRightTang
+                player1Model.playerLeftTextures = fbiLeftTang
+            } else {
+                player1Model.playerRightTextures = fbiRightTextures
+                player1Model.playerLeftTextures = fbiLeftTextures
+            }
+        }
+    }
+    
+//    func updateTerroristTextures(){
+//        if thisPlayer.role != "terrorist"{
+//            // other player is terrorist
+//            player2Model.playerRightTextures = terroristRightNone
+//            player2Model.playerLeftTextures = terroristLeftNone
+//        }
+//    }
+//    
+//    func updateFBITextures(){
+//        if thisPlayer.role != "fbi"{
+//            
+//        }
+//    }
 }
 
 extension GameScene: SKPhysicsContactDelegate{
