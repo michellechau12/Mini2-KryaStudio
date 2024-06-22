@@ -26,7 +26,7 @@ class GameScene: SKScene, ObservableObject {
     
     private var timerLabel: SKLabelNode?
     var timerIsRunning = false
-
+    
     var timer: Timer?
     var timeLeft = 30
     
@@ -38,39 +38,22 @@ class GameScene: SKScene, ObservableObject {
     
     private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
     private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
-    private var bombNode = SKSpriteNode(imageNamed: "bomb-on")
     
-    private var fbiTextures: [SKTexture] = [
-        SKTexture(imageNamed: "fbi-borgol"),
-        SKTexture(imageNamed: "fbi-tang")
-    ]
+    private var fbiRightTextures: [SKTexture] = []
+    private var fbiLeftTextures: [SKTexture] = []
     
-    private var fbiRightTextures: [SKTexture] = [
-        SKTexture(imageNamed: "fbi-borgol-right-1"),
-        SKTexture(imageNamed: "fbi-borgol-right-2"),
-        SKTexture(imageNamed: "fbi-borgol-right-3"),
-        SKTexture(imageNamed: "fbi-borgol-right-4"),
-        SKTexture(imageNamed: "fbi-borgol-right-5")
-    ]
+    private var terroristRightTextures: [SKTexture] = []
+    private var terroristLeftTextures: [SKTexture] = []
     
-    private var fbiLeftTextures: [SKTexture] = [
-        SKTexture(imageNamed: "fbi-borgol-left-1"),
-        SKTexture(imageNamed: "fbi-borgol-left-2"),
-        SKTexture(imageNamed: "fbi-borgol-left-3"),
-        SKTexture(imageNamed: "fbi-borgol-left-4"),
-        SKTexture(imageNamed: "fbi-borgol-left-5")
-    ]
+    // custom textures
+    private var fbiRightTang: [SKTexture] = []
+    private var fbiLeftTang: [SKTexture] = []
     
+    private var terroristRightNone: [SKTexture] = []
+    private var terroristLeftNone: [SKTexture] = []
     
-    private var terroristTextures: [SKTexture] = [
-        SKTexture(imageNamed: "terrorist-bomb"),
-        SKTexture(imageNamed: "terrorist-none"),
-        SKTexture(imageNamed: "terrorist-pentungan")
-    ]
-    private var bombTextures: [SKTexture] = [
-        SKTexture(imageNamed: "bomb-on"),
-        SKTexture(imageNamed: "bomb-off")
-    ]
+    private var terroristRightPentungan: [SKTexture] = []
+    private var terroristLeftPentungan: [SKTexture] = []
     
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
@@ -84,21 +67,19 @@ class GameScene: SKScene, ObservableObject {
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
     
+    private var isPlantButtonTapped = false
+    private var isDefuseButtonTapped = false
+    
+    private var condition = "initial-condition"
+    
     override func didMove(to view: SKView) {
-//        super.didMove(to: view)
-        // Load the .sks file
-//        if let scene = SKScene(fileNamed: "MazeScene") {
-//            // Set the scale mode to scale to fit the window
-//            scene.scaleMode = .aspectFill
-//            
-//            // Add the loaded scene to the current scene
-//            self.addChild(scene)
-//        }
         
+        loadFBITextures()
+        loadTerroristsTextures()
         // Initialize player models
         if let player1Id = player1Id, let player2Id = player2Id {
-            player1Model = PlayerModel(id: player1Id, playerTextures: fbiTextures, gameScene: self)
-            player2Model = PlayerModel(id: player2Id, playerTextures: terroristTextures, gameScene: self)
+            player1Model = PlayerModel(id: player1Id, playerRightTextures: fbiRightTextures, playerLeftTextures: fbiLeftTextures, gameScene: self)
+            player2Model = PlayerModel(id: player2Id, playerRightTextures: terroristRightTextures, playerLeftTextures: terroristLeftTextures, gameScene: self)
         } else {
             print("DEBUG: Player IDs are not set correctly.")
         }
@@ -107,7 +88,7 @@ class GameScene: SKScene, ObservableObject {
         setupBombSites()
         
         setThisPlayer()
-//        createMaze()
+        //        createMaze()
         
         createCamera()
         createJoystick()
@@ -119,11 +100,11 @@ class GameScene: SKScene, ObservableObject {
             setupDefuseButton()
         }
         
-//        print("DEBUG Player1id, player2id, playerpeerid")
-//        print(player1Id ?? "none")
-//        print(player2Id ?? "none")
-//        print(playerPeerId ?? "none")
-//        print("==============")
+        //        print("DEBUG Player1id, player2id, playerpeerid")
+        //        print(player1Id ?? "none")
+        //        print(player2Id ?? "none")
+        //        print(playerPeerId ?? "none")
+        //        print("==============")
         
         //setupMask()
         
@@ -131,6 +112,97 @@ class GameScene: SKScene, ObservableObject {
         
         addChild(player1Model.playerNode)
         addChild(player2Model.playerNode)
+    }
+    
+    func loadFBITextures(){
+        //general textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-borgol-right-\(i)")
+            fbiRightTextures.append(texture)
+        }
+    
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-borgol-left-\(i)")
+            fbiLeftTextures.append(texture)
+        }
+        
+        //Tang textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-tang-right-\(i)")
+            fbiRightTang.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-tang-left-\(i)")
+            fbiLeftTang.append(texture)
+        }
+    }
+    
+    func loadTerroristsTextures(){
+        //general textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-bom-rightt-\(i)")
+            terroristRightTextures.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-bom-left-\(i)")
+            terroristLeftTextures.append(texture)
+        }
+        
+        //none textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-none-right-\(i)")
+            terroristRightNone.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-none-left-\(i)")
+            terroristLeftNone.append(texture)
+        }
+        
+        //pentungan textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-pentungan-right-\(i)")
+            terroristRightPentungan.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-pentungan-left-\(i)")
+            terroristLeftPentungan.append(texture)
+        }
+    }
+    
+    func getFBITextures(type: String) -> [SKTexture]{
+        if type == "tang-right"{
+            return fbiRightTang
+        } else if type == "tang-left"{
+            return fbiLeftTang
+        }
+        return fbiRightTextures
+    }
+    
+    func getTerroristTextures(type: String) -> [SKTexture]{
+        if type == "none-right"{
+            return terroristRightNone
+        } else if type == "none-left"{
+            return terroristLeftNone
+        } else if type == "pentungan-right"{
+            return terroristRightPentungan
+        } else if type == "pentungan-left"{
+            return terroristLeftPentungan
+        }
+        return terroristRightTextures
     }
     
     func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
@@ -155,14 +227,14 @@ class GameScene: SKScene, ObservableObject {
     
     func setUpTimerLabel(){
         let timerLabel = SKLabelNode(fontNamed: "Arial")
-           timerLabel.fontSize = 40
-            timerLabel.fontColor = .white
-            timerLabel.position = CGPoint(x: -6, y: 320)
-           timerLabel.zPosition = 100
-//           addChild(timerLabel)
+        timerLabel.fontSize = 40
+        timerLabel.fontColor = .white
+        timerLabel.position = CGPoint(x: -6, y: 320)
+        timerLabel.zPosition = 100
+        //           addChild(timerLabel)
         
-           self.timerLabel = timerLabel
-            self.timerLabel?.text = "Timer:"
+        self.timerLabel = timerLabel
+        self.timerLabel?.text = "Timer:"
         self.timerLabel?.isHidden = false
         cameraNode?.addChild(timerLabel)
     }
@@ -170,7 +242,7 @@ class GameScene: SKScene, ObservableObject {
     func setupMapPhysics() {
         guard let map = childNode(withName: "Maze") as? SKTileMapNode else {
             print("DEBUG: SKTileMapNode 'Maze' not found.")
-            createMaze()
+//            createMaze()
             return
         }
         
@@ -253,7 +325,7 @@ class GameScene: SKScene, ObservableObject {
             
             if bombSiteRect.contains(thisPlayer.playerNode.position){
                 // Debugging print:
-//                print("Player is in bomb site: \(thisPlayer.playerNode.position)")
+                //                print("Player is in bomb site: \(thisPlayer.playerNode.position)")
                 return true
             }
         }
@@ -261,40 +333,41 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func addBombNode() {
-            let bombNode = SKSpriteNode(imageNamed: "bomb-on")
-            bombNode.size = CGSize(width: 50, height: 50)
-            bombNode.position = player2Model.playerNode.position
-            bombNode.zPosition = 5
-            bombNode.name = "bomb"
-            addChild(bombNode)
-    
-               isBombPlanted = true
-               plantButton.isHidden = true
-    
-               startTimer()
-        }
+        let bombNode = SKSpriteNode(imageNamed: "bomb")
+        bombNode.size = CGSize(width: 50, height: 50)
+        bombNode.position = player2Model.playerNode.position
+        bombNode.zPosition = 5
+        bombNode.name = "bomb"
+        addChild(bombNode)
+        condition = "terrorist-planted-bomb"
+        
+        isBombPlanted = true
+        plantButton.isHidden = true
+        
+        startTimer()
+    }
     
     func startTimer() {
-            timeLeft = 30
-            timerLabel?.text = "Time: \(timeLeft)"
-            timerLabel?.isHidden = false
-
-            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
-                guard let self = self else { return }
-                self.timeLeft -= 1
-                self.timerLabel?.text = "Time: \(self.timeLeft)"
+        timeLeft = 30
+        timerLabel?.text = "Time: \(timeLeft)"
+        timerLabel?.isHidden = false
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            self.timeLeft -= 1
+            self.timerLabel?.text = "Time: \(self.timeLeft)"
+            
+            if self.timeLeft <= 0 {
+                timer.invalidate()
+                self.timerLabel?.isHidden = true
                 
-                if self.timeLeft <= 0 {
-                    timer.invalidate()
-                    self.timerLabel?.isHidden = true
-                    
-                    if let bombNode = self.childNode(withName: "bomb"){
-                        bombNode.removeFromParent()
-                    }
-                    //Logic untuk pindah scene misalnya (Kalah atau poin Terrorist bertambah nanti jika tidak didefuse)
+                if let bombNode = self.childNode(withName: "bomb"){
+                    bombNode.removeFromParent()
                 }
+                //Logic untuk pindah scene misalnya (Kalah atau poin Terrorist bertambah nanti jika tidak didefuse)
             }
         }
+    }
     
     func createCamera(){
         cameraNode = SKCameraNode()
@@ -328,58 +401,6 @@ class GameScene: SKScene, ObservableObject {
         else if playerPeerId == player2Id {
             self.thisPlayer = player2Model
         }
-    }
-    
-    func moveOtherPlayer(id: String, pos: CGPoint) {
-        if id == player1Id {
-            player1Model.synchronizeOtherPlayerPosition(position: pos)
-        }
-        else {
-            player2Model.synchronizeOtherPlayerPosition(position: pos)
-        }
-    }
-    
-    // unused
-    func createMaze() {
-        // Create an SKSpriteNode with the maze image
-        let mazeTexture = SKTexture(imageNamed: "mazePercobaan")
-        let maze = SKSpriteNode(texture: mazeTexture)
-        
-        // Set the position of the maze to the center of the screen
-        maze.position = CGPoint(x: frame.midX, y: frame.midY)
-        
-        // Adjust the size of the maze to fit the screen while maintaining the aspect ratio
-        let screenWidth = frame.size.width
-        let screenHeight = frame.size.height
-        let textureWidth = mazeTexture.size().width
-        let textureHeight = mazeTexture.size().height
-        
-        let scaleX = (screenWidth / textureWidth) + 60
-        let scaleY = screenHeight / textureHeight
-        let scale = min(scaleX, scaleY)
-        
-        maze.setScale(scale)
-        
-        let walls = [
-            CGRect(x: 30, y: -505, width: 480, height: 20),
-            CGRect(x: -505, y: -505, width: 480, height: 20),
-            //CGRect(x: -505, y: -505, width: 20, height: 70),
-            
-        ]
-        
-        var bodies = [SKPhysicsBody]()
-        for wall in walls {
-            let body = SKPhysicsBody(rectangleOf: wall.size, center: CGPoint(x: wall.midX, y: wall.midY))
-            bodies.append(body)
-        }
-        
-        let compoundBody = SKPhysicsBody(bodies: bodies)
-        maze.physicsBody = compoundBody
-        maze.physicsBody?.isDynamic = false
-        maze.physicsBody?.categoryBitMask = 2
-        maze.physicsBody?.collisionBitMask = 1
-        addChild(maze)
-        
     }
     
     func createJoystick() {
@@ -435,20 +456,20 @@ class GameScene: SKScene, ObservableObject {
         
         // planting the bomb from plant button -> only terrorists
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
-               bombPlantTimerStartTime = Date()
+            bombPlantTimerStartTime = Date()
             
             // kasih animasi
             
-               bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                   self?.addBombNode()
-                   self?.bombPlantTimer = nil
-                   self?.bombPlantTimerStartTime = nil
-                   
-                   //sending location of the bomb to other player
-                   let bombCondition = MPBombModel(bomb: .planted, position: self?.bombNode.position ?? CGPoint(x: 0, y: 0))
-                   self?.mpManager.send(bomb: bombCondition)
-               }
-           }
+            bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                self?.addBombNode()
+                self?.bombPlantTimer = nil
+                self?.bombPlantTimerStartTime = nil
+                
+                //sending location of the bomb to other player
+                let bombCondition = MPBombModel(bomb: .planted)
+                self?.mpManager.send(bomb: bombCondition)
+            }
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -477,7 +498,6 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let joystickKnob = joystickKnob, let joystick = joystick else { return }
         let moveBack = SKAction.move(to: joystick.position, duration: 0.1)
@@ -486,10 +506,10 @@ class GameScene: SKScene, ObservableObject {
         
         guard let bombPlantTimer = bombPlantTimer, bombPlantTimerStartTime != nil else { return }
         let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime!)
-            if elapsedTime < 2.0 {
-                bombPlantTimer.invalidate()
-                bombPlantTimerStartTime = nil
-            }
+        if elapsedTime < 2.0 {
+            bombPlantTimer.invalidate()
+            bombPlantTimerStartTime = nil
+        }
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -498,33 +518,9 @@ class GameScene: SKScene, ObservableObject {
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * thisPlayer.speedMultiplier, dy: displacement.dy * thisPlayer.speedMultiplier)
         
-        self.thisPlayer.movePlayer(velocity: velocity, mpManager: mpManager)
+        self.thisPlayer.movePlayer(velocity: velocity, mpManager: mpManager, condition: condition)
         
-        if velocity.dx > 0 {
-                        // Move Right
-            if thisPlayer.playerNode.action(forKey: "moveRight") == nil {
-                thisPlayer.playerNode.removeAction(forKey: "moveLeft")
-                            let walkToRight = SKAction.repeatForever(SKAction.animate(with: fbiRightTextures, timePerFrame: 0.1))
-                thisPlayer.playerNode.run(walkToRight, withKey: "moveRight")
-                          //  orientation = "right"
-            
-
-                        }
-                    } else if velocity.dx < 0 {
-                        // Move Left
-                        if thisPlayer.playerNode.action(forKey: "moveLeft") == nil {
-                            thisPlayer.playerNode.removeAction(forKey: "moveRight")
-                            let walkToLeft = SKAction.repeatForever(SKAction.animate(with: fbiLeftTextures, timePerFrame: 0.1))
-                            thisPlayer.playerNode.run(walkToLeft, withKey: "moveLeft")
-                    
-
-                        }
-                    } else {
-                        thisPlayer.playerNode.removeAction(forKey: "moveRight")
-                        thisPlayer.playerNode.removeAction(forKey: "moveLeft")
-                    }
-        
-//        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
+        //        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
         
         //Camera mengikuti character
         cameraNode?.position = thisPlayer.playerNode.position
@@ -536,7 +532,7 @@ class GameScene: SKScene, ObservableObject {
         if isPlayerNearBomb() {
             
             // Debugging print:
-            print("Defuse button should be visible")
+//            print("Defuse button should be visible")
             let offset: CGFloat = 20.0
             defuseButton.position = CGPoint(
                 x: thisPlayer.playerNode.position.x,
@@ -563,11 +559,11 @@ class GameScene: SKScene, ObservableObject {
                     plantButton.position = CGPoint(
                         x: thisPlayer.playerNode.position.x,
                         y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
-            
+                    
                     plantButton.isHidden = false
                     
                     // Debugging print:
-                    print("Plant button is visible")
+//                    print("Plant button is visible")
                 } else {
                     plantButton.isHidden = true
                 }
@@ -577,32 +573,31 @@ class GameScene: SKScene, ObservableObject {
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
         switch player.action {
-            case .start:
-                print("Start")
-            case .move:
-//                print("Move")
-                self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition)
-            case .collide:
-                print("Start")
-            case .sabotagedView:
-                print("Start")
-            case .plantBomb:
-                print("Start")
-                // change terrorist texture from terrorist-bomb to terrorist-none
-            case .nearToBomb:
-                print("Start")
-                self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition)
-                // change terrorist texture from terrorist-none to terrorist-pentungan
-                // change fbi texture from fbi-borgol to fbi-tang
-                // change terrorist isVulnerable -> false
-                // change fbi isVulnerable -> true
-            case .death:
-                print("Start")
-            case .reset:
-                print("Start")
-            case .end:
-                mpManager.session.disconnect()
-            }
+        case .start:
+            print("Start")
+        case .move:
+            // print("Move")
+            self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition, orientation: player.playerOrientation, textures: player.playerTextures)
+        case .collide:
+            print("Start")
+        case .sabotagedView:
+            print("Start")
+        case .plantBomb:
+            print("Start")
+            // change terrorist texture from terrorist-bomb to terrorist-none
+        case .nearToBomb:
+            print("Start")
+            // change terrorist texture from terrorist-none to terrorist-pentungan
+            // change fbi texture from fbi-borgol to fbi-tang
+            // change terrorist isVulnerable -> false
+            // change fbi isVulnerable -> true
+        case .death:
+            print("Start")
+        case .reset:
+            print("Start")
+        case .end:
+            mpManager.session.disconnect()
+        }
     }
     
     func handleBomb(bomb: MPBombModel, mpManager: MultipeerConnectionManager) {
@@ -611,20 +606,47 @@ class GameScene: SKScene, ObservableObject {
             print("unplanted")
         case .planted:
             print("planted")
-            synchronizeOtherBombPosition(position: bomb.position)
-            updatePlayerVulnerability()
+            synchronizeOtherBombPosition()
+            updateTerroristTextures()
+//            updatePlayerVulnerability()
         case .defused:
             print("defused")
         }
     }
     
-    func synchronizeOtherBombPosition(position: CGPoint){
+    func moveOtherPlayer(id: String, pos: CGPoint, orientation: String, textures: String) {
+        if id == player1Id {
+            player1Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, textures: textures)
+        }
+        else {
+            player2Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, textures: textures)
+        }
+    }
+    
+    func synchronizeOtherBombPosition(){
         self.addBombNode()
     }
     
-    func updatePlayerVulnerability(){
-        
+    func updateTerroristTextures(){
+        if thisPlayer.role != "terrorist"{
+            // other player is terrorist
+            player2Model.playerRightTextures = terroristRightNone
+            player2Model.playerLeftTextures = terroristLeftNone
+//            let playerCondition = MPPlayerModel(
+//                action: .move,
+//                playerId: player2Id,
+//                playerPosition: player2Model.playerNode.position,
+//                playerOrientation: player2Model.orientation,
+//                playerTextures: "none",
+//                isVulnerable: false
+//            )
+//            mpManager.send(player: playerCondition)
+        }
     }
+    
+//    func updatePlayerVulnerability(){
+//        
+//    }
 }
 
 extension GameScene: SKPhysicsContactDelegate{
@@ -637,18 +659,18 @@ extension GameScene: SKPhysicsContactDelegate{
         print("DEBUG: bodyA = \(bodyA.categoryBitMask), bodyB = \(bodyB.categoryBitMask)")
         print("DEBUG: bodyA = \(BitMaskCategory.player1), bodyB = \(BitMaskCategory.player2)")
         switch collision {
-            case BitMaskCategory.player1 | BitMaskCategory.player2:
-                // FBI and terrorist collided
-                print("FBI and terrorist collided")
-                handlePlayerCollision()
-            case BitMaskCategory.player1 | BitMaskCategory.maze:
-                // FBI and maze collided
-                print("FBI and maze collided")
-            case BitMaskCategory.player2 | BitMaskCategory.maze:
-                // Terrorist and maze collided
-                print("Terrorist and maze collided")
-            default:
-                break
+        case BitMaskCategory.player1 | BitMaskCategory.player2:
+            // FBI and terrorist collided
+            print("FBI and terrorist collided")
+            handlePlayerCollision()
+        case BitMaskCategory.player1 | BitMaskCategory.maze:
+            // FBI and maze collided
+            print("FBI and maze collided")
+        case BitMaskCategory.player2 | BitMaskCategory.maze:
+            // Terrorist and maze collided
+            print("Terrorist and maze collided")
+        default:
+            break
         }
     }
     

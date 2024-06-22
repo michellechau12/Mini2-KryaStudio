@@ -25,16 +25,9 @@ struct MPPlayerModel: Codable {
     let action: Action
     let playerId: String
     let playerPosition: CGPoint
-    let playerTextureIndex: Int //FBI (pegang tang, pegang borgol); Terrorist (bomb, nothing, pentungan)
+    let playerOrientation: String
+    let playerTextures: String //FBI (pegang tang, pegang borgol); Terrorist (bomb, nothing, pentungan)
     let isVulnerable: Bool
-    
-    init(action: Action, playerId: String, playerPosition: CGPoint, playerTextureIndex: Int, isVulnerable: Bool) {
-        self.action = action
-        self.playerId = playerId
-        self.playerPosition = playerPosition
-        self.playerTextureIndex = playerTextureIndex
-        self.isVulnerable = isVulnerable
-    }
     
     func data() -> Data? {
         try? JSONEncoder().encode(self)
@@ -66,7 +59,6 @@ struct MPBombModel: Codable {
     }
     
     let bomb: BombEvent
-    let position: CGPoint
 //    let time: Timer //(?) -> cannot conform to codable -> berarti timernya countdown di masing" service ketika bomb change state dari unplanted jadi planted
     
     func data() -> Data? {
