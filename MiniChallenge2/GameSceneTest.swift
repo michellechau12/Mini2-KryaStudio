@@ -96,6 +96,9 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
     
+    private var isPlantButtonTapped = false
+    private var isDefuseButtonTapped = false
+    
     override func didMove(to view: SKView) {
         super.didMove(to: view)
         
@@ -114,7 +117,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             camera.run(zoomInAction)
         }
         
-        //        createMaze()
         setupMapPhysics()
         setupBombSites()
         createCharacter()
@@ -122,19 +124,12 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         createJoystick()
         setupPlantButton()
         setupDefuseButton()
-       // sabotagedView()
-        print(role)
-        
-        
+        // sabotagedView()
+        setupTimerLabel()
         physicsWorld.contactDelegate = self
-        
     }
     
     func setupMapPhysics() {
-        //contact delegate:
-        //fbi node physics body:
-        //terrorist node physics body:
-    
         //map physics body:
         let map = childNode(withName: "Maze") as! SKTileMapNode
         
@@ -163,12 +158,9 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
                         tileNode.physicsBody?.restitution = 0
                         tileNode.physicsBody?.isDynamic = false
                         
-                        //friction = semakin strict objectnya, sehingga lebih baik dibuat 0 saja
-                        //tileNode.physicsBody?.friction = 20.0
-                        
                         tileNode.physicsBody?.mass = 30.0
-                        tileNode.physicsBody?.contactTestBitMask = 2
                         tileNode.physicsBody?.categoryBitMask = 1
+                        tileNode.physicsBody?.contactTestBitMask = 2
                         tileNode.physicsBody?.collisionBitMask = 1
                         
                         tileMap.addChild(tileNode)
@@ -189,9 +181,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
                         position: bombSitePosition,
                         size: bombSiteSize)
                     bombSites.append(bombSite)
-                    
-                    //Debugging print:
-                    //print("bombsite position is: \(bombSitePosition) and size is: \(bombSiteSize)")
                 }
             }
         }
@@ -227,78 +216,20 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         let characterHeight = characterTexture.size().height * 0.1
         let offsetX = (frame.width - characterWidth) / 2
         let offsetY = characterHeight / 2
-        
-        
-        //        if (role == "terrorist") {
-        //            characterPosition = terroristSpawnPoint
-        //        } else {
-        //            characterPosition = fbiSpawnPoint
-        //        }
-        
-        
         print("Terrorist Character Position: x = \(frame.minX + offsetX + 5), y = \(frame.minY + offsetY + 1360)")
         
         character.position = characterPosition
         character.setScale(0.3)
         character.zPosition = 3
         
-        //Setting manual supaya SKPhysicsBody cocok ke Character
-        // character.anchorPoint = CGPoint(x: 0.495, y: 0.6)
-        
-        //        if let character = character {
-        // Create a physics body that matches the visual size of the sprite
         character.physicsBody = SKPhysicsBody(texture: characterTexture, size: character.size)
-        //        character.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 28, height: 30), center: CGPoint(x: 0, y: -5))
         character.physicsBody?.affectedByGravity = false
         character.physicsBody?.isDynamic = true
         character.physicsBody?.allowsRotation = false
-        character.physicsBody?.contactTestBitMask = 1
         character.physicsBody?.categoryBitMask = 2
+        character.physicsBody?.contactTestBitMask = 1
         character.physicsBody?.collisionBitMask = 3
-        //        character.physicsBody?.node?.position = CGPoint(x: 0, y: -20)
         addChild(character)
-        //        }
-    }
-    
-    func createMaze() {
-        // Create an SKSpriteNode with the maze image
-        let mazeTexture = SKTexture(imageNamed: "mazePercobaan")
-        let maze = SKSpriteNode(texture: mazeTexture)
-        
-        // Set the position of the maze to the center of the screen
-        maze.position = CGPoint(x: frame.midX, y: frame.midY)
-        
-        // Adjust the size of the maze to fit the screen while maintaining the aspect ratio
-        let screenWidth = frame.size.width
-        let screenHeight = frame.size.height
-        let textureWidth = mazeTexture.size().width
-        let textureHeight = mazeTexture.size().height
-        
-        let scaleX = (screenWidth / textureWidth) + 60
-        let scaleY = screenHeight / textureHeight
-        let scale = min(scaleX, scaleY)
-        
-        maze.setScale(scale)
-        
-        let walls = [
-            CGRect(x: 30, y: -505, width: 480, height: 20),
-            CGRect(x: -505, y: -505, width: 480, height: 20),
-            //CGRect(x: -505, y: -505, width: 20, height: 70),
-            
-        ]
-        
-        var bodies = [SKPhysicsBody]()
-        for wall in walls {
-            let body = SKPhysicsBody(rectangleOf: wall.size, center: CGPoint(x: wall.midX, y: wall.midY))
-            bodies.append(body)
-        }
-        
-        let compoundBody = SKPhysicsBody(bodies: bodies)
-        maze.physicsBody = compoundBody
-        maze.physicsBody?.isDynamic = false
-        maze.physicsBody?.categoryBitMask = 2
-        maze.physicsBody?.collisionBitMask = 1
-        addChild(maze)
     }
     
     func createJoystick() {
@@ -321,7 +252,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         cameraNode?.addChild(joystickBase)
         cameraNode?.addChild(joystickKnob)
-        
         self.joystick = joystickBase
         self.joystickKnob = joystickKnob
         
@@ -365,7 +295,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             
             if bombSiteRect.contains(character.position){
                 // Debugging print:
-              //  print("Player is in bomb site: \(character.position)")
+                //  print("Player is in bomb site: \(character.position)")
                 return true
             }
         }
@@ -381,18 +311,21 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         bombNode.name = "bombNode"
         addChild(bombNode)
         
-        let timerLabel = SKLabelNode(fontNamed: "Arial")
-        timerLabel.fontSize = 20
-        timerLabel.fontColor = .white
-        timerLabel.position = CGPoint(x: bombNode.position.x, y: bombNode.position.y + 30)
-        timerLabel.zPosition = 6
-        addChild(timerLabel)
-        self.timerLabel = timerLabel
-        
         isBombPlanted = true
         plantButton.isHidden = true
-        
         startTimer()
+    }
+    
+    func setupTimerLabel() {
+        let timerLabel = SKLabelNode(fontNamed: "Arial")
+        timerLabel.fontSize = 40
+        timerLabel.fontColor = .white
+        timerLabel.position = CGPoint(x: -6, y: 320)
+        timerLabel.zPosition = 100
+        
+        self.timerLabel = timerLabel
+        self.timerLabel?.text = "Timer:"
+        cameraNode?.addChild(timerLabel)
     }
     
     func startTimer() {
@@ -435,8 +368,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         return distanceToBomb <= defuseRadius
     }
     
- 
-    
     
     func didBegin(_ contact: SKPhysicsContact) {
         let collision = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
@@ -457,40 +388,19 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
             bombPlantTimerStartTime = Date()
-            
-            bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
-                print("selesai plant...")
-                self?.addBombNode()
-                self?.bombPlantTimer = nil
-                self?.bombPlantTimerStartTime = nil
-            }
-        }
+                print("lagi plant...")
+            isPlantButtonTapped = true
+       }
+        
         
         if defuseButton.contains(location) && !defuseButton.isHidden {
-            print("defusing...")
-//            startDefuseTimer()
-            defuseTimerStartTime = Date()
-            defuseTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-//
-                print("selesai defuse...")
-                self?.defuseButton.isHidden = true
-                self?.defuseTimer = nil
-                self?.defuseTimerStartTime = nil
-                self?.timerLabel?.isHidden = true
-                if let bombNode = self?.childNode(withName: "bombNode") {
-                    bombNode.removeFromParent()
-                }
-                
-            }
-
-            }
-        
+                           defuseTimerStartTime = Date()
+                               isDefuseButtonTapped = true
+        } 
     }
     
     
-    
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         
@@ -500,71 +410,108 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             //Convert Lokasi touch dari Scene ke Cam
             let convertedLocation = camera.convert(location, from: self)
             
-            
-            //Setup seberapa jauh Knob bisa ditarik
-            let maxDistance: CGFloat = 50.0
-            
-            let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
-            let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
-            
-            if distance <= maxDistance {
-                joystickKnob.position = convertedLocation
-            } else {
-                let angle = atan2(displacement.dy, displacement.dx)
-                joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
-                                                y: joystick.position.y + sin(angle) * maxDistance)
+            if joystick.contains(convertedLocation) {
+                //Setup seberapa jauh Knob bisa ditarik
+                let maxDistance: CGFloat = 50.0
+                
+                let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
+                let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
+                
+                if distance <= maxDistance {
+                    joystickKnob.position = convertedLocation
+                } else {
+                    let angle = atan2(displacement.dy, displacement.dx)
+                    joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
+                                                    y: joystick.position.y + sin(angle) * maxDistance)
+                }
             }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         guard let joystickKnob = joystickKnob, let joystick = joystick else { return }
         let moveBack = SKAction.move(to: joystick.position, duration: 0.1)
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
         
-        guard let bombPlantTimer = bombPlantTimer, bombPlantTimerStartTime != nil else { return }
-        let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime!)
-        if elapsedTime < 2.0 {
-            bombPlantTimer.invalidate()
-            bombPlantTimerStartTime = nil
+        guard isPlantButtonTapped == false else {return}
+            if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+                if elapsedTime >= 2.0 {
+                    self.addBombNode()
+                    self.timerLabel?.isHidden = false
+                    self.bombPlantTimerStartTime = nil
+                } else {
+                    self.bombPlantTimerStartTime = nil
+                }
+            }
+        
+        guard isDefuseButtonTapped == false else {return}
+        if let defuseTimerStartTime = defuseTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+            if elapsedTime >= 2.0 {
+                self.defuseButton.isHidden = true
+                if let bombNode = self.childNode(withName: "bombNode") {
+                    bombNode.removeFromParent()
+                }
+                self.timerLabel?.isHidden = true
+                self.defuseTimerStartTime = nil
+            } else {
+                self.defuseTimerStartTime = nil
+            }
         }
-        
-        //defusing
-        guard let defuseBombTimer = defuseTimer, defuseTimerStartTime != nil else { return }
-        let defuseElapsedTime = Date().timeIntervalSince(defuseTimerStartTime!)
-        if defuseElapsedTime < 2.0 {
-            defuseBombTimer.invalidate()
-            defuseTimerStartTime = nil
-        }
-        
-        
     }
     
     override func update(_ currentTime: TimeInterval) {
+        //supaya tetap false kalau ga ditekan plant button and defuse buttonnya:
+        isPlantButtonTapped = false
+        isDefuseButtonTapped = false
+        
+//        addbomb if players already held plant button for a certain period of time
+        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+            if elapsedTime >= 2.0 {
+                self.addBombNode()
+                self.bombPlantTimerStartTime = nil
+            }
+        }
+        
+        if let defuseTimerStartTime = defuseTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+            if elapsedTime >= 2.0 {
+                self.defuseButton.isHidden = true
+                if let bombNode = self.childNode(withName: "bombNode") {
+                    bombNode.removeFromParent()
+                }
+                self.timerLabel?.isHidden = true
+            }
+        }
+        
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
-        let velocity = CGVector(dx: displacement.dx * speedMultiplierTerrorist, dy: displacement.dy * speedMultiplierTerrorist)
         
-        character.physicsBody?.velocity = velocity
-        
-        //   character.position = CGPoint(x: character.position.x + velocity.dx , y: character.position.y + velocity.dy)
-        
-        // Determine movement direction and play appropriate animation
-        if velocity.dx > 0 {
-            character.removeAction(forKey: "moveLeft")
-            character.run(SKAction.repeatForever(SKAction.animate(with: fbiRightTextures, timePerFrame: 0.1)), withKey: "moveRight")
-        } else if velocity.dx < 0 {
-            character.removeAction(forKey: "moveRight")
-            character.run(SKAction.repeatForever(SKAction.animate(with: fbiLeftTextures, timePerFrame: 0.1)), withKey: "moveLeft")
+        if displacement.dx != 0 || displacement.dy != 0 {
+            let velocity = CGVector(dx: displacement.dx * speedMultiplierTerrorist, dy: displacement.dy * speedMultiplierTerrorist)
+            
+            character.physicsBody?.velocity = velocity
+            
+            // Determine movement direction and play appropriate animation
+            if velocity.dx > 0 {
+                character.removeAction(forKey: "moveLeft")
+                character.run(SKAction.repeatForever(SKAction.animate(with: fbiRightTextures, timePerFrame: 0.1)), withKey: "moveRight")
+            } else if velocity.dx < 0 {
+                character.removeAction(forKey: "moveRight")
+                character.run(SKAction.repeatForever(SKAction.animate(with: fbiLeftTextures, timePerFrame: 0.1)), withKey: "moveLeft")
+            } else {
+                character.removeAction(forKey: "moveRight")
+                character.removeAction(forKey: "moveLeft")
+            }
         } else {
+            character.physicsBody?.velocity = .zero
             character.removeAction(forKey: "moveRight")
             character.removeAction(forKey: "moveLeft")
         }
-        
-        
         
         //Camera mengikuti character
         cameraNode?.position = character.position
@@ -588,7 +535,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         //If FBI near bomb, defuse button will appear
         if isPlayerNearBomb() {
-//            Debugging print:
+            // Debugging print:
             print("Defuse button should be visible")
             let offset: CGFloat = 20.0
             defuseButton.position = CGPoint(
@@ -598,7 +545,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         } else {
             defuseButton.isHidden = true
         }
-    
+        
         
     }
     

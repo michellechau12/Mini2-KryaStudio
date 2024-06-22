@@ -14,7 +14,7 @@ struct MiniChallenge2App: App {
     @StateObject var gameScene = GameScene()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView()
                 .environmentObject(mpManager)
                 .environmentObject(gameScene)
         }
