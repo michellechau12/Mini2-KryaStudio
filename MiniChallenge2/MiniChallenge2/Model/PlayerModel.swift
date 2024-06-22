@@ -162,7 +162,7 @@ class PlayerModel: ObservableObject {
         }
     }
     
-    func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String, textures: String) {
+    func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String) {
         playerNode.position = position
         
         animateWalking(orientation: orientation)

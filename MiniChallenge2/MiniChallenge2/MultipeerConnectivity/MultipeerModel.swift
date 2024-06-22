@@ -12,10 +12,7 @@ struct MPPlayerModel: Codable {
     enum Action: String, Codable {
         case start
         case move
-        case collide
         case sabotagedView
-        case plantBomb
-        case nearToBomb // ->delay 2 second if cancelled by FBI
         case death
         case reset
         case end
@@ -53,7 +50,6 @@ struct MPMapModel: Codable {
 
 struct MPBombModel: Codable {
     enum BombEvent: String, Codable {
-        case unplanted
         case planted
         case defused
     }

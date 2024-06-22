@@ -71,44 +71,35 @@ class GameScene: SKScene, ObservableObject {
     private var isDefuseButtonTapped = false
     
     private var condition = "initial-condition"
+    private var viewSabotaged = false
     
     override func didMove(to view: SKView) {
+        physicsWorld.contactDelegate = self
         
+        // Load Textures and Setting Players
         loadFBITextures()
         loadTerroristsTextures()
-        // Initialize player models
-        if let player1Id = player1Id, let player2Id = player2Id {
-            player1Model = PlayerModel(id: player1Id, playerRightTextures: fbiRightTextures, playerLeftTextures: fbiLeftTextures, gameScene: self)
-            player2Model = PlayerModel(id: player2Id, playerRightTextures: terroristRightTextures, playerLeftTextures: terroristLeftTextures, gameScene: self)
-        } else {
-            print("DEBUG: Player IDs are not set correctly.")
-        }
+        createPlayers()
+        setThisPlayer()
         
+        // Setting up the map
         setupMapPhysics()
         setupBombSites()
         
-        setThisPlayer()
-        //        createMaze()
-        
+        // Setting up Game Components that follows the users camera
         createCamera()
         createJoystick()
         setUpTimerLabel()
+        
+        if viewSabotaged {
+            setupSabotagedView()
+        }
         
         if thisPlayer.role == "terrorist"{
             setupPlantButton()
         }else{
             setupDefuseButton()
         }
-        
-        //        print("DEBUG Player1id, player2id, playerpeerid")
-        //        print(player1Id ?? "none")
-        //        print(player2Id ?? "none")
-        //        print(playerPeerId ?? "none")
-        //        print("==============")
-        
-        //setupMask()
-        
-        physicsWorld.contactDelegate = self
         
         addChild(player1Model.playerNode)
         addChild(player2Model.playerNode)
@@ -205,38 +196,41 @@ class GameScene: SKScene, ObservableObject {
         return terroristRightTextures
     }
     
-    func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
-        let dx = charPosition.x - bombPosition.x
-        let dy = charPosition.y - bombPosition.y
-        return sqrt(dx * dx + dy * dy)
+    func createPlayers(){
+        // Initialize player models
+        if let player1Id = player1Id, let player2Id = player2Id {
+            player1Model = PlayerModel(
+                id: player1Id,
+                playerRightTextures: fbiRightTextures,
+                playerLeftTextures: fbiLeftTextures,
+                gameScene: self
+            )
+            player2Model = PlayerModel(
+                id: player2Id, 
+                playerRightTextures: terroristRightTextures,
+                playerLeftTextures: terroristLeftTextures,
+                gameScene: self
+            )
+        } else {
+            print("DEBUG: Player IDs are not set correctly.")
+        }
     }
     
-    func setupDefuseButton() {
-        defuseButton.size = CGSize(width: 60, height: 60)
-        defuseButton.zPosition = 2
-        addChild(defuseButton)
-        defuseButton.isHidden = true
-    }
-    
-    func isPlayerNearBomb() -> Bool {
-        guard let bombNode = childNode(withName: "bomb") else { return false }
-        let distanceToBomb = calculateDistance(from: thisPlayer.playerNode.position, to: bombNode.position)
+    func setThisPlayer() {
+        // temp: player1 is fbi, player 2 is terrorist
         
-        return distanceToBomb <= defuseRadius
-    }
-    
-    func setUpTimerLabel(){
-        let timerLabel = SKLabelNode(fontNamed: "Arial")
-        timerLabel.fontSize = 40
-        timerLabel.fontColor = .white
-        timerLabel.position = CGPoint(x: -6, y: 320)
-        timerLabel.zPosition = 100
-        //           addChild(timerLabel)
-        
-        self.timerLabel = timerLabel
-        self.timerLabel?.text = "Timer:"
-        self.timerLabel?.isHidden = false
-        cameraNode?.addChild(timerLabel)
+        guard let playerPeerId = playerPeerId,
+              let player1Id = player1Id,
+              let player2Id = player2Id else {
+            print("DEBUG: Player IDs are not set correctly.")
+            return
+        }
+        if playerPeerId == player1Id {
+            self.thisPlayer = player1Model
+        }
+        else if playerPeerId == player2Id {
+            self.thisPlayer = player2Model
+        }
     }
     
     func setupMapPhysics() {
@@ -286,7 +280,6 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    // Setup bombsite
     func setupBombSites() {
         for child in self.children {
             if child.name == "BombSite" { //Di setup di MazeScene
@@ -305,7 +298,77 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    //Setup plant button
+    func createCamera(){
+        cameraNode = SKCameraNode()
+        self.camera = cameraNode
+        if let camera = cameraNode {
+            // Set the initial position of the camera to be centered on the character
+            camera.position = thisPlayer.playerNode.position
+            addChild(camera)
+            
+            //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
+            camera.setScale(1.5)
+            
+            //Supaya bisa abrupt view dari mapnya (Animation)
+            let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
+            camera.run(zoomInAction)
+        }
+    }
+    
+    func createJoystick() {
+        //Otak-atik posisi Joystick
+        let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
+        joystickBase.position = CGPoint(x: -480, y: -310)
+        joystickBase.setScale(1.5)
+        joystickBase.alpha = 0.5
+        joystickBase.zPosition = 80
+        joystickBase.name = "joystickBase2"
+        
+        let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
+        joystickKnob.position = CGPoint(x: -480, y: -310)
+        joystickKnob.setScale(1.5)
+        joystickKnob.zPosition = 88
+        joystickKnob.name = "joystickKnob2"
+        
+        cameraNode?.addChild(joystickBase)
+        cameraNode?.addChild(joystickKnob)
+        
+        self.joystick = joystickBase
+        self.joystickKnob = joystickKnob
+        
+    }
+    
+    func setUpTimerLabel(){
+        let timerLabel = SKLabelNode(fontNamed: "Arial")
+        timerLabel.fontSize = 40
+        timerLabel.fontColor = .white
+        timerLabel.position = CGPoint(x: -6, y: 320)
+        timerLabel.zPosition = 100
+        //           addChild(timerLabel)
+        
+        self.timerLabel = timerLabel
+        self.timerLabel?.text = "Timer:"
+        self.timerLabel?.isHidden = false
+        cameraNode?.addChild(timerLabel)
+    }
+    
+    func setupSabotagedView() {
+        maskNode = SKShapeNode(circleOfRadius: 150)
+        maskNode?.fillColor = .white
+        maskNode?.strokeColor = .clear
+        
+        cropNode = SKCropNode()
+        cropNode?.maskNode = maskNode
+        cropNode?.zPosition = 10
+        addChild(cropNode!)
+        
+        // Create a black background
+        let background = SKSpriteNode(color: .black, size: self.size)
+        background.position = CGPoint(x: frame.midX, y: frame.midY)
+        background.zPosition = 5
+        cropNode?.addChild(background)  // Added to cropNode instead of scene
+    }
+    
     func setupPlantButton() {
         plantButton.size = CGSize(width: 120, height: 70)
         plantButton.zPosition = 2
@@ -313,6 +376,27 @@ class GameScene: SKScene, ObservableObject {
         addChild(plantButton)
         plantButton.isHidden = true
     }
+    
+    func setupDefuseButton() {
+        defuseButton.size = CGSize(width: 60, height: 60)
+        defuseButton.zPosition = 2
+        addChild(defuseButton)
+        defuseButton.isHidden = true
+    }
+    
+    func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
+        let dx = charPosition.x - bombPosition.x
+        let dy = charPosition.y - bombPosition.y
+        return sqrt(dx * dx + dy * dy)
+    }
+    
+    func isPlayerNearBomb() -> Bool {
+        guard let bombNode = childNode(withName: "bomb") else { return false }
+        let distanceToBomb = calculateDistance(from: thisPlayer.playerNode.position, to: bombNode.position)
+        
+        return distanceToBomb <= defuseRadius
+    }
+    
     
     //Check if player enters the bombsite area
     func isPlayerInBombSite() -> Bool {
@@ -354,81 +438,6 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func createCamera(){
-        cameraNode = SKCameraNode()
-        self.camera = cameraNode
-        if let camera = cameraNode {
-            // Set the initial position of the camera to be centered on the character
-            camera.position = thisPlayer.playerNode.position
-            addChild(camera)
-            
-            //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
-            camera.setScale(1.5)
-            
-            //Supaya bisa abrupt view dari mapnya (Animation)
-            let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
-            camera.run(zoomInAction)
-        }
-    }
-    
-    func setThisPlayer() {
-        // temp: player1 is fbi, player 2 is terrorist
-        
-        guard let playerPeerId = playerPeerId,
-              let player1Id = player1Id,
-              let player2Id = player2Id else {
-            print("DEBUG: Player IDs are not set correctly.")
-            return
-        }
-        if playerPeerId == player1Id {
-            self.thisPlayer = player1Model
-        }
-        else if playerPeerId == player2Id {
-            self.thisPlayer = player2Model
-        }
-    }
-    
-    func createJoystick() {
-        
-        //Otak-atik posisi Joystick
-        let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
-        joystickBase.position = CGPoint(x: -480, y: -310)
-        joystickBase.setScale(1.5)
-        joystickBase.alpha = 0.5
-        joystickBase.zPosition = 80
-        joystickBase.name = "joystickBase2"
-        
-        let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
-        joystickKnob.position = CGPoint(x: -480, y: -310)
-        joystickKnob.setScale(1.5)
-        joystickKnob.zPosition = 88
-        joystickKnob.name = "joystickKnob2"
-        
-        cameraNode?.addChild(joystickBase)
-        cameraNode?.addChild(joystickKnob)
-        
-        self.joystick = joystickBase
-        self.joystickKnob = joystickKnob
-        
-    }
-    
-    func setupMask() {
-        maskNode = SKShapeNode(circleOfRadius: 150)
-        maskNode?.fillColor = .white
-        maskNode?.strokeColor = .clear
-        
-        cropNode = SKCropNode()
-        cropNode?.maskNode = maskNode
-        cropNode?.zPosition = 10
-        addChild(cropNode!)
-        
-        // Create a black background
-        let background = SKSpriteNode(color: .black, size: self.size)
-        background.position = CGPoint(x: frame.midX, y: frame.midY)
-        background.zPosition = 5
-        cropNode?.addChild(background)  // Added to cropNode instead of scene
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -439,33 +448,17 @@ class GameScene: SKScene, ObservableObject {
             joystickKnob?.position = convertedLocation
         }
         
+        // Detecting touch on plant button
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
             bombPlantTimerStartTime = Date()
             print("lagi plant...")
         }
         
-        
+        // Detecting touch on defuse button
         if defuseButton.contains(location) && !defuseButton.isHidden {
             defuseTimerStartTime = Date()
             print("lagi defuse...")
         }
-        
-        // planting the bomb from plant button -> only terrorists
-//        if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
-//            bombPlantTimerStartTime = Date()
-//            
-//            // kasih animasi
-//            
-//            bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-//                self?.addBombNode()
-//                self?.bombPlantTimer = nil
-//                self?.bombPlantTimerStartTime = nil
-//                
-//                //sending location of the bomb to other player
-//                let bombCondition = MPBombModel(bomb: .planted)
-//                self?.mpManager.send(bomb: bombCondition)
-//            }
-//        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -500,12 +493,6 @@ class GameScene: SKScene, ObservableObject {
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
         
-//        guard let bombPlantTimer = bombPlantTimer, bombPlantTimerStartTime != nil else { return }
-//        let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime!)
-//        if elapsedTime < 2.0 {
-//            bombPlantTimer.invalidate()
-//            bombPlantTimerStartTime = nil
-//        }
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
             if elapsedTime < 2.0 {
@@ -628,21 +615,9 @@ class GameScene: SKScene, ObservableObject {
         case .start:
             print("Start")
         case .move:
-            // print("Move")
-            self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition, orientation: player.playerOrientation, textures: player.playerTextures)
-        case .collide:
-            print("Start")
+            self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition, orientation: player.playerOrientation)
         case .sabotagedView:
-            print("Start")
-        case .plantBomb:
-            print("Start")
-            // change terrorist texture from terrorist-bomb to terrorist-none
-        case .nearToBomb:
-            print("Start")
-            // change terrorist texture from terrorist-none to terrorist-pentungan
-            // change fbi texture from fbi-borgol to fbi-tang
-            // change terrorist isVulnerable -> false
-            // change fbi isVulnerable -> true
+            print("sabotaged view")
         case .death:
             print("Start")
         case .reset:
@@ -654,29 +629,27 @@ class GameScene: SKScene, ObservableObject {
     
     func handleBomb(bomb: MPBombModel, mpManager: MultipeerConnectionManager) {
         switch bomb.bomb {
-        case .unplanted:
-            print("unplanted")
         case .planted:
             print("planted")
-            synchronizeOtherBombPosition(isDefused: false)
+            synchronizeOtherPlayerBombCondition(isDefused: false)
             updateTerroristTextures()
 //            updatePlayerVulnerability()
         case .defused:
             print("defused")
-            synchronizeOtherBombPosition(isDefused: true)
+            synchronizeOtherPlayerBombCondition(isDefused: true)
         }
     }
     
-    func moveOtherPlayer(id: String, pos: CGPoint, orientation: String, textures: String) {
+    func moveOtherPlayer(id: String, pos: CGPoint, orientation: String) {
         if id == player1Id {
-            player1Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, textures: textures)
+            player1Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation)
         }
         else {
-            player2Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, textures: textures)
+            player2Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation)
         }
     }
     
-    func synchronizeOtherBombPosition(isDefused: Bool){
+    func synchronizeOtherPlayerBombCondition(isDefused: Bool){
         if isDefused {
             self.defuseBombNode()
         }else{
@@ -689,21 +662,8 @@ class GameScene: SKScene, ObservableObject {
             // other player is terrorist
             player2Model.playerRightTextures = terroristRightNone
             player2Model.playerLeftTextures = terroristLeftNone
-//            let playerCondition = MPPlayerModel(
-//                action: .move,
-//                playerId: player2Id,
-//                playerPosition: player2Model.playerNode.position,
-//                playerOrientation: player2Model.orientation,
-//                playerTextures: "none",
-//                isVulnerable: false
-//            )
-//            mpManager.send(player: playerCondition)
         }
     }
-    
-//    func updatePlayerVulnerability(){
-//        
-//    }
 }
 
 extension GameScene: SKPhysicsContactDelegate{
