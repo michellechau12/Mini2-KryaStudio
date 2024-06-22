@@ -63,7 +63,7 @@ class GameScene: SKScene, ObservableObject {
     
     private var bombSites: [BombSiteModel] = []
     private let plantButton = SKSpriteNode(imageNamed: "plantButton")
-    private let defuseButton = SKSpriteNode(imageNamed: "defuseButton")
+    private let defuseButton = SKSpriteNode(imageNamed: "tang")
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
     
@@ -332,21 +332,6 @@ class GameScene: SKScene, ObservableObject {
         return false
     }
     
-    func addBombNode() {
-        let bombNode = SKSpriteNode(imageNamed: "bomb")
-        bombNode.size = CGSize(width: 50, height: 50)
-        bombNode.position = player2Model.playerNode.position
-        bombNode.zPosition = 5
-        bombNode.name = "bomb"
-        addChild(bombNode)
-        condition = "terrorist-planted-bomb"
-        
-        isBombPlanted = true
-        plantButton.isHidden = true
-        
-        startTimer()
-    }
-    
     func startTimer() {
         timeLeft = 30
         timerLabel?.text = "Time: \(timeLeft)"
@@ -454,22 +439,33 @@ class GameScene: SKScene, ObservableObject {
             joystickKnob?.position = convertedLocation
         }
         
-        // planting the bomb from plant button -> only terrorists
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
             bombPlantTimerStartTime = Date()
-            
-            // kasih animasi
-            
-            bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                self?.addBombNode()
-                self?.bombPlantTimer = nil
-                self?.bombPlantTimerStartTime = nil
-                
-                //sending location of the bomb to other player
-                let bombCondition = MPBombModel(bomb: .planted)
-                self?.mpManager.send(bomb: bombCondition)
-            }
+            print("lagi plant...")
         }
+        
+        
+        if defuseButton.contains(location) && !defuseButton.isHidden {
+            defuseTimerStartTime = Date()
+            print("lagi defuse...")
+        }
+        
+        // planting the bomb from plant button -> only terrorists
+//        if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
+//            bombPlantTimerStartTime = Date()
+//            
+//            // kasih animasi
+//            
+//            bombPlantTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+//                self?.addBombNode()
+//                self?.bombPlantTimer = nil
+//                self?.bombPlantTimerStartTime = nil
+//                
+//                //sending location of the bomb to other player
+//                let bombCondition = MPBombModel(bomb: .planted)
+//                self?.mpManager.send(bomb: bombCondition)
+//            }
+//        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -504,11 +500,26 @@ class GameScene: SKScene, ObservableObject {
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
         
-        guard let bombPlantTimer = bombPlantTimer, bombPlantTimerStartTime != nil else { return }
-        let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime!)
-        if elapsedTime < 2.0 {
-            bombPlantTimer.invalidate()
-            bombPlantTimerStartTime = nil
+//        guard let bombPlantTimer = bombPlantTimer, bombPlantTimerStartTime != nil else { return }
+//        let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime!)
+//        if elapsedTime < 2.0 {
+//            bombPlantTimer.invalidate()
+//            bombPlantTimerStartTime = nil
+//        }
+        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+            if elapsedTime < 2.0 {
+                print("cancel planting")
+                self.bombPlantTimerStartTime = nil
+            }
+        }
+        
+        if let defuseTimerStartTime = defuseTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+            if elapsedTime < 2.0 {
+                print("cancel defusing")
+                self.defuseTimerStartTime = nil
+            }
         }
     }
     
@@ -528,47 +539,88 @@ class GameScene: SKScene, ObservableObject {
         // Mask mengikuti character -> sabotage view
         maskNode?.position = thisPlayer.playerNode.position
         
-        //If FBI near bomb, defuse button will appear
-        if isPlayerNearBomb() {
-            
-            // Debugging print:
-//            print("Defuse button should be visible")
-            let offset: CGFloat = 20.0
-            defuseButton.position = CGPoint(
-                x: thisPlayer.playerNode.position.x,
-                y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset)
-            defuseButton.isHidden = false
-        } else {
-            defuseButton.isHidden = true
+        if thisPlayer.role == "fbi" {
+            //If FBI near bomb, defuse button will appear
+            if isPlayerNearBomb() {
+                let offset: CGFloat = 20.0
+                defuseButton.position = CGPoint(
+                    x: thisPlayer.playerNode.position.x,
+                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset)
+                defuseButton.isHidden = false
+            } else {
+                defuseButton.isHidden = true
+            }
+        }
+        //role terrorist
+        else {
+            if isPlayerInBombSite() && !isBombPlanted {
+                // func to enable plantButton
+                let offset: CGFloat = 20.0
+                plantButton.position = CGPoint(
+                    x: thisPlayer.playerNode.position.x,
+                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
+                
+                plantButton.isHidden = false
+                
+                // Debugging print:
+//                    print("Plant button is visible")
+            } else {
+                plantButton.isHidden = true
+            }
         }
         
-        if isPlayerInBombSite() {
-            // role fbi
-            if thisPlayer.role == "fbi" {
-                // kalo ada bomb
-                if isBombPlanted {
-                    // func defuse
-                }
-            }
-            // role terrorist
-            else {
-                // kalo ga ada bomb
-                if !isBombPlanted {//
-                    // func to enable plantButton
-                    let offset: CGFloat = 20.0
-                    plantButton.position = CGPoint(
-                        x: thisPlayer.playerNode.position.x,
-                        y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
-                    
-                    plantButton.isHidden = false
-                    
-                    // Debugging print:
-//                    print("Plant button is visible")
-                } else {
-                    plantButton.isHidden = true
-                }
+        // add bomb if players already held plant button for a certain period of time
+        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+            if elapsedTime >= 2.0 {
+                print("Success planting bomb")
+                self.addBombNode()
+                
+                //                sending location of the bomb to other player
+                let bombCondition = MPBombModel(bomb: .planted)
+                self.mpManager.send(bomb: bombCondition)
             }
         }
+        
+        // defuse bomb if players already held defuse button for a certain period of time
+        if let defuseTimerStartTime = defuseTimerStartTime {
+            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+            if elapsedTime >= 2.0 {
+                print("Success defusing bomb")
+                self.defuseBombNode()
+                
+                //           sending bomb condition to multipeer
+                let bombCondition = MPBombModel(bomb: .defused)
+                self.mpManager.send(bomb: bombCondition)
+            }
+        }
+        
+    }
+    
+    func addBombNode() {
+        let bombNode = SKSpriteNode(imageNamed: "bomb")
+        bombNode.size = CGSize(width: 50, height: 50)
+        bombNode.position = player2Model.playerNode.position
+        bombNode.zPosition = 5
+        bombNode.name = "bomb"
+        addChild(bombNode)
+        condition = "terrorist-planted-bomb"
+        
+        isBombPlanted = true
+        plantButton.isHidden = true
+        
+        startTimer()
+        
+        self.bombPlantTimerStartTime = nil
+    }
+    
+    func defuseBombNode(){
+        self.defuseButton.isHidden = true
+        self.timerLabel?.isHidden = true
+        if let bombNode = self.childNode(withName: "bomb") {
+            bombNode.removeFromParent()
+        }
+        self.defuseTimerStartTime = nil
     }
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
@@ -606,11 +658,12 @@ class GameScene: SKScene, ObservableObject {
             print("unplanted")
         case .planted:
             print("planted")
-            synchronizeOtherBombPosition()
+            synchronizeOtherBombPosition(isDefused: false)
             updateTerroristTextures()
 //            updatePlayerVulnerability()
         case .defused:
             print("defused")
+            synchronizeOtherBombPosition(isDefused: true)
         }
     }
     
@@ -623,8 +676,12 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func synchronizeOtherBombPosition(){
-        self.addBombNode()
+    func synchronizeOtherBombPosition(isDefused: Bool){
+        if isDefused {
+            self.defuseBombNode()
+        }else{
+            self.addBombNode()
+        }
     }
     
     func updateTerroristTextures(){
