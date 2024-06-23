@@ -456,9 +456,11 @@ class GameScene: SKScene, ObservableObject {
         // send event to other person
         let bombCondition = MPBombModel(bomb: .exploded, playerBombCondition: "exploded")
         mpManager.send(bomb: bombCondition)
+        self.winner = player2Model // terrorist win
+        
+        print("DEBUG : Yang menang adalah \(player2Model.role)")
         
         isGameFinished = true
-        self.winner = player2Model // terrorist win
         removeAllNodes()
     }
     

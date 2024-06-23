@@ -21,7 +21,7 @@ struct GameOverView: View {
                 if gameScene.winner.id == gameScene.player1Id{
                     Image("fbi-borgol-right-1")
                 } else {
-                    Image("terrorist-bomb-right-1")
+                    Image("terrorist-bom-rightt-1")
                 }
                 
                 Button{
