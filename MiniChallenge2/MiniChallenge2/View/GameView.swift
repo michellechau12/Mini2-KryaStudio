@@ -13,20 +13,32 @@ struct GameView: View {
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @Environment (\.dismiss) var dismiss
     
+    @State private var isGameFinished: Bool = false
+    
     var body: some View {
-        SpriteView(scene: gameScene)
-            .environmentObject(gameScene)
-            .environmentObject(mpManager)
-            .ignoresSafeArea()
-            .onAppear(){
-                gameScene.playerPeerId = mpManager.myConnectionId.displayName
-                print("DEBUG: this player id \(gameScene.playerPeerId ?? "none")")
-            }
-            .onReceive(mpManager.$paired, perform: { _ in
-                if mpManager.paired == false {
-                    dismiss()
+        NavigationStack{
+            SpriteView(scene: gameScene)
+                .environmentObject(gameScene)
+                .environmentObject(mpManager)
+                .ignoresSafeArea()
+                .onAppear(){
+                    gameScene.playerPeerId = mpManager.myConnectionId.displayName
+                    print("DEBUG: this player id \(gameScene.playerPeerId ?? "none")")
                 }
-            })
+                .onReceive(mpManager.$paired, perform: { _ in
+                    if mpManager.paired == false {
+                        dismiss()
+                    }
+                })
+                .onReceive(gameScene.$isGameFinished, perform: { _ in
+                    if gameScene.isGameFinished == true {
+                        isGameFinished = true
+                    }
+                })
+                .navigationDestination(isPresented: $isGameFinished) {
+                    GameOverView()
+                }
+        }
     }
 }
 

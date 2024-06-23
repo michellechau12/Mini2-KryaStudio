@@ -11,6 +11,7 @@
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFA22C2452EF00708CF4 /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */; };
 		ECA3DFA52C24533800708CF4 /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = ECA3DFA42C24533800708CF4 /* MazeScene.sks */; };
+		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
 		ECCC18A42C1833160059276B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A32C1833160059276B /* Assets.xcassets */; };
@@ -31,6 +32,7 @@
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
 		ECA3DFA32C2452F500708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
 		ECA3DFA42C24533800708CF4 /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeScene.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/View/MazeScene.sks"; sourceTree = "<group>"; };
+		ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
 		ECCC18A12C1833140059276B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -125,9 +127,10 @@
 		ECCC19362C1AA9B50059276B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				ECCC19332C1A3F890059276B /* GameView.swift */,
 				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
 				EF18C2A62C241CDB000B7808 /* YourNameView.swift */,
+				ECCC19332C1A3F890059276B /* GameView.swift */,
+				ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */,
 				ECA3DFA42C24533800708CF4 /* MazeScene.sks */,
 			);
 			path = View;
@@ -216,6 +219,7 @@
 				ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */,
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
 				EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */,
+				ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

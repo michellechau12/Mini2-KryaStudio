@@ -11,6 +11,8 @@ import GameplayKit
 class GameScene: SKScene, ObservableObject {
     
     var mpManager: MultipeerConnectionManager!
+    @Published var isGameFinished: Bool = false
+    @Published var winner: PlayerModel!
     
     @Published var player1Id: String!
     @Published var player2Id: String!
@@ -28,7 +30,7 @@ class GameScene: SKScene, ObservableObject {
     var timerIsRunning = false
     
     var timer: Timer?
-    var timeLeft = 30
+    var timeLeft = 0 // setted at the function
     
     private var bombPlantTimer: Timer?
     private var bombPlantTimerStartTime: Date?
@@ -65,12 +67,13 @@ class GameScene: SKScene, ObservableObject {
     private let plantButton = SKSpriteNode(imageNamed: "plantButton")
     private let defuseButton = SKSpriteNode(imageNamed: "tang")
     private var isBombPlanted = false
-    private var defuseRadius: CGFloat = 100.0
+    private var defuseRadius: CGFloat = 50.0
     
     private var isPlantButtonTapped = false
     private var isDefuseButtonTapped = false
     
-    private var condition = "initial-condition"
+    private var terroristCondition = "start"
+    private var fbiCondition = "start"
     private var viewSabotaged = false
     
     override func didMove(to view: SKView) {
@@ -367,7 +370,7 @@ class GameScene: SKScene, ObservableObject {
         
         cropNode = SKCropNode()
         cropNode?.maskNode = maskNode
-        cropNode?.zPosition = 10
+        cropNode?.zPosition = 50
         addChild(cropNode!)
         
         // Create a black background
@@ -379,7 +382,7 @@ class GameScene: SKScene, ObservableObject {
     
     func setupPlantButton() {
         plantButton.size = CGSize(width: 120, height: 70)
-        plantButton.zPosition = 2
+        plantButton.zPosition = 20
         plantButton.alpha = 0.7
         addChild(plantButton)
         plantButton.isHidden = true
@@ -387,7 +390,7 @@ class GameScene: SKScene, ObservableObject {
     
     func setupDefuseButton() {
         defuseButton.size = CGSize(width: 60, height: 60)
-        defuseButton.zPosition = 2
+        defuseButton.zPosition = 20
         addChild(defuseButton)
         defuseButton.isHidden = true
     }
@@ -425,7 +428,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func startTimer() {
-        timeLeft = 30
+        timeLeft = 60
         timerLabel?.text = "Time: \(timeLeft)"
         timerLabel?.isHidden = false
         
@@ -441,7 +444,30 @@ class GameScene: SKScene, ObservableObject {
                 if let bombNode = self.childNode(withName: "bomb"){
                     bombNode.removeFromParent()
                 }
+                
+//                gameOverByExplodingBomb()
                 //Logic untuk pindah scene misalnya (Kalah atau poin Terrorist bertambah nanti jika tidak didefuse)
+                
+            }
+        }
+    }
+    
+    func gameOverByExplodingBomb(){
+        // send event to other person
+        let bombCondition = MPBombModel(bomb: .exploded, playerBombCondition: "exploded")
+        mpManager.send(bomb: bombCondition)
+        
+        isGameFinished = true
+        self.winner = player2Model // terrorist win
+        removeAllNodes()
+    }
+    
+    func removeAllNodes(){
+        for node in self.children {
+            // check if the node is a shark
+            if let node = node as? SKSpriteNode, node.name == "Player1" || node.name == "Player2" || node.name == "joyStick" || node.name == "joyStickKnob" || node.name == "Maze" || node.name == "bomb" {
+                
+                node.removeFromParent()
             }
         }
     }
@@ -519,20 +545,16 @@ class GameScene: SKScene, ObservableObject {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        
+//        // return if the game is finish
+//        if isGameFinish {
+//            return
+//        }
+        
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * thisPlayer.speedMultiplier, dy: displacement.dy * thisPlayer.speedMultiplier)
-        
-        self.thisPlayer.movePlayer(velocity: velocity, mpManager: mpManager, condition: condition)
-        
-        //        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
-        
-        //Camera mengikuti character
-        cameraNode?.position = thisPlayer.playerNode.position
-        
-        // Mask mengikuti character -> sabotage view
-        maskNode?.position = thisPlayer.playerNode.position
         
         if thisPlayer.role == "fbi" {
             //If FBI near bomb, defuse button will appear
@@ -542,14 +564,18 @@ class GameScene: SKScene, ObservableObject {
                     x: thisPlayer.playerNode.position.x,
                     y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset)
                 defuseButton.isHidden = false
-                condition = "fbi-near-bomb"
+                fbiCondition = "fbi-near-bomb"
                 
                 //sending to multipeer
-                let bombCondition = MPBombModel(bomb: .approachedByPlayers)
+                let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-near-bomb")
                 mpManager.send(bomb: bombCondition)
             } else {
                 defuseButton.isHidden = true
-                condition = "fbi-far-from-bomb"
+                fbiCondition = "fbi-far-from-bomb"
+                
+                //sending to multipeer
+                let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-far-from-bomb")
+                mpManager.send(bomb: bombCondition)
             }
         }
         //role terrorist
@@ -570,16 +596,35 @@ class GameScene: SKScene, ObservableObject {
             
             if isBombPlanted {
                 if isPlayerNearBomb() {
-                    condition = "terrorist-near-bomb"
+                    terroristCondition = "terrorist-near-bomb"
                     
                     //sending to multipeer
-                    let bombCondition = MPBombModel(bomb: .approachedByPlayers)
+                    let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-near-bomb")
                     mpManager.send(bomb: bombCondition)
                 } else {
-                    condition = "terrorist-planted-bomb"
+                    terroristCondition = "terrorist-planted-bomb"
+                    
+                    //sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-planted-bomb")
+                    mpManager.send(bomb: bombCondition)
                 }
             }
         }
+        
+        // Moving the player
+        if thisPlayer.role == "terrorist"{
+            self.thisPlayer.movePlayer(velocity: velocity, mpManager: mpManager, condition: terroristCondition)
+        } else {
+            self.thisPlayer.movePlayer(velocity: velocity, mpManager: mpManager, condition: fbiCondition)
+        }
+        
+        //        print("x: \(self.thisPlayer.playerNode.position.x), y: \(self.thisPlayer.playerNode.position.y)")
+        
+        //Camera mengikuti character
+        cameraNode?.position = thisPlayer.playerNode.position
+        
+        // Mask mengikuti character -> sabotage view
+        maskNode?.position = thisPlayer.playerNode.position
         
         // add bomb if players already held plant button for a certain period of time
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
@@ -589,7 +634,7 @@ class GameScene: SKScene, ObservableObject {
                 self.addBombNode()
                 
                 //                sending location of the bomb to other player
-                let bombCondition = MPBombModel(bomb: .planted)
+                let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb")
                 self.mpManager.send(bomb: bombCondition)
             }
         }
@@ -602,7 +647,7 @@ class GameScene: SKScene, ObservableObject {
                 self.defuseBombNode()
                 
                 //           sending bomb condition to multipeer
-                let bombCondition = MPBombModel(bomb: .defused)
+                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb")
                 self.mpManager.send(bomb: bombCondition)
             }
         }
@@ -611,12 +656,12 @@ class GameScene: SKScene, ObservableObject {
     
     func addBombNode() {
         let bombNode = SKSpriteNode(imageNamed: "bomb")
-        bombNode.size = CGSize(width: 50, height: 50)
+        bombNode.size = CGSize(width: 20, height: 20)
         bombNode.position = player2Model.playerNode.position
         bombNode.zPosition = 5
         bombNode.name = "bomb"
         addChild(bombNode)
-        condition = "terrorist-planted-bomb"
+        terroristCondition = "terrorist-planted-bomb"
         
         isBombPlanted = true
         plantButton.isHidden = true
@@ -648,6 +693,11 @@ class GameScene: SKScene, ObservableObject {
         case .reset:
             print("Start")
         case .end:
+            if thisPlayer.id == player.playerId {
+                
+            }else {
+                
+            }
             mpManager.session.disconnect()
         }
     }
@@ -656,25 +706,29 @@ class GameScene: SKScene, ObservableObject {
         switch bomb.bomb {
         case .planted:
             print("planted")
+            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
             synchronizeOtherPlayerBombCondition(isDefused: false)
-//            updateTerroristTextures()
-            updateOtherPlayerTextures()
 //            updatePlayerVulnerability()
         case .approachedByPlayers:
-            updateCondition()
-            updateOtherPlayerTextures()
+            print("bomb approached by players")
+            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
         case .defused:
             print("defused")
             synchronizeOtherPlayerBombCondition(isDefused: true)
+        case .exploded:
+            print("exploded")
+            isGameFinished = true
+            self.winner = player2Model // terrorist win
+            mpManager.session.disconnect()
         }
     }
     
     func moveOtherPlayer(id: String, pos: CGPoint, orientation: String) {
         if id == player1Id {
-            player1Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation)
+            player1Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, condition: terroristCondition)
         }
         else {
-            player2Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation)
+            player2Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, condition: fbiCondition)
         }
     }
     
@@ -686,24 +740,24 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func updateCondition(){
-        if thisPlayer.role != "terrorist"{
-            //other player is terrorist
-            if condition != "terrorist-near-bomb" {
-                condition = "terrorist-planted-bomb"
-            }else{
-                condition = "terrorist-near-bomb"
-            }
-        } else {
-            if condition != "fbi-near-bomb"{
-                condition = "fbi-near-bomb"
-            } else {
-                condition = "fbi-far-from-bomb"
-            }
-        }
-    }
+//    func updateCondition(){
+////        if thisPlayer.role != "terrorist"{
+//            //other player is terrorist
+//            if terroristCondition != "terrorist-near-bomb" {
+//                terroristCondition = "terrorist-near-bomb"
+//            }else{
+//                terroristCondition = "terrorist-planted-bomb"
+//            }
+////        } else {
+//            if fbiCondition != "fbi-near-bomb"{
+//                fbiCondition = "fbi-near-bomb"
+//            } else {
+//                fbiCondition = "fbi-far-from-bomb"
+//            }
+////        }
+//    }
     
-    func updateOtherPlayerTextures(){
+    func updateOtherPlayerTextures(condition: String){
         if thisPlayer.role != "terrorist"{
             // other player is terrorist
             if condition == "terrorist-planted-bomb"{
@@ -724,20 +778,6 @@ class GameScene: SKScene, ObservableObject {
             }
         }
     }
-    
-//    func updateTerroristTextures(){
-//        if thisPlayer.role != "terrorist"{
-//            // other player is terrorist
-//            player2Model.playerRightTextures = terroristRightNone
-//            player2Model.playerLeftTextures = terroristLeftNone
-//        }
-//    }
-//    
-//    func updateFBITextures(){
-//        if thisPlayer.role != "fbi"{
-//            
-//        }
-//    }
 }
 
 extension GameScene: SKPhysicsContactDelegate{
@@ -768,16 +808,38 @@ extension GameScene: SKPhysicsContactDelegate{
     func handlePlayerCollision() {
         if thisPlayer.role == "fbi"{
             if thisPlayer.isVulnerable{
-                print("you (fbI) lose")
+                print("you (fbi) lose")
             } else{
                 print("you (fbi) win")
+//                gameOverByCollision(winner: "fbi")
             }
         } else if thisPlayer.role == "terrorist" {
             if thisPlayer.isVulnerable {
                 print("you (terrorist) lose")
             } else {
                 print("you (terrorist) win")
+//                gameOverByCollision(winner: "terrorist")
             }
         }
+    }
+    
+    func gameOverByCollision(winner: String){
+        isGameFinished = true
+        
+        if winner == "fbi"{
+            self.winner = player1Model //fbi wins
+            
+            //sending multipeer
+            let playerCondition = MPPlayerModel(action: .end, playerId: player1Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable)
+            mpManager.send(player: playerCondition)
+        }else{
+            self.winner = player2Model // terrorist wins
+            
+            //sending multipeer
+            let playerCondition = MPPlayerModel(action: .end, playerId: player2Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable)
+            mpManager.send(player: playerCondition)
+        }
+        
+//        removeAllNodes()
     }
 }

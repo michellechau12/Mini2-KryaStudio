@@ -20,6 +20,8 @@ class PlayerModel: ObservableObject {
     var role: String
     var playerTextureIndex: Int = 0
     var orientation: String = ""
+    var previousCondition: String = ""
+    var previousOrientation: String = "not-moving"
     
     init(id: String, playerRightTextures: [SKTexture], playerLeftTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
@@ -30,8 +32,8 @@ class PlayerModel: ObservableObject {
         self.isVulnerable = true
         self.role = ""
         
-        playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 20, height: 20))
-        playerNode.zPosition = 3
+        playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 30, height: 30))
+        playerNode.zPosition = 2
         
         print("DEBUG")
         print("===========================")
@@ -93,7 +95,7 @@ class PlayerModel: ObservableObject {
         
         // assigning player textures
         updatePlayerTextures(condition: condition)
-        animateWalking(orientation: self.orientation)
+        animateWalking(orientation: self.orientation, condition: condition)
         
         // setting vulnerability
         if gameScene.isPlayerNearBomb(){
@@ -106,24 +108,12 @@ class PlayerModel: ObservableObject {
         }
         
         //sending the movement to multipeer
-        let playerCondition: MPPlayerModel
-        if role == "fbi" {
-            playerCondition = MPPlayerModel(
+        let playerCondition = MPPlayerModel(
                 action: .move,
                 playerId: self.id,
                 playerPosition: playerNode.position,
                 playerOrientation: self.orientation,
-                playerTextures: "borgol",
                 isVulnerable: self.isVulnerable)
-        }else{
-            playerCondition = MPPlayerModel(
-                action: .move,
-                playerId: self.id,
-                playerPosition: playerNode.position,
-                playerOrientation: self.orientation,
-                playerTextures: "bomb",
-                isVulnerable: self.isVulnerable)
-        }
         mpManager.send(player: playerCondition)
     }
     
@@ -152,30 +142,54 @@ class PlayerModel: ObservableObject {
         
     }
     
-    func animateWalking(orientation: String){
-        if orientation == "right" {
-            // Move Right
-            if playerNode.action(forKey: "moveRight") == nil {
-                playerNode.removeAction(forKey: "moveLeft")
+    func animateWalking(orientation: String, condition: String){
+        // Only update the animation if the condition has changed
+        if condition != previousCondition {
+            // Update the previous condition
+            previousCondition = condition
+            
+            // Remove current walking actions
+            playerNode.removeAction(forKey: "moveRight")
+            playerNode.removeAction(forKey: "moveLeft")
+            
+            // Add new walking action based on the orientation
+            if orientation == "right" {
                 let walkToRight = SKAction.repeatForever(SKAction.animate(with: playerRightTextures, timePerFrame: 0.1))
                 playerNode.run(walkToRight, withKey: "moveRight")
-            }
-        } else if orientation == "left" {
-            // Move Left
-            if playerNode.action(forKey: "moveLeft") == nil {
-                playerNode.removeAction(forKey: "moveRight")
+            } else if orientation == "left" {
                 let walkToLeft = SKAction.repeatForever(SKAction.animate(with: playerLeftTextures, timePerFrame: 0.1))
                 playerNode.run(walkToLeft, withKey: "moveLeft")
             }
         } else {
-            playerNode.removeAction(forKey: "moveRight")
-            playerNode.removeAction(forKey: "moveLeft")
+            // Update the animation if the orientation changes while keeping the same condition
+            if orientation != previousOrientation {
+                if orientation == "right" {
+                    if playerNode.action(forKey: "moveRight") == nil {
+                        playerNode.removeAction(forKey: "moveLeft")
+                        let walkToRight = SKAction.repeatForever(SKAction.animate(with: playerRightTextures, timePerFrame: 0.1))
+                        playerNode.run(walkToRight, withKey: "moveRight")
+                    }
+                } else if orientation == "left" {
+                    if playerNode.action(forKey: "moveLeft") == nil {
+                        playerNode.removeAction(forKey: "moveRight")
+                        let walkToLeft = SKAction.repeatForever(SKAction.animate(with: playerLeftTextures, timePerFrame: 0.1))
+                        playerNode.run(walkToLeft, withKey: "moveLeft")
+                    }
+                } else {
+                    playerNode.removeAction(forKey: "moveRight")
+                    playerNode.removeAction(forKey: "moveLeft")
+                }
+                
+                // Update the previous orientation
+                previousOrientation = orientation
+            }
         }
     }
     
-    func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String) {
+    func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String, condition: String) {
         playerNode.position = position
         
-        animateWalking(orientation: orientation)
+        updatePlayerTextures(condition: condition)
+        animateWalking(orientation: orientation, condition: condition)
     }
 }
