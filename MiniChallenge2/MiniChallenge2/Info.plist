@@ -7,5 +7,9 @@
 		<string>_BombnChase._tcp</string>
 		<string>_BombnChase._udp</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Pixelify.ttf</string>
+	</array>
 </dict>
 </plist>

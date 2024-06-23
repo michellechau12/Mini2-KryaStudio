@@ -7,19 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B0F36272C1E88DE009A2629 /* PlayerPairingView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */; };
 		0B0F362B2C1FEE63009A2629 /* Randomizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0F362A2C1FEE63009A2629 /* Randomizer.swift */; };
-		0B0F362D2C1FEEA9009A2629 /* RandomRoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0F362C2C1FEEA9009A2629 /* RandomRoleView.swift */; };
 		0B0F362F2C1FF26E009A2629 /* FBIInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0F362E2C1FF26E009A2629 /* FBIInstructionView.swift */; };
-		0B0F36312C1FF286009A2629 /* TerroristInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B0F36302C1FF286009A2629 /* TerroristInstructionView.swift */; };
+		0B241C682C242E9400FB2E79 /* PlayerPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B241C672C242E9400FB2E79 /* PlayerPairingView.swift */; };
+		0BB504832C23040A001EF48D /* InputNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB504822C23040A001EF48D /* InputNameView.swift */; };
+		0BB504852C241EE4001EF48D /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BB504842C241EE4001EF48D /* ColorExtensions.swift */; };
+		0BB504882C2420E8001EF48D /* PixelifySans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0BB504872C2420D3001EF48D /* PixelifySans.ttf */; };
 		0BD4EF982C1DABE6009B814E /* PlayerPairingViewDummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BD4EF972C1DABE6009B814E /* PlayerPairingViewDummy.swift */; };
+		0BDC38E62C27B8B40032553C /* NameInputOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38E52C27B8B40032553C /* NameInputOverlay.swift */; };
+		0BDC38E82C27BBF30032553C /* CreditOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38E72C27BBF30032553C /* CreditOverlay.swift */; };
+		0BDC38EA2C27CAD80032553C /* StudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38E92C27CAD80032553C /* StudioView.swift */; };
+		0BDC38EC2C27E7270032553C /* TerroristInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38EB2C27E7270032553C /* TerroristInstructionView.swift */; };
+		0BDC38EE2C27EA3D0032553C /* FBIWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38ED2C27EA3C0032553C /* FBIWinningView.swift */; };
+		0BDC38F02C27EB6A0032553C /* TerroristWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38EF2C27EB6A0032553C /* TerroristWinningView.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
 		ECCC18A42C1833160059276B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A32C1833160059276B /* Assets.xcassets */; };
 		ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A72C1833160059276B /* Preview Assets.xcassets */; };
 		ECCC18AF2C18364E0059276B /* MazeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18AE2C18364E0059276B /* MazeScene.swift */; };
 		ECCC18B12C1837810059276B /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18B02C1837810059276B /* MazeScene.sks */; };
-		ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19252C18C72B0059276B /* PlayerPairingView.swift */; };
 		ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19272C18CB8D0059276B /* MultipeerConnectionManager.swift */; };
 		ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19292C1941030059276B /* MultipeerModel.swift */; };
 		ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC192C2C1975CB0059276B /* GameScene.swift */; };
@@ -29,12 +35,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPairingView2.swift; sourceTree = "<group>"; };
 		0B0F362A2C1FEE63009A2629 /* Randomizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Randomizer.swift; sourceTree = "<group>"; };
-		0B0F362C2C1FEEA9009A2629 /* RandomRoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomRoleView.swift; sourceTree = "<group>"; };
 		0B0F362E2C1FF26E009A2629 /* FBIInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBIInstructionView.swift; sourceTree = "<group>"; };
-		0B0F36302C1FF286009A2629 /* TerroristInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristInstructionView.swift; sourceTree = "<group>"; };
+		0B241C672C242E9400FB2E79 /* PlayerPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPairingView.swift; sourceTree = "<group>"; };
+		0BB504822C23040A001EF48D /* InputNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputNameView.swift; sourceTree = "<group>"; };
+		0BB504842C241EE4001EF48D /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		0BB504872C2420D3001EF48D /* PixelifySans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PixelifySans.ttf; sourceTree = "<group>"; };
 		0BD4EF972C1DABE6009B814E /* PlayerPairingViewDummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPairingViewDummy.swift; sourceTree = "<group>"; };
+		0BDC38E52C27B8B40032553C /* NameInputOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameInputOverlay.swift; sourceTree = "<group>"; };
+		0BDC38E72C27BBF30032553C /* CreditOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditOverlay.swift; sourceTree = "<group>"; };
+		0BDC38E92C27CAD80032553C /* StudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudioView.swift; sourceTree = "<group>"; };
+		0BDC38EB2C27E7270032553C /* TerroristInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristInstructionView.swift; sourceTree = "<group>"; };
+		0BDC38ED2C27EA3C0032553C /* FBIWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBIWinningView.swift; sourceTree = "<group>"; };
+		0BDC38EF2C27EB6A0032553C /* TerroristWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristWinningView.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
 		ECCC18A12C1833140059276B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -43,7 +56,6 @@
 		ECCC18A72C1833160059276B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		ECCC18AE2C18364E0059276B /* MazeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MazeScene.swift; sourceTree = "<group>"; };
 		ECCC18B02C1837810059276B /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
-		ECCC19252C18C72B0059276B /* PlayerPairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerPairingView.swift; sourceTree = "<group>"; };
 		ECCC19272C18CB8D0059276B /* MultipeerConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerConnectionManager.swift; sourceTree = "<group>"; };
 		ECCC19292C1941030059276B /* MultipeerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipeerModel.swift; sourceTree = "<group>"; };
 		ECCC192C2C1975CB0059276B /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -67,10 +79,18 @@
 		0B214A952C21458200B7F3A4 /* Dummy */ = {
 			isa = PBXGroup;
 			children = (
-				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
+				0BB504822C23040A001EF48D /* InputNameView.swift */,
 				0BD4EF972C1DABE6009B814E /* PlayerPairingViewDummy.swift */,
 			);
 			path = Dummy;
+			sourceTree = "<group>";
+		};
+		0BB504862C2420B5001EF48D /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				0BB504872C2420D3001EF48D /* PixelifySans.ttf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 		ECCC18932C1833140059276B = {
@@ -95,6 +115,7 @@
 			children = (
 				ECCC189F2C1833140059276B /* MiniChallenge2App.swift */,
 				ECCC19362C1AA9B50059276B /* View */,
+				0BB504862C2420B5001EF48D /* Font */,
 				ECCC19352C1AA9A20059276B /* Model */,
 				ECCC19322C1A38BB0059276B /* Info.plist */,
 				ECCC192B2C194FA70059276B /* MultipeerConnectivity */,
@@ -130,6 +151,7 @@
 			children = (
 				ECCC192E2C19790E0059276B /* PlayerModel.swift */,
 				0B0F362A2C1FEE63009A2629 /* Randomizer.swift */,
+				0BB504842C241EE4001EF48D /* ColorExtensions.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -137,12 +159,16 @@
 		ECCC19362C1AA9B50059276B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0BDC38E92C27CAD80032553C /* StudioView.swift */,
 				ECCC18A12C1833140059276B /* ContentView.swift */,
-				0B0F36262C1E88DE009A2629 /* PlayerPairingView2.swift */,
-				0B0F362C2C1FEEA9009A2629 /* RandomRoleView.swift */,
+				0BDC38E52C27B8B40032553C /* NameInputOverlay.swift */,
+				0BDC38E72C27BBF30032553C /* CreditOverlay.swift */,
+				0B241C672C242E9400FB2E79 /* PlayerPairingView.swift */,
 				0B0F362E2C1FF26E009A2629 /* FBIInstructionView.swift */,
-				0B0F36302C1FF286009A2629 /* TerroristInstructionView.swift */,
+				0BDC38EB2C27E7270032553C /* TerroristInstructionView.swift */,
 				ECCC19332C1A3F890059276B /* GameView.swift */,
+				0BDC38ED2C27EA3C0032553C /* FBIWinningView.swift */,
+				0BDC38EF2C27EB6A0032553C /* TerroristWinningView.swift */,
 				0B214A952C21458200B7F3A4 /* Dummy */,
 			);
 			path = View;
@@ -208,6 +234,7 @@
 			files = (
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
 				ECCC18B12C1837810059276B /* MazeScene.sks in Resources */,
+				0BB504882C2420E8001EF48D /* PixelifySans.ttf in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -220,19 +247,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECCC18AF2C18364E0059276B /* MazeScene.swift in Sources */,
-				0B0F362D2C1FEEA9009A2629 /* RandomRoleView.swift in Sources */,
+				0BDC38E62C27B8B40032553C /* NameInputOverlay.swift in Sources */,
+				0BDC38EC2C27E7270032553C /* TerroristInstructionView.swift in Sources */,
+				0BDC38F02C27EB6A0032553C /* TerroristWinningView.swift in Sources */,
 				ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */,
 				ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */,
-				0B0F36312C1FF286009A2629 /* TerroristInstructionView.swift in Sources */,
-				0B0F36272C1E88DE009A2629 /* PlayerPairingView2.swift in Sources */,
+				0BDC38EE2C27EA3D0032553C /* FBIWinningView.swift in Sources */,
+				0BDC38E82C27BBF30032553C /* CreditOverlay.swift in Sources */,
+				0BB504852C241EE4001EF48D /* ColorExtensions.swift in Sources */,
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
+				0B241C682C242E9400FB2E79 /* PlayerPairingView.swift in Sources */,
+				0BDC38EA2C27CAD80032553C /* StudioView.swift in Sources */,
 				0BD4EF982C1DABE6009B814E /* PlayerPairingViewDummy.swift in Sources */,
 				0B0F362F2C1FF26E009A2629 /* FBIInstructionView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
 				ECCC19382C1AD2E30059276B /* GameSceneTest.swift in Sources */,
+				0BB504832C23040A001EF48D /* InputNameView.swift in Sources */,
 				0B0F362B2C1FEE63009A2629 /* Randomizer.swift in Sources */,
-				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
 			);
