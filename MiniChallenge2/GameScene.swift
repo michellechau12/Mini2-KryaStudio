@@ -767,6 +767,8 @@ class GameScene: SKScene, ObservableObject {
                 player2Model.playerRightTextures = terroristRightPentungan
                 player2Model.playerLeftTextures = terroristLeftPentungan
             }
+            player2Model.latestTextureLeft = player2Model.playerLeftTextures[player2Model.playerLeftTextures.count - 1]
+            player2Model.latestTextureRight = player2Model.playerRightTextures[player2Model.playerRightTextures.count - 1]
         } else {
             // other player is fbi
             if condition == "fbi-near-bomb"{
@@ -776,6 +778,8 @@ class GameScene: SKScene, ObservableObject {
                 player1Model.playerRightTextures = fbiRightTextures
                 player1Model.playerLeftTextures = fbiLeftTextures
             }
+            player1Model.latestTextureLeft = player1Model.playerLeftTextures[player1Model.playerLeftTextures.count - 1]
+            player1Model.latestTextureRight = player1Model.playerRightTextures[player1Model.playerRightTextures.count - 1]
         }
     }
 }

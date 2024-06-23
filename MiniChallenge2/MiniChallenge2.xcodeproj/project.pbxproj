@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
-		ECA3DFA22C2452EF00708CF4 /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */; };
-		ECA3DFA52C24533800708CF4 /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = ECA3DFA42C24533800708CF4 /* MazeScene.sks */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
@@ -24,14 +22,14 @@
 		ECCC19342C1A3F890059276B /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19332C1A3F890059276B /* GameView.swift */; };
 		ECCC19382C1AD2E30059276B /* GameSceneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19372C1AD2E30059276B /* GameSceneTest.swift */; };
 		EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF18C2A62C241CDB000B7808 /* YourNameView.swift */; };
+		EF7A022C2C28596000457237 /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF7A022B2C28596000457237 /* MazeTileSet.sks */; };
+		EF7A022E2C28596500457237 /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF7A022D2C28596500457237 /* MazeScene.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
-		ECA3DFA32C2452F500708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
-		ECA3DFA42C24533800708CF4 /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeScene.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/View/MazeScene.sks"; sourceTree = "<group>"; };
 		ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
@@ -48,6 +46,8 @@
 		ECCC19332C1A3F890059276B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		ECCC19372C1AD2E30059276B /* GameSceneTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneTest.swift; sourceTree = "<group>"; };
 		EF18C2A62C241CDB000B7808 /* YourNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourNameView.swift; sourceTree = "<group>"; };
+		EF7A022B2C28596000457237 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
+		EF7A022D2C28596500457237 /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +90,7 @@
 				ECCC19322C1A38BB0059276B /* Info.plist */,
 				ECCC192B2C194FA70059276B /* MultipeerConnectivity */,
 				ECCC18A32C1833160059276B /* Assets.xcassets */,
-				ECA3DFA32C2452F500708CF4 /* MazeTileSet.sks */,
+				EF7A022B2C28596000457237 /* MazeTileSet.sks */,
 				ECCC18A52C1833160059276B /* MiniChallenge2.entitlements */,
 				ECCC18A62C1833160059276B /* Preview Content */,
 			);
@@ -131,7 +131,7 @@
 				EF18C2A62C241CDB000B7808 /* YourNameView.swift */,
 				ECCC19332C1A3F890059276B /* GameView.swift */,
 				ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */,
-				ECA3DFA42C24533800708CF4 /* MazeScene.sks */,
+				EF7A022D2C28596500457237 /* MazeScene.sks */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -195,9 +195,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
-				ECA3DFA22C2452EF00708CF4 /* MazeTileSet.sks in Resources */,
+				EF7A022C2C28596000457237 /* MazeTileSet.sks in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
-				ECA3DFA52C24533800708CF4 /* MazeScene.sks in Resources */,
+				EF7A022E2C28596500457237 /* MazeScene.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

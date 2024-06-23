@@ -22,6 +22,9 @@ class PlayerModel: ObservableObject {
     var orientation: String = ""
     var previousCondition: String = ""
     var previousOrientation: String = "not-moving"
+    // For notWalking Texture
+    var latestTextureRight: SKTexture
+    var latestTextureLeft: SKTexture
     
     init(id: String, playerRightTextures: [SKTexture], playerLeftTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
@@ -31,6 +34,8 @@ class PlayerModel: ObservableObject {
         self.speedMultiplier = 0
         self.isVulnerable = true
         self.role = ""
+        self.latestTextureRight = playerRightTextures[0]
+        self.latestTextureLeft = playerLeftTextures[0]
         
         playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 30, height: 30))
         playerNode.zPosition = 2
@@ -139,7 +144,9 @@ class PlayerModel: ObservableObject {
                 playerLeftTextures = gameScene.getFBITextures(type: "borgol-left")
             }
         }
-        
+        // Add latestTexture for animateNotWalking with last index of textures's array
+        self.latestTextureRight = playerRightTextures[playerRightTextures.count - 1]
+        self.latestTextureLeft = playerLeftTextures[playerLeftTextures.count - 1]
     }
     
     func animateWalking(orientation: String, condition: String){
@@ -175,9 +182,19 @@ class PlayerModel: ObservableObject {
                         let walkToLeft = SKAction.repeatForever(SKAction.animate(with: playerLeftTextures, timePerFrame: 0.1))
                         playerNode.run(walkToLeft, withKey: "moveLeft")
                     }
+                // If player is notWalking
                 } else {
                     playerNode.removeAction(forKey: "moveRight")
                     playerNode.removeAction(forKey: "moveLeft")
+                    
+                    if previousOrientation == "right"{
+                        playerNode.texture = latestTextureRight
+                        // print("DEBUG: show notWalkingRight texture")
+                    }else {
+                        playerNode.texture = latestTextureLeft
+                        // print("DEBUG: show notWalkingLeft texture")
+                    }
+                            
                 }
                 
                 // Update the previous orientation
@@ -189,7 +206,7 @@ class PlayerModel: ObservableObject {
     func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String, condition: String) {
         playerNode.position = position
         
-        updatePlayerTextures(condition: condition)
+//        updatePlayerTextures(condition: condition)
         animateWalking(orientation: orientation, condition: condition)
     }
 }
