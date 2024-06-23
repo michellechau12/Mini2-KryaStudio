@@ -23,7 +23,7 @@ struct NameInputOverlay: View {
             Image("popup-paper")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 800)
+                .frame(width: 700)
             Button {
                 showNameInput = false
             } label: {
@@ -31,20 +31,21 @@ struct NameInputOverlay: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 60)
-            } .offset(x: 300, y: -190)
+            } .offset(x: 260, y: -170)
             
             
             VStack(spacing: 20) {
                 Text("Enter your Name")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(Font.custom("PixelifySans-Regular_SemiBold", size: 36))
+                    .foregroundColor(Color.brownSecondary)
                     .padding()
                 
-                TextField("Enter your name", text: $newName)
+                TextField("Your name", text: $newName)
                     .padding()
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .multilineTextAlignment(.center)
                     .frame(width: 300, height: 50)
-                    .background(Color.white)
+                    .background(Color.brownTertiary)
                     .cornerRadius(10)
                 
                 Button {

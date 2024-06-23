@@ -20,6 +20,7 @@
 		0BDC38EC2C27E7270032553C /* TerroristInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38EB2C27E7270032553C /* TerroristInstructionView.swift */; };
 		0BDC38EE2C27EA3D0032553C /* FBIWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38ED2C27EA3C0032553C /* FBIWinningView.swift */; };
 		0BDC38F02C27EB6A0032553C /* TerroristWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38EF2C27EB6A0032553C /* TerroristWinningView.swift */; };
+		0BDC38F42C2806FD0032553C /* CheckFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BDC38F32C2806FD0032553C /* CheckFont.swift */; };
 		ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC189F2C1833140059276B /* MiniChallenge2App.swift */; };
 		ECCC18A22C1833140059276B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC18A12C1833140059276B /* ContentView.swift */; };
 		ECCC18A42C1833160059276B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECCC18A32C1833160059276B /* Assets.xcassets */; };
@@ -48,6 +49,7 @@
 		0BDC38EB2C27E7270032553C /* TerroristInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristInstructionView.swift; sourceTree = "<group>"; };
 		0BDC38ED2C27EA3C0032553C /* FBIWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBIWinningView.swift; sourceTree = "<group>"; };
 		0BDC38EF2C27EB6A0032553C /* TerroristWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristWinningView.swift; sourceTree = "<group>"; };
+		0BDC38F32C2806FD0032553C /* CheckFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckFont.swift; sourceTree = "<group>"; };
 		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
 		ECCC18A12C1833140059276B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 			children = (
 				0BB504822C23040A001EF48D /* InputNameView.swift */,
 				0BD4EF972C1DABE6009B814E /* PlayerPairingViewDummy.swift */,
+				0BDC38F32C2806FD0032553C /* CheckFont.swift */,
 			);
 			path = Dummy;
 			sourceTree = "<group>";
@@ -259,6 +262,7 @@
 				0B241C682C242E9400FB2E79 /* PlayerPairingView.swift in Sources */,
 				0BDC38EA2C27CAD80032553C /* StudioView.swift in Sources */,
 				0BD4EF982C1DABE6009B814E /* PlayerPairingViewDummy.swift in Sources */,
+				0BDC38F42C2806FD0032553C /* CheckFont.swift in Sources */,
 				0B0F362F2C1FF26E009A2629 /* FBIInstructionView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,

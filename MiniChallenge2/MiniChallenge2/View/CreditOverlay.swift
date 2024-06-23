@@ -37,14 +37,13 @@ struct CreditOverlay: View {
                     .frame(width: 60)
             } .offset(x: 380, y: -240)
             VStack {
-                Spacer()
+                Spacer().frame(height: 100)
                 Text("developed by : ")
-                    .font(.title3)
-                    .fontWeight(.medium)
-                    .padding()
+                    .font(Font.custom("PixelifySans-Regular_SemiBold", size: 24))
+                    .foregroundColor(Color.brownSecondary)
                 Text("KRYA Studio")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(Font.custom("PixelifySans-Regular_Bold", size: 56))
+                    .foregroundColor(Color.brownSecondary)
                     .padding()
                 
                 VStack(spacing: 20) {
@@ -59,8 +58,8 @@ struct CreditOverlay: View {
                                         .frame(width: 140, height: 140)
                                         .clipShape(Circle())
                                     Text(creditsName[index].1)
-                                        .font(.title)
-                                        .fontWeight(.medium)
+                                        .font(Font.custom("PixelifySans-Regular_SemiBold", size: 32))
+                                        .foregroundColor(Color.brownSecondary)
                                 }
                             }
                         }
