@@ -36,11 +36,22 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     var timer: Timer?
     var timeLeft = 30
     
-    private var bombPlantTimer: Timer?
+    private let plantButton = SKSpriteNode(imageNamed: "plantButton")
+    private var isBombPlanted = false
     private var bombPlantTimerStartTime: Date?
     
-    private var defuseTimer: Timer?
+    private let defuseButton = SKSpriteNode(imageNamed: "defuseButton")
     private var defuseTimerStartTime: Date?
+    private var defuseRadius: CGFloat = 50.0
+    private var defuseProgressBar: SKSpriteNode?
+    private var defuseProgressBarBackground: SKSpriteNode?
+    private var delayStartTime: Date?
+    private var previousTexture: SKTexture?
+    private var lastMovementDirection: MovementDirection = .none
+    private var isDelayingMove: Bool = false
+    
+    private var progressBar: SKSpriteNode?
+    private var progressBarBackground: SKSpriteNode?
     
     // Define texture arrays for animations
     private var fbiRightTextures: [SKTexture] = [
@@ -57,6 +68,16 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         SKTexture(imageNamed: "fbi-borgol-left-3"),
         SKTexture(imageNamed: "fbi-borgol-left-4"),
         SKTexture(imageNamed: "fbi-borgol-left-5")
+    ]
+    
+    private var defuseDelayTexture: [SKTexture] = [
+        SKTexture(imageNamed: "delay-texture-1"),
+        SKTexture(imageNamed: "delay-texture-2"),
+        SKTexture(imageNamed: "delay-texture-3"),
+        SKTexture(imageNamed: "delay-texture-4"),
+        SKTexture(imageNamed: "delay-texture-5"),
+        SKTexture(imageNamed: "delay-texture-6")
+        
     ]
     
     
@@ -90,11 +111,6 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     var speedMultiplierFBI = Int.self
     
     private var bombSites: [BombSiteModel] = []
-    private let playerCatNode = SKSpriteNode(imageNamed: "player_cat")
-    private let plantButton = SKSpriteNode(imageNamed: "plantButton")
-    private let defuseButton = SKSpriteNode(imageNamed: "defuseButton")
-    private var isBombPlanted = false
-    private var defuseRadius: CGFloat = 50.0
     
     
     override func didMove(to view: SKView) {
@@ -121,6 +137,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         //        setThisPlayer()
         createJoystick()
         setupPlantButton()
+        setupProgressBar()
         setupDefuseButton()
         // sabotagedView()
         setupTimerLabel()
@@ -300,10 +317,33 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         return false
     }
     
+    func setupProgressBar() {
+        progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 10))
+        progressBarBackground?.zPosition = 10
+        progressBarBackground?.position = CGPoint(
+            x: character.position.x,
+            y: character.position.y + character.size.height / 2 + 20)
+        addChild(progressBarBackground!)
+        progressBarBackground?.isHidden = true
+        
+        progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 10))
+        progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
+        progressBar?.position = CGPoint(
+            x: character.position.x - 50,
+            y: character.position.y + character.size.height / 2 + 20)
+        progressBar?.zPosition = 11
+        addChild(progressBar!)
+        progressBar?.isHidden = true
+    }
+    
+    func updateProgressBar(elapsedTime: TimeInterval, totalTime: TimeInterval) {
+        let progress = min(CGFloat(elapsedTime / totalTime), 1.0)
+        progressBar?.size.width = 100 * progress
+    }
     
     func addBombNode() {
         let bombNode = SKSpriteNode(imageNamed: "bomb-on")
-        bombNode.size = CGSize(width: 50, height: 50)
+        bombNode.size = CGSize(width: 30, height: 30)
         bombNode.position = character.position
         bombNode.zPosition = 5
         bombNode.name = "bombNode"
@@ -387,12 +427,35 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
             bombPlantTimerStartTime = Date()
             print("lagi plant...")
+            //start bomb plant animation:
+            let plantAnimation = SKAction.repeatForever(SKAction.animate(with: fbiRightTextures, timePerFrame: 0.1))
+            character.run(plantAnimation, withKey: "planting")
+            //show bomb plant progress bar:
+            progressBarBackground?.isHidden = false
+            progressBar?.isHidden = false
         }
         
         
         if defuseButton.contains(location) && !defuseButton.isHidden {
             defuseTimerStartTime = Date()
             print("lagi defuse...")
+            //start bomb defuse animation:
+            let defuseTextures: [SKTexture]
+            switch lastMovementDirection {
+            case .left:
+                defuseTextures = fbiLeftTextures
+            case .right:
+                defuseTextures = fbiRightTextures
+            case .none:
+                defuseTextures = fbiRightTextures
+            }
+             
+            let defuseAnimation = SKAction.repeatForever(SKAction.animate(with: defuseTextures, timePerFrame: 0.1))
+            character.run(defuseAnimation, withKey: "defusing")
+            
+            //show bomb defuse progress bar:
+            progressBarBackground?.isHidden = false
+            progressBar?.isHidden = false
         }
     }
     
@@ -436,21 +499,72 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             if elapsedTime < 2.0 {
                 print("cancel planting")
                 self.bombPlantTimerStartTime = nil
+                //cancel plant texture and progress bar
+                character.removeAction(forKey: "planting")
+                progressBarBackground?.isHidden = true
+                progressBar?.isHidden = true
             }
         }
         
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime < 2.0 {
+            if elapsedTime < 5.0 {
                 print("cancel defusing")
                 self.defuseTimerStartTime = nil
+                //cancel defuse texture and progress bar
+                character.removeAction(forKey: "defusing")
+                progressBarBackground?.isHidden = true
+                progressBar?.isHidden = true
+                
+                //store the current texture
+                previousTexture = character.texture!
+                
+                //start defuse cancel delay animation:
+                let delayTextures: [SKTexture]
+                switch lastMovementDirection {
+                case .left:
+                    delayTextures = defuseDelayTexture
+                    previousTexture = fbiLeftTextures[0]
+                case .right:
+                    delayTextures = defuseDelayTexture
+                    previousTexture = fbiRightTextures[0]
+                case .none:
+                    delayTextures = defuseDelayTexture
+                    previousTexture = fbiRightTextures[0]
+                }
+                
+                let delayTexture = SKAction.repeatForever(SKAction.animate(with: delayTextures, timePerFrame: 0.1))
+                character.run(delayTexture, withKey: "delayCancelling")
+                
+                //start delay timer:
+                delayStartTime = Date()
+                isDelayingMove = true
             }
         }
     }
     
     override func update(_ currentTime: TimeInterval) {
-                
+        
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
+        
+        if isDelayingMove {
+                // Prevent movement if isDelayingMove is true
+                character.physicsBody?.velocity = .zero
+                character.removeAction(forKey: "moveRight")
+                character.removeAction(forKey: "moveLeft")
+                
+                // Check if delay is over
+                if let delayStartTime = delayStartTime {
+                    let delayElapsedTime = Date().timeIntervalSince(delayStartTime)
+                    if delayElapsedTime >= 3.0 {
+                        character.removeAction(forKey: "delayCancelling")
+                        character.texture = previousTexture
+                        isDelayingMove = false
+                        self.delayStartTime = nil
+                    }
+                }
+                return
+            }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         
@@ -461,16 +575,21 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             
             // Determine movement direction and play appropriate animation
             if velocity.dx > 0 {
+                lastMovementDirection = .right
                 character.removeAction(forKey: "moveLeft")
                 character.run(SKAction.repeatForever(SKAction.animate(with: fbiRightTextures, timePerFrame: 0.1)), withKey: "moveRight")
             } else if velocity.dx < 0 {
+                lastMovementDirection = .left
                 character.removeAction(forKey: "moveRight")
                 character.run(SKAction.repeatForever(SKAction.animate(with: fbiLeftTextures, timePerFrame: 0.1)), withKey: "moveLeft")
             } else {
+//                lastMovementDirection = .none
                 character.removeAction(forKey: "moveRight")
                 character.removeAction(forKey: "moveLeft")
             }
         } else {
+            
+//            lastMovementDirection = .none
             character.physicsBody?.velocity = .zero
             character.removeAction(forKey: "moveRight")
             character.removeAction(forKey: "moveLeft")
@@ -491,7 +610,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
             
             plantButton.isHidden = false
             // Debugging print:
-//            print("Plant button is visible")
+            //            print("Plant button is visible")
         } else {
             plantButton.isHidden = true
         }
@@ -511,16 +630,23 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         // add bomb if players already held plant button for a certain period of time
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+            updateProgressBar(elapsedTime: elapsedTime, totalTime: 2.0)
+            
             if elapsedTime >= 2.0 {
                 print("Success planting bomb")
                 self.addBombNode()
                 self.bombPlantTimerStartTime = nil
+                progressBar?.isHidden = true
+                progressBarBackground?.isHidden = true
+                character.removeAction(forKey: "planting")
             }
         }
         // defuse bomb if players already held defuse button for a certain period of time
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime >= 2.0 {
+            updateProgressBar(elapsedTime: elapsedTime, totalTime: 5.0)
+            
+            if elapsedTime >= 5.0 {
                 print("Success defusing bomb")
                 self.defuseButton.isHidden = true
                 self.timerLabel?.isHidden = true
@@ -528,9 +654,19 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
                     bombNode.removeFromParent()
                 }
                 self.defuseTimerStartTime = nil
+                progressBar?.isHidden = true
+                progressBarBackground?.isHidden = true
+                character.removeAction(forKey: "defusing")
+                
             }
         }
-
+        
     }
     
+}
+
+enum MovementDirection {
+    case left
+    case right
+    case none
 }
