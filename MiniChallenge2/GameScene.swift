@@ -457,7 +457,7 @@ class GameScene: SKScene, ObservableObject {
     
     func gameOverByExplodingBomb(){
         // send event to other person
-        let bombCondition = MPBombModel(bomb: .exploded, playerBombCondition: "exploded")
+        let bombCondition = MPBombModel(bomb: .exploded, playerBombCondition: "exploded", winnerId: player2Id)
         mpManager.send(bomb: bombCondition)
         self.winner = player2Model // terrorist win
         
@@ -585,14 +585,14 @@ class GameScene: SKScene, ObservableObject {
                 fbiCondition = "fbi-near-bomb"
                 
                 //sending to multipeer
-                let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-near-bomb")
+                let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-near-bomb", winnerId: thisPlayer.id)
                 mpManager.send(bomb: bombCondition)
             } else {
                 defuseButton.isHidden = true
                 fbiCondition = "fbi-far-from-bomb"
                 
                 //sending to multipeer
-                let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-far-from-bomb")
+                let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-far-from-bomb", winnerId: thisPlayer.id)
                 mpManager.send(bomb: bombCondition)
             }
         }
@@ -617,13 +617,13 @@ class GameScene: SKScene, ObservableObject {
                     terroristCondition = "terrorist-near-bomb"
                     
                     //sending to multipeer
-                    let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-near-bomb")
+                    let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-near-bomb", winnerId: thisPlayer.id)
                     mpManager.send(bomb: bombCondition)
                 } else {
                     terroristCondition = "terrorist-planted-bomb"
                     
                     //sending to multipeer
-                    let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-planted-bomb")
+                    let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
                     mpManager.send(bomb: bombCondition)
                 }
             }
@@ -652,7 +652,7 @@ class GameScene: SKScene, ObservableObject {
                 self.addBombNode()
                 
                 //                sending location of the bomb to other player
-                let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb")
+                let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
                 self.mpManager.send(bomb: bombCondition)
             }
         }
@@ -665,7 +665,7 @@ class GameScene: SKScene, ObservableObject {
                 self.defuseBombNode()
                 
                 //           sending bomb condition to multipeer
-                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb")
+                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player2Id)
                 self.mpManager.send(bomb: bombCondition)
             }
         }
@@ -766,7 +766,7 @@ class GameScene: SKScene, ObservableObject {
         case .exploded:
             print("exploded")
             isGameFinished = true
-            if self.winner.id == self.thisPlayer.id{
+            if bomb.winnerId == self.thisPlayer.id{
                 statementGameOver = "You Win"
                 imageGameOver = "terrorist-bom-rightt-1"
                 print("DEBUG_GO_COLS: TERRORIST WIN")

@@ -58,6 +58,7 @@ struct MPBombModel: Codable {
     
     let bomb: BombEvent
     let playerBombCondition: String
+    let winnerId: String
 //    let time: Timer //(?) -> cannot conform to codable -> berarti timernya countdown di masing" service ketika bomb change state dari unplanted jadi planted
     
     func data() -> Data? {
