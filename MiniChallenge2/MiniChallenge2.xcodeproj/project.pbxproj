@@ -12,6 +12,10 @@
 		0B91B1F52C296EE3005E7F99 /* CreditOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1F42C296EE3005E7F99 /* CreditOverlay.swift */; };
 		0B91B1F72C296EFC005E7F99 /* PixelifySans.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B1F62C296EFC005E7F99 /* PixelifySans.ttf */; };
 		0B91B1F92C296FBA005E7F99 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1F82C296FBA005E7F99 /* ColorExtensions.swift */; };
+		0B91B1FB2C29724C005E7F99 /* FBIInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1FA2C29724C005E7F99 /* FBIInstructionView.swift */; };
+		0B91B1FD2C297276005E7F99 /* TerroristInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1FC2C297276005E7F99 /* TerroristInstructionView.swift */; };
+		0B91B1FF2C2972B0005E7F99 /* FBIWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1FE2C2972B0005E7F99 /* FBIWinningView.swift */; };
+		0B91B2012C2972EF005E7F99 /* TerroristWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B2002C2972EF005E7F99 /* TerroristWinningView.swift */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -37,6 +41,10 @@
 		0B91B1F42C296EE3005E7F99 /* CreditOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditOverlay.swift; sourceTree = "<group>"; };
 		0B91B1F62C296EFC005E7F99 /* PixelifySans.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PixelifySans.ttf; sourceTree = "<group>"; };
 		0B91B1F82C296FBA005E7F99 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		0B91B1FA2C29724C005E7F99 /* FBIInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBIInstructionView.swift; sourceTree = "<group>"; };
+		0B91B1FC2C297276005E7F99 /* TerroristInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristInstructionView.swift; sourceTree = "<group>"; };
+		0B91B1FE2C2972B0005E7F99 /* FBIWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBIWinningView.swift; sourceTree = "<group>"; };
+		0B91B2002C2972EF005E7F99 /* TerroristWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristWinningView.swift; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
@@ -141,11 +149,15 @@
 			children = (
 				0B91B1F02C296E2A005E7F99 /* StudioView.swift */,
 				0B91B1F22C296ED2005E7F99 /* NameInputOverlay.swift */,
+				0B91B1FA2C29724C005E7F99 /* FBIInstructionView.swift */,
+				0B91B1FC2C297276005E7F99 /* TerroristInstructionView.swift */,
 				0B91B1F42C296EE3005E7F99 /* CreditOverlay.swift */,
 				ECCC19252C18C72B0059276B /* PlayerPairingView.swift */,
 				EF18C2A62C241CDB000B7808 /* YourNameView.swift */,
 				ECCC19332C1A3F890059276B /* GameView.swift */,
 				ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */,
+				0B91B1FE2C2972B0005E7F99 /* FBIWinningView.swift */,
+				0B91B2002C2972EF005E7F99 /* TerroristWinningView.swift */,
 				EF7A022D2C28596500457237 /* MazeScene.sks */,
 			);
 			path = View;
@@ -226,8 +238,11 @@
 			files = (
 				0B91B1F12C296E2A005E7F99 /* StudioView.swift in Sources */,
 				ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */,
+				0B91B1FD2C297276005E7F99 /* TerroristInstructionView.swift in Sources */,
+				0B91B2012C2972EF005E7F99 /* TerroristWinningView.swift in Sources */,
 				0B91B1F32C296ED2005E7F99 /* NameInputOverlay.swift in Sources */,
 				ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */,
+				0B91B1FF2C2972B0005E7F99 /* FBIWinningView.swift in Sources */,
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
@@ -237,6 +252,7 @@
 				ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */,
 				0B91B1F52C296EE3005E7F99 /* CreditOverlay.swift in Sources */,
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
+				0B91B1FB2C29724C005E7F99 /* FBIInstructionView.swift in Sources */,
 				EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */,
 				ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
