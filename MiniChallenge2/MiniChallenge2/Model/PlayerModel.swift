@@ -247,6 +247,7 @@ class PlayerModel: ObservableObject {
     
     func stopPlantingBombAnimation(){
         self.playerNode.removeAction(forKey: "plantingAnimation")
+        self.playerNode.texture = latestTextureRight
     }
     
     func animateDefusingBomb(){

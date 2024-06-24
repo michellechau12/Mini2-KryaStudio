@@ -98,6 +98,7 @@ class GameScene: SKScene, ObservableObject {
     private var viewSabotaged = false
     
     var isDelayingMove: Bool = false
+    private var defuseCooldownDuration = 3.0
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -766,6 +767,7 @@ class GameScene: SKScene, ObservableObject {
                 if isPlayerNearBomb() {
                     terroristCondition = "terrorist-near-bomb"
                     
+                    
                     //sending to multipeer
                     let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-near-bomb", winnerId: thisPlayer.id)
                     mpManager.send(bomb: bombCondition)
@@ -786,7 +788,7 @@ class GameScene: SKScene, ObservableObject {
             
             if let defuseCooldownStartTime = defuseCooldownStartTime {
                 let cooldownElapsedTime = Date().timeIntervalSince(defuseCooldownStartTime)
-                if cooldownElapsedTime >= 3 {
+                if cooldownElapsedTime >= defuseCooldownDuration {
                     thisPlayer.playerNode.removeAction(forKey: "delayCancelling")
                     
                     switch thisPlayer.previousOrientation {
@@ -978,6 +980,7 @@ class GameScene: SKScene, ObservableObject {
         case .planted:
             print("planted")
             updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            player2Model.stopPlantingBombAnimation() // terrorist stop animate planting bomb
             synchronizeOtherPlayerBombCondition(isDefused: false)
 //            updatePlayerVulnerability()
         case .approachedByPlayers:
@@ -1060,7 +1063,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func updateOtherPlayerTextures(condition: String){
-        if thisPlayer.role != "terrorist"{
+        if thisPlayer.role == "fbi"{
             // other player is terrorist
             print("DEBUG: condition for updateOtherPlayer \(condition)")
             if condition == "terrorist-planted-bomb"{
