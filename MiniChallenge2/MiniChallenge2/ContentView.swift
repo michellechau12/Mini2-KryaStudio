@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @EnvironmentObject var gameScene: GameScene
+    
     @State var startGame: Bool = false
     
     var body: some View {
@@ -46,6 +48,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
 //        .environmentObject(MultipeerConnectionManager(playerName: "sample"))
-        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
-        .environmentObject(GameScene())
+//        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
+//        .environmentObject(GameScene())
 }
