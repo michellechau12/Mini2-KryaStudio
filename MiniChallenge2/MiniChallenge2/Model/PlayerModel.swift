@@ -118,7 +118,8 @@ class PlayerModel: ObservableObject {
                 playerId: self.id,
                 playerPosition: playerNode.position,
                 playerOrientation: self.orientation,
-                isVulnerable: self.isVulnerable)
+                isVulnerable: self.isVulnerable,
+                winnerId: "_NaN_")
         mpManager.send(player: playerCondition)
     }
     

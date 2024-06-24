@@ -24,6 +24,7 @@ struct MPPlayerModel: Codable {
     let playerPosition: CGPoint
     let playerOrientation: String
     let isVulnerable: Bool
+    let winnerId: String
     
     func data() -> Data? {
         try? JSONEncoder().encode(self)

@@ -14,6 +14,9 @@ struct GameView: View {
     @Environment (\.dismiss) var dismiss
     
     @State private var isGameFinished: Bool = false
+//    @State var statementGameOver : String
+//    @State var imageGameOver : String
+    
     
     var body: some View {
         NavigationStack{
@@ -38,11 +41,19 @@ struct GameView: View {
                 .navigationDestination(isPresented: $isGameFinished) {
                     GameOverView()
                 }
+            
+//                .navigationDestination(isPresented: $isGameFinished) {
+//                    GameOverView(statementGameOver: $statementGameOver, imageGameOver: $imageGameOver)
+//                }
         }
     }
 }
 
 #Preview{
+//    GameView(statementGameOver: "You Win", imageGameOver: "fbi-borgol-right-1")
+//        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
+//        .environmentObject(GameScene())
+    
     GameView()
         .environmentObject(MultipeerConnectionManager(playerId: UUID()))
         .environmentObject(GameScene())

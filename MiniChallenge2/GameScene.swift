@@ -14,6 +14,9 @@ class GameScene: SKScene, ObservableObject {
     @Published var isGameFinished: Bool = false
     @Published var winner: PlayerModel!
     
+//    @Published var statementGameOver: String
+//    @Published var imageGameOver: String
+    
     @Published var player1Id: String!
     @Published var player2Id: String!
     
@@ -458,7 +461,7 @@ class GameScene: SKScene, ObservableObject {
         mpManager.send(bomb: bombCondition)
         self.winner = player2Model // terrorist win
         
-        print("DEBUG : Yang menang adalah \(player2Model.role)")
+        // print("DEBUG : Yang menang adalah \(player2Model.role)")
         
         isGameFinished = true
         removeAllNodes()
@@ -700,7 +703,7 @@ class GameScene: SKScene, ObservableObject {
             }else {
                 
             }
-            mpManager.session.disconnect()
+            // mpManager.session.disconnect()
         }
     }
     
@@ -812,40 +815,74 @@ extension GameScene: SKPhysicsContactDelegate{
     }
     
     func handlePlayerCollision() {
+        // If thisPlayer win the game
+        if !thisPlayer.isVulnerable{
+            
+        }
+        
         if thisPlayer.role == "fbi"{
             if thisPlayer.isVulnerable{
-                print("you (fbi) lose")
+                print("DEBUG_COL : you (fbi) lose")
+                gameOverByCollision(winner: "terrorist", playerRole: thisPlayer.role)
             } else{
-                print("you (fbi) win")
-//                gameOverByCollision(winner: "fbi")
+                print("DEBUG_COL : you (fbi) win")
+                gameOverByCollision(winner: "fbi", playerRole: thisPlayer.role)
             }
         } else if thisPlayer.role == "terrorist" {
             if thisPlayer.isVulnerable {
-                print("you (terrorist) lose")
+                print("DEBUG_COL : you (terrorist) lose")
+                gameOverByCollision(winner: "fbi", playerRole: thisPlayer.role)
             } else {
-                print("you (terrorist) win")
-//                gameOverByCollision(winner: "terrorist")
+                print("DEBUG_COL : you (terrorist) win")
+                gameOverByCollision(winner: "terrorist", playerRole: thisPlayer.role)
             }
         }
     }
     
-    func gameOverByCollision(winner: String){
+    func gameOverByCollision(winner: String, playerRole: String){
         isGameFinished = true
         
         if winner == "fbi"{
-            self.winner = player1Model //fbi wins
-            
-            //sending multipeer
-            let playerCondition = MPPlayerModel(action: .end, playerId: player1Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable)
-            mpManager.send(player: playerCondition)
-        }else{
-            self.winner = player2Model // terrorist wins
-            
-            //sending multipeer
-            let playerCondition = MPPlayerModel(action: .end, playerId: player2Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable)
-            mpManager.send(player: playerCondition)
+            // If player as fbi winning the game
+            if winner == playerRole{
+                self.winner = player1Model //fbi wins
+                
+                //sending multipeer - kenapa harus kirim player2Id??
+                let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
+                mpManager.send(player: playerCondition)
+                
+                print("DEBUG_GO_COLS: FBI WIN")
+            } else { // If player as terrorist losing the game
+                self.winner = player1Model //fbi wins
+                
+                //sending multipeer
+                let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
+                mpManager.send(player: playerCondition)
+                
+                print("DEBUG_GO_COLS: TERRORIST LOSE")
+            }
+        } else {
+            if winner == playerRole{
+                self.winner = player2Model // terrorist wins
+                
+                //sending multipeer
+                let playerCondition = MPPlayerModel(action: .end, playerId: player2Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
+                
+                mpManager.send(player: playerCondition)
+                
+                print("DEBUG_GO_COLS: TERRORIST WIN")
+            } else{
+                self.winner = player2Model // terrorist wins
+                
+                //sending multipeer
+                let playerCondition = MPPlayerModel(action: .end, playerId: player2Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
+                
+                mpManager.send(player: playerCondition)
+                
+                print("DEBUG_GO_COLS: FBI LOSE")
+            }
         }
         
-//        removeAllNodes()
+        removeAllNodes()
     }
 }
