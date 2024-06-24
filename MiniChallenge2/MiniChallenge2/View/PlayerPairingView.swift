@@ -17,155 +17,153 @@ struct PlayerPairingView: View {
     @State private var sendInvitation = false
     @Environment (\.dismiss) private var dismiss
     
-    @AppStorage("yourName") var yourName : String = ""
-    
-    @State private var userName = ""
-    @State private var changeName = false
-    @State private var newName = ""
-    
     var body: some View {
         NavigationStack {
-            VStack {
+            ZStack {
+                Image("pairing-bg-img")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
                 VStack {
-                    Text("Finding Other Player...")
-                        .font(.largeTitle)
-                        .foregroundStyle(.blue)
-                    
-                    Text("Your name is \(userName)")
-                        .font(.largeTitle)
-                        .foregroundStyle(.yellow)
-                    
-                    if changeName {
-                        TextField("Enter new name", text: $newName)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                    VStack {
+                        Spacer()
+                        HStack{
+                            Button(
+                                role: .cancel,
+                                action: {
+                                    print("DEBUG: Cancel button pressed")
+                                    dismiss()
+                                    mpManager.availablePlayers.removeAll()
+                                    mpManager.stopBrowsing()
+                                    mpManager.stopAdvertising()
+                                }, label: {
+                                    Image("back-button")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 140)
+                                    
+                                }) .padding(.leading,50)
+                            Spacer()
+                        }
+                        Image("text-pairing")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 800)
+                        Text("Make sure your Bluetooth and Wi-Fi are on")
+                            .font(Font.custom("PixelifySans-Regular", size: 32))
+                            .foregroundColor(.white)
                             .padding()
-                        
-                        Button("Save Name") {
-                            saveNewName()
-                        }
-                        .padding()
-                        .buttonStyle(BorderedButtonStyle())
-                    } else {
-                        Button("Change Name") {
-                            changeName.toggle()
-                        }
-                        .padding()
-                        .buttonStyle(BorderedButtonStyle())
-                    }
-
-                    
-                    List(mpManager.availablePlayers, id: \.self) { player in
-                        AvailablePlayerCard(playerName: player.displayName)
-                            .onTapGesture {
-                                print("DEBUG: Touch Detected")
-                                inviteOtherPlayer = true
-                                mpManager.searchPlayers.invitePeer(player, to: mpManager.session, withContext: nil, timeout: 20)
-                                gameScene.player1Id = mpManager.myConnectionId.displayName
-                                gameScene.player2Id = player.displayName
-                                
-                                print("===========================")
-                                print("DEBUG: player1Id \( gameScene.player1Id ?? "none")")
-                                print("DEBUG: player2Id \( gameScene.player2Id ?? "none")")
-                                print("DEBUG: inviteReceived \(mpManager.inviteReceived)")
-                                print("===========================")
+                        Spacer()
+                            .frame(height: 80)
+                        HStack {
+                            Spacer()
+                                .frame(width: 200)
+                            VStack {
+                                Image("circle-fbi-right")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 200)
+                                Text("\(mpManager.myConnectionId.displayName)")
+                                    .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))
+                                    .foregroundColor(.white)
+                                    .padding()
+                            } .frame(width:300)
+                            Image("text-vs")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200)
+                            ScrollView(.horizontal) {
+                                HStack {
+                                    ForEach(mpManager.availablePlayers, id: \.self) { player in
+                                        AvailablePlayerCard(playerName: player.displayName, imageName: "circle-fbi-left")
+                                            .padding(.leading, 50)
+                                            .onTapGesture {
+                                                print("DEBUG: Touch Detected on \(player.displayName)")
+                                                inviteOtherPlayer = true
+                                                sendInvitation = true
+                                                mpManager.searchPlayers.invitePeer(player, to: mpManager.session, withContext: nil, timeout: 20)
+                                                gameScene.player1Id = mpManager.myConnectionId.displayName
+                                                gameScene.player2Id = player.displayName
+                                                print("DEBUG: inviteReceived \(mpManager.inviteReceived)")
+                                            }
+                                    }
+                                }
                             }
-                            .listStyle(.plain)
-                            .alert("Received invitation from  \(mpManager.inviteReceivedFrom? .displayName ?? "Unknown")", isPresented: $mpManager.inviteReceived) {
-                                
-                                // if invite rejected
+                            .alert("Received invitation from  \(mpManager.inviteReceivedFrom?.displayName ?? "Unknown")", isPresented: $mpManager.inviteReceived) {
                                 Button {
+                                    print("DEBUG: Decline Invite")
                                     if let invitationHandler = mpManager.invitationHandler {
                                         invitationHandler(false, nil)
                                     }
                                 } label: {
                                     Text("Decline Invite")
                                 }
-                                
-                                // if invite accepted
                                 Button {
+                                    print("DEBUG: Accept Invite from \(mpManager.inviteReceivedFrom?.displayName ?? "Unknown")")
                                     if let invitationHandler = mpManager.invitationHandler {
                                         invitationHandler(true, mpManager.session)
-                                        gameScene.player1Id = mpManager.inviteReceivedFrom? .displayName ?? "Unknown"
+                                        gameScene.player1Id = mpManager.inviteReceivedFrom?.displayName ?? "Unknown"
                                         gameScene.player2Id = mpManager.myConnectionId.displayName
                                     }
                                 } label: {
                                     Text("Accept")
                                 }
                             }
+                        }
+                        .padding(.bottom, 120)
+                        Spacer()
                     }
-                }
-//                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
-//                )
-                .onAppear(){
-                    mpManager.isAvailableToPlay = true
-                    mpManager.startBrowsing()
-                    mpManager.startAdvertising()
-                    userName = mpManager.myConnectionId.displayName
-                }
-                .onDisappear(){
-                    mpManager.isAvailableToPlay = false
-                    mpManager.stopBrowsing()
-                    mpManager.stopAdvertising()
-                }
-                .onChange(of: mpManager.paired) { oldValue, newValue in
-                    startGame = newValue
-                    sendInvitation = false
-                }
-                
-                // the red button to go back to start page
-                Button(
-                    role: .cancel,
-                    action: {
-                        dismiss()
-                        mpManager.availablePlayers.removeAll()
+    //                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
+    //                )
+                    .onAppear(){
+                        mpManager.isAvailableToPlay = true
+                        mpManager.startBrowsing()
+                        mpManager.startAdvertising()
+                    }
+                    .onDisappear(){
+                        mpManager.isAvailableToPlay = false
                         mpManager.stopBrowsing()
                         mpManager.stopAdvertising()
-                    }, label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .frame(maxWidth: .infinity)
-                    })
-                .buttonStyle(BorderedProminentButtonStyle())
-                .tint(Color.red)
-            }
-            .padding(.horizontal, 30)
-            .navigationBarBackButtonHidden(true)
-            .onAppear(){
-                mpManager.setupGame(gameScene: gameScene)
-            }
-            .navigationDestination(
-                isPresented: $startGame) {
-                    GameView()
+                    }
+                    .onChange(of: mpManager.paired) { oldValue, newValue in
+                        startGame = newValue
+                        sendInvitation = false
+                    }
                 }
-        }
-    }
-    
-    func saveNewName() {
-        if !newName.isEmpty {
-            yourName = newName
-            userName = newName
-            changeName.toggle()
-            
-            mpManager.updatePeerID(with: newName)
+                .navigationBarBackButtonHidden(true)
+                .onAppear(){
+                    mpManager.setupGame(gameScene: gameScene)
+                }
+                .navigationDestination(
+                    isPresented: $startGame) {
+                        GameView()
+                }
+            }
         }
     }
 }
 
 struct AvailablePlayerCard: View {
     @State var playerName: String
+    let imageName: String?
     
     var body: some View {
         VStack {
-            Rectangle()
-                .scaledToFit()
-                .frame(width: 200, height: 200)
+            if let imageName = imageName {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200)
+            }
             Text(playerName)
-                .font(.title)
-        }
+                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))                .foregroundColor(.white)
+                .padding()
+        } .frame(width:300)
     }
 }
 
 #Preview {
-    PlayerPairingView(yourName: "Sample")
+    PlayerPairingView()
 }
 
 
