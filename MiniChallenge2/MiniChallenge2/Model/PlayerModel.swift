@@ -109,14 +109,20 @@ class PlayerModel: ObservableObject {
         animateWalking(orientation: self.orientation, condition: condition)
         
         // setting vulnerability
-        if gameScene.isPlayerNearBomb(){
-            //changing the state
-            if self.role == "fbi"{
+        if self.role == "fbi"{
+            if gameScene.fbiCondition == "fbi-defusing-bomb" || gameScene.fbiCondition == "fbi-cancel-defusing" {
                 self.isVulnerable = true
-            } else {
+            } else{
+                self.isVulnerable = false
+            }
+        } else if self.role == "terrorist"{
+            if gameScene.terroristCondition == "terrorist-initial" || gameScene.terroristCondition == "terrorist-planting-bomb" || gameScene.terroristCondition == "terrorist-planted-bomb" {
+                self.isVulnerable = true
+            }else if gameScene.terroristCondition == "terrorist-near-bomb" && (gameScene.fbiCondition == "fbi-defusing-bomb" || gameScene.fbiCondition == "fbi-cancel-defusing"){
                 self.isVulnerable = false
             }
         }
+        
         
         //sending the movement to multipeer
         let playerCondition = MPPlayerModel(
@@ -139,6 +145,9 @@ class PlayerModel: ObservableObject {
             } else if condition == "terrorist-near-bomb"{
                 playerRightTextures = gameScene.getTerroristTextures(type: "pentungan-right")
                 playerLeftTextures = gameScene.getTerroristTextures(type: "pentungan-left")
+            } else if condition == "terrorist-planting-bomb"{
+                playerRightTextures = gameScene.getTerroristTextures(type: "plantbomb-right")
+                playerLeftTextures = gameScene.getTerroristTextures(type: "plantbomb-left")
             }
         }
         // role fbi
@@ -149,6 +158,9 @@ class PlayerModel: ObservableObject {
             } else if condition == "fbi-far-from-bomb"{
                 playerRightTextures = gameScene.getFBITextures(type: "borgol-right")
                 playerLeftTextures = gameScene.getFBITextures(type: "borgol-left")
+            } else if condition == "fbi-defusing-bomb"{
+                playerRightTextures = gameScene.getFBITextures(type: "defuse-right")
+                playerLeftTextures = gameScene.getFBITextures(type: "defuse-left")
             }
         }
         // Add latestTexture for animateNotWalking with last index of textures's array

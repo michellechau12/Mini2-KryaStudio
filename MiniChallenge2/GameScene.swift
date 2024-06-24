@@ -87,8 +87,8 @@ class GameScene: SKScene, ObservableObject {
     private var plantDuration = 3.0
     private var defuseDuration = 5.0
     
-    private var terroristCondition = "start"
-    private var fbiCondition = "start"
+    var terroristCondition = "terrorist-initial"
+    var fbiCondition = "fbi-initial"
     private var viewSabotaged = false
     
     var isDelayingMove: Bool = false
@@ -551,6 +551,8 @@ class GameScene: SKScene, ObservableObject {
             progressBarBackground?.isHidden = false
             progressBar?.isHidden = false
             
+            self.terroristCondition = "terrorist-planting-bomb"
+            
             //run planting animation
             print("DEBUG: previous Orientation \(thisPlayer.previousOrientation)")
             switch thisPlayer.playerPreviousRightLeft {
@@ -571,6 +573,8 @@ class GameScene: SKScene, ObservableObject {
             // show progress bar
             progressBarBackground?.isHidden = false
             progressBar?.isHidden = false
+            
+            self.fbiCondition = "fbi-defusing-bomb"
             
             //run defuse animation
             switch thisPlayer.playerPreviousRightLeft {
@@ -616,6 +620,7 @@ class GameScene: SKScene, ObservableObject {
         moveBack.timingMode = .easeOut
         joystickKnob.run(moveBack)
         
+        // Terrorist cancelled planting bomb
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
             if elapsedTime < plantDuration {
@@ -625,6 +630,9 @@ class GameScene: SKScene, ObservableObject {
                 // remove progress bar
                 progressBarBackground?.isHidden = true
                 progressBar?.isHidden = true
+                
+                // change terrorist condition from terrorist-planting-bomb to terrorist-initial
+                self.terroristCondition = "terrorist-initial"
                 
                 //remove planting animation
                 thisPlayer.playerNode.removeAction(forKey: "plantingAnimation")
@@ -642,10 +650,13 @@ class GameScene: SKScene, ObservableObject {
                 progressBarBackground?.isHidden = true
                 progressBar?.isHidden = true
                 
-                //run cancel defuse animation:
+                // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
+                self.fbiCondition = "fbi-cancel-defusing"
+                
+                // run cancel defuse animation:
                 thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: fbiDefuseDelayTexture, timePerFrame: 0.1)), withKey: "delayCancelling")
                 
-                //remove defusing animation
+                // remove defusing animation
                 thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
                 
                 //Start delay timer:
@@ -663,8 +674,6 @@ class GameScene: SKScene, ObservableObject {
 //        }
         
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
-        
-        
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * thisPlayer.speedMultiplier, dy: displacement.dy * thisPlayer.speedMultiplier)
@@ -745,6 +754,9 @@ class GameScene: SKScene, ObservableObject {
                     
                     isDelayingMove = false
                     self.defuseCooldownStartTime = nil
+                    
+                    // change from fbi-cancel-defusing
+                    self.fbiCondition = "fbi-initial"
                 }
             }
             return
@@ -1026,31 +1038,31 @@ extension GameScene: SKPhysicsContactDelegate{
             // Handle collision between player2 and the maze
         }
         
-        // is not applicable when there's a lot of spritenode
-        //        let bodyA = contact.bodyA
-        //        let bodyB = contact.bodyB
-        //
-        //        // Determine the categories involved in the collision
-        //        let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
-        //        print("DEBUG: bodyA = \(bodyA.categoryBitMask), bodyB = \(bodyB.categoryBitMask)")
-        //        print("DEBUG: bodyA = \(BitMaskCategory.player1), bodyB = \(BitMaskCategory.player2)")
-        //
-        //        switch collision {
-        //        case BitMaskCategory.player1 | BitMaskCategory.player2:
-        //            // FBI and terrorist collided
-        //            print("FBI and terrorist collided")
-        //            handlePlayerCollision()
-        //        case BitMaskCategory.player1 | BitMaskCategory.maze:
-        //            // FBI and maze collided
-        //            print("FBI and maze collided")
-        //
-        //        case BitMaskCategory.player2 | BitMaskCategory.maze:
-        //            // Terrorist and maze collided
-        //            print("Terrorist and maze collided")
-        //
-        //        default:
-        //            break
-        //        }
+//         is not applicable when there's a lot of spritenode
+//                let bodyA = contact.bodyA
+//                let bodyB = contact.bodyB
+//        
+//                // Determine the categories involved in the collision
+//                let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
+//                print("DEBUG: bodyA = \(bodyA.categoryBitMask), bodyB = \(bodyB.categoryBitMask)")
+//                print("DEBUG: bodyA = \(BitMaskCategory.player1), bodyB = \(BitMaskCategory.player2)")
+//        
+//                switch collision {
+//                case BitMaskCategory.player1 | BitMaskCategory.player2:
+//                    // FBI and terrorist collided
+//                    print("FBI and terrorist collided")
+//                    handlePlayerCollision()
+//                case BitMaskCategory.player1 | BitMaskCategory.maze:
+//                    // FBI and maze collided
+//                    print("FBI and maze collided")
+//        
+//                case BitMaskCategory.player2 | BitMaskCategory.maze:
+//                    // Terrorist and maze collided
+//                    print("Terrorist and maze collided")
+//        
+//                default:
+//                    break
+//                }
     }
     
     func handlePlayerCollision() {
