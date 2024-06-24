@@ -12,8 +12,8 @@ struct GameOverView: View {
     @EnvironmentObject var gameScene: GameScene
     
     @State var playAgain: Bool = false
-//    @Binding var statementGameOver : String
-//    @Binding var imageGameOver : String
+    @State var statementGameOver : String = ""
+    @State var imageGameOver : String = ""
     
     
     var body: some View {
@@ -24,29 +24,9 @@ struct GameOverView: View {
                 
                 Text("Your id is \(gameScene.thisPlayer.id)")
                 // Text("The winner is ... ")
-                // Text(statementGameOver)
-                // Image(imageGameOver)
+                Text(statementGameOver)
+                Image(imageGameOver)
                 
-                // DONE
-                if gameScene.thisPlayer.role == "fbi" {
-                    if gameScene.winner.id == gameScene.thisPlayer.id{
-                        Text("You win.")
-                    }else {
-                        Text("You lose.")
-                    }
-                    Image("fbi-borgol-right-1")
-                    Text("The winner id is \(gameScene.winner.id)")
-                }
-                else if gameScene.thisPlayer.role == "terrorist"{
-                    if gameScene.winner.id == gameScene.thisPlayer.id{
-                        Text("You win.")
-                    } else {
-                        Text("You lose.")
-                    }
-                    Image("terrorist-bom-rightt-1")
-                    Text("The winner id is \(gameScene.winner.id)")
-                }
-
                 Button{
                     playAgain = true
                 } label:{
@@ -55,6 +35,9 @@ struct GameOverView: View {
                 .buttonStyle(BorderedProminentButtonStyle())
             }
             .onAppear(){
+                statementGameOver = gameScene.statementGameOver
+                imageGameOver = gameScene.imageGameOver
+                
                 playAgain = false
                 mpManager.stopBrowsing()
                 mpManager.stopAdvertising()

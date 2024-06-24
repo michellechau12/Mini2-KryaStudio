@@ -11,11 +11,11 @@ import GameplayKit
 class GameScene: SKScene, ObservableObject {
     
     var mpManager: MultipeerConnectionManager!
-    @Published var isGameFinished: Bool = false
+    @Published var isGameFinished: Bool!
     @Published var winner: PlayerModel!
     
-//    @Published var statementGameOver: String
-//    @Published var imageGameOver: String
+    @Published var statementGameOver: String = ""
+    @Published var imageGameOver: String = ""
     
     @Published var player1Id: String!
     @Published var player2Id: String!
@@ -81,6 +81,7 @@ class GameScene: SKScene, ObservableObject {
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
+        isGameFinished = false
         
         // Load Textures and Setting Players
         loadFBITextures()
@@ -698,6 +699,36 @@ class GameScene: SKScene, ObservableObject {
         case .reset:
             print("Start")
         case .end:
+            isGameFinished = true
+            
+            if thisPlayer.role == "fbi"{ // OtherPlayer as FBI
+                // If player as fbi winning the game
+                if player.winnerId == thisPlayer.id{
+                    statementGameOver = "You Win"
+                    imageGameOver = "fbi-borgol-right-1"
+                    print("DEBUG_GO_COLS_handle: FBI WIN")
+                } else { // If player as terrorist losing the game
+                    statementGameOver = "You Lose"
+                    imageGameOver = "terrorist-bom-rightt-1"
+                    print("DEBUG_GO_COLS_handle: TERRORIST LOSE")
+                }
+            } else {
+                // If player as terrorist winning the game
+                if player.winnerId == thisPlayer.id{
+                    statementGameOver = "You Win"
+                    imageGameOver = "terrorist-bom-rightt-1"
+                    print("DEBUG_GO_COLS_handle: TERRORIST WIN")
+                } else{
+                    statementGameOver = "You Lose"
+                    imageGameOver = "fbi-borgol-right-1"
+                    print("DEBUG_GO_COLS_handle: FBI LOSE")
+                }
+            }
+            
+            if isGameFinished{
+                removeAllNodes()
+            }
+            
             if thisPlayer.id == player.playerId {
                 
             }else {
@@ -843,46 +874,44 @@ extension GameScene: SKPhysicsContactDelegate{
         isGameFinished = true
         
         if winner == "fbi"{
+            self.winner = player1Model //fbi wins
+            
+            //sending multipeer
+            let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
+            
+            mpManager.send(player: playerCondition)
+            
             // If player as fbi winning the game
-            if winner == playerRole{
-                self.winner = player1Model //fbi wins
-                
-                //sending multipeer - kenapa harus kirim player2Id??
-                let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
-                mpManager.send(player: playerCondition)
-                
+            if self.winner.id == self.thisPlayer.id{
+                statementGameOver = "You Win"
+                imageGameOver = "fbi-borgol-right-1"
                 print("DEBUG_GO_COLS: FBI WIN")
             } else { // If player as terrorist losing the game
-                self.winner = player1Model //fbi wins
-                
-                //sending multipeer
-                let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
-                mpManager.send(player: playerCondition)
-                
+                statementGameOver = "You Lose"
+                imageGameOver = "terrorist-bom-rightt-1"
                 print("DEBUG_GO_COLS: TERRORIST LOSE")
             }
         } else {
-            if winner == playerRole{
-                self.winner = player2Model // terrorist wins
-                
-                //sending multipeer
-                let playerCondition = MPPlayerModel(action: .end, playerId: player2Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
-                
-                mpManager.send(player: playerCondition)
-                
+            self.winner = player2Model // terrorist wins
+            
+            //sending multipeer
+            let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
+            
+            mpManager.send(player: playerCondition)
+            
+            if self.winner.id == self.thisPlayer.id{
+                statementGameOver = "You Win"
+                imageGameOver = "terrorist-bom-rightt-1"
                 print("DEBUG_GO_COLS: TERRORIST WIN")
             } else{
-                self.winner = player2Model // terrorist wins
-                
-                //sending multipeer
-                let playerCondition = MPPlayerModel(action: .end, playerId: player2Id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
-                
-                mpManager.send(player: playerCondition)
-                
+                statementGameOver = "You Lose"
+                imageGameOver = "fbi-borgol-right-1"
                 print("DEBUG_GO_COLS: FBI LOSE")
             }
         }
         
-        removeAllNodes()
+        if isGameFinished{
+            removeAllNodes()
+        }
     }
 }

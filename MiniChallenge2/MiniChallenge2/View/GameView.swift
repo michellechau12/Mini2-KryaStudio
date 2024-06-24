@@ -14,9 +14,6 @@ struct GameView: View {
     @Environment (\.dismiss) var dismiss
     
     @State private var isGameFinished: Bool = false
-//    @State var statementGameOver : String
-//    @State var imageGameOver : String
-    
     
     var body: some View {
         NavigationStack{
@@ -33,10 +30,15 @@ struct GameView: View {
                         dismiss()
                     }
                 })
+//                .onAppear(){
+//                    isGameFinished = gameScene.isGameFinished
+//                    print("DEBUG isGameFinished : \(isGameFinished)")
+//                }
                 .onReceive(gameScene.$isGameFinished, perform: { _ in
                     if gameScene.isGameFinished == true {
                         isGameFinished = true
                     }
+                    print("DEBUG isGameFinished : \(isGameFinished)")
                 })
                 .navigationDestination(isPresented: $isGameFinished) {
                     GameOverView()
