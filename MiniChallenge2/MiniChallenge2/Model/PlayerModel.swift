@@ -108,7 +108,22 @@ class PlayerModel: ObservableObject {
         updatePlayerTextures(condition: condition)
         animateWalking(orientation: self.orientation, condition: condition)
         
+//        self.checkPlayerVulnerability()
+        
+        //sending the movement to multipeer
+        let playerCondition = MPPlayerModel(
+                action: .move,
+                playerId: self.id,
+                playerPosition: playerNode.position,
+                playerOrientation: self.orientation,
+                isVulnerable: self.isVulnerable,
+                winnerId: "_NaN_")
+        mpManager.send(player: playerCondition)
+    }
+    
+    func updatePlayerVulnerability(){
         // setting vulnerability
+        print("DEBUG: condition \(gameScene.fbiCondition), vulnerability \(isVulnerable)")
         if self.role == "fbi"{
             if gameScene.fbiCondition == "fbi-defusing-bomb" || gameScene.fbiCondition == "fbi-cancel-defusing" {
                 self.isVulnerable = true
@@ -122,17 +137,6 @@ class PlayerModel: ObservableObject {
                 self.isVulnerable = false
             }
         }
-        
-        
-        //sending the movement to multipeer
-        let playerCondition = MPPlayerModel(
-                action: .move,
-                playerId: self.id,
-                playerPosition: playerNode.position,
-                playerOrientation: self.orientation,
-                isVulnerable: self.isVulnerable,
-                winnerId: "_NaN_")
-        mpManager.send(player: playerCondition)
     }
     
     func updatePlayerTextures(condition: String){
@@ -148,6 +152,9 @@ class PlayerModel: ObservableObject {
             } else if condition == "terrorist-planting-bomb"{
                 playerRightTextures = gameScene.getTerroristTextures(type: "plantbomb-right")
                 playerLeftTextures = gameScene.getTerroristTextures(type: "plantbomb-left")
+            } else if condition == "terrorist-initial"{
+                playerRightTextures = gameScene.getTerroristTextures(type: "bomb-right")
+                playerLeftTextures = gameScene.getTerroristTextures(type: "bomb-left")
             }
         }
         // role fbi
@@ -161,6 +168,9 @@ class PlayerModel: ObservableObject {
             } else if condition == "fbi-defusing-bomb"{
                 playerRightTextures = gameScene.getFBITextures(type: "defuse-right")
                 playerLeftTextures = gameScene.getFBITextures(type: "defuse-left")
+            } else if condition == "fbi-cancel-defusing"{
+                playerRightTextures = gameScene.getFBITextures(type: "delay")
+                playerLeftTextures = gameScene.getFBITextures(type: "delay")
             }
         }
         // Add latestTexture for animateNotWalking with last index of textures's array
@@ -220,6 +230,42 @@ class PlayerModel: ObservableObject {
                 previousOrientation = orientation
             }
         }
+    }
+    
+    func animatePlantingBombAnimation(){
+        
+        print("DEBUG: previous Orientation \(self.previousOrientation)")
+        switch self.playerPreviousRightLeft {
+        case "left":
+            self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: self.playerLeftTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
+        case "right":
+            self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: self.playerRightTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
+        default:
+            self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: self.playerRightTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
+        }
+    }
+    
+    func stopPlantingBombAnimation(){
+        self.playerNode.removeAction(forKey: "plantingAnimation")
+    }
+    
+    func animateDefusingBomb(){
+        switch self.playerPreviousRightLeft {
+        case "left":
+            self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: self.playerLeftTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
+        case "right":
+            self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: self.playerRightTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
+        default:
+            self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: self.playerRightTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
+        }
+    }
+    
+    func cancelDefuseAnimation(){
+        self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: gameScene.getFBITextures(type: "delay"), timePerFrame: 0.1)), withKey: "delayCancelling")
+    }
+    
+    func stopDefusingBombAnimation(){
+        self.playerNode.removeAction(forKey: "defusingAnimation")
     }
     
     func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String, condition: String) {

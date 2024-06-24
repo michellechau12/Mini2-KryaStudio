@@ -56,6 +56,9 @@ class GameScene: SKScene, ObservableObject {
     private var fbiRightTang: [SKTexture] = []
     private var fbiLeftTang: [SKTexture] = []
     
+    private var fbiRightDefuseBomb: [SKTexture] = []
+    private var fbiLeftDefuseBomb: [SKTexture] = []
+    
     private var fbiDefuseDelayTexture: [SKTexture] = []
     
     private var terroristRightNone: [SKTexture] = []
@@ -63,6 +66,9 @@ class GameScene: SKScene, ObservableObject {
     
     private var terroristRightPentungan: [SKTexture] = []
     private var terroristLeftPentungan: [SKTexture] = []
+    
+    private var terroristRightPlantBomb: [SKTexture] = []
+    private var terroristLeftPlantBomb: [SKTexture] = []
     
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
@@ -154,6 +160,19 @@ class GameScene: SKScene, ObservableObject {
             fbiLeftTang.append(texture)
         }
         
+        //Defusing bomb textures
+        //right
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "fbi-defuse-right-\(i)")
+            fbiRightDefuseBomb.append(texture)
+        }
+        
+        //left
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "fbi-defuse-left-\(i)")
+            fbiLeftDefuseBomb.append(texture)
+        }
+        
         // defuse delay texture
         for i in 1...6 {
             let texture = SKTexture(imageNamed: "delay-texture-\(i)")
@@ -200,6 +219,19 @@ class GameScene: SKScene, ObservableObject {
             let texture = SKTexture(imageNamed: "terrorist-pentungan-left-\(i)")
             terroristLeftPentungan.append(texture)
         }
+        
+        //planting bomb textures
+        //right
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-right-\(i)")
+            terroristRightPlantBomb.append(texture)
+        }
+        
+        //left
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-left-\(i)")
+            terroristLeftPlantBomb.append(texture)
+        }
     }
     
     func getFBITextures(type: String) -> [SKTexture]{
@@ -211,6 +243,12 @@ class GameScene: SKScene, ObservableObject {
             return fbiRightTextures
         } else if type == "borgol-left"{
             return fbiLeftTextures
+        } else if type == "defuse-right"{
+            return fbiRightDefuseBomb
+        } else if type == "defuse-left"{
+            return fbiLeftDefuseBomb
+        } else if type == "delay"{
+            return fbiDefuseDelayTexture
         }
         return fbiRightTextures
     }
@@ -228,6 +266,10 @@ class GameScene: SKScene, ObservableObject {
             return terroristRightTextures
         } else if type == "bomb-left"{
             return terroristLeftTextures
+        } else if type == "plantbomb-right"{
+            return terroristRightPlantBomb
+        } else if type == "plantbomb-left"{
+            return terroristLeftPlantBomb
         }
         return terroristRightTextures
     }
@@ -554,15 +596,12 @@ class GameScene: SKScene, ObservableObject {
             self.terroristCondition = "terrorist-planting-bomb"
             
             //run planting animation
-            print("DEBUG: previous Orientation \(thisPlayer.previousOrientation)")
-            switch thisPlayer.playerPreviousRightLeft {
-            case "left":
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerLeftTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
-            case "right":
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
-            default:
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
-            }
+            thisPlayer.updatePlayerTextures(condition: terroristCondition)
+            thisPlayer.animatePlantingBombAnimation()
+            
+            // sending to multipeer
+            let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+            mpManager.send(bomb: bombCondition)
         }
         
         // Detecting touch on defuse button
@@ -577,14 +616,12 @@ class GameScene: SKScene, ObservableObject {
             self.fbiCondition = "fbi-defusing-bomb"
             
             //run defuse animation
-            switch thisPlayer.playerPreviousRightLeft {
-            case "left":
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerLeftTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
-            case "right":
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
-            default:
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
-            }
+            thisPlayer.updatePlayerTextures(condition: fbiCondition)
+            thisPlayer.animateDefusingBomb()
+            
+            // sending to multipeer
+            let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+            mpManager.send(bomb: bombCondition)
         }
     }
     
@@ -633,9 +670,14 @@ class GameScene: SKScene, ObservableObject {
                 
                 // change terrorist condition from terrorist-planting-bomb to terrorist-initial
                 self.terroristCondition = "terrorist-initial"
+                thisPlayer.updatePlayerTextures(condition: terroristCondition)
                 
                 //remove planting animation
-                thisPlayer.playerNode.removeAction(forKey: "plantingAnimation")
+                thisPlayer.stopPlantingBombAnimation()
+                
+                // sending to multipeer
+                let bombCondition = MPBombModel(bomb: .cancelledPlanting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+                mpManager.send(bomb: bombCondition)
                 
             }
         }
@@ -654,10 +696,14 @@ class GameScene: SKScene, ObservableObject {
                 self.fbiCondition = "fbi-cancel-defusing"
                 
                 // run cancel defuse animation:
-                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: fbiDefuseDelayTexture, timePerFrame: 0.1)), withKey: "delayCancelling")
+                thisPlayer.cancelDefuseAnimation() // there's delay after cancelling defuse animation
                 
                 // remove defusing animation
-                thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
+                thisPlayer.stopDefusingBombAnimation()
+                
+                // sending to multipeer
+                let bombCondition = MPBombModel(bomb: .cancelledDefusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+                mpManager.send(bomb: bombCondition)
                 
                 //Start delay timer:
                 defuseCooldownStartTime = Date()
@@ -791,7 +837,7 @@ class GameScene: SKScene, ObservableObject {
                 progressBar?.isHidden = true
                 
                 //remove planting animation
-                thisPlayer.playerNode.removeAction(forKey: "plantingAnimation")
+                thisPlayer.stopPlantingBombAnimation()
                 
                 //  sending location of the bomb to other player
                 let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
@@ -842,7 +888,6 @@ class GameScene: SKScene, ObservableObject {
                 }
             }
         }
-        
     }
     
     func addBombNode() {
@@ -922,6 +967,14 @@ class GameScene: SKScene, ObservableObject {
     
     func handleBomb(bomb: MPBombModel, mpManager: MultipeerConnectionManager) {
         switch bomb.bomb {
+        case .planting:
+            print("planting")
+            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            player2Model.animatePlantingBombAnimation() // terrorist animate planting bomb
+        case .cancelledPlanting:
+            print("cancel planting")
+            player2Model.stopPlantingBombAnimation() // terrorist stop animate planting bomb
+            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
         case .planted:
             print("planted")
             updateOtherPlayerTextures(condition: bomb.playerBombCondition)
@@ -929,6 +982,23 @@ class GameScene: SKScene, ObservableObject {
 //            updatePlayerVulnerability()
         case .approachedByPlayers:
             print("bomb approached by players")
+            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+        case .defusing:
+            print("defusing")
+            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            player1Model.animateDefusingBomb() // fbi animate defusing bomb
+            
+//            // if defusing, fbi becomes vulnerable
+//            if self.thisPlayer.role == "fbi"{
+//                self.thisPlayer.isVulnerable = true
+//            }else{
+//                self.thisPlayer.isVulnerable = false
+//            }
+            
+        case .cancelledDefusing:
+            print("cancelled defusing")
+            player1Model.cancelDefuseAnimation() // there's delay when cancelled defusing bomb
+            player1Model.stopDefusingBombAnimation() // fbi stop animate defusing bomb
             updateOtherPlayerTextures(condition: bomb.playerBombCondition)
         case .defused:
             print("defused")
@@ -992,12 +1062,20 @@ class GameScene: SKScene, ObservableObject {
     func updateOtherPlayerTextures(condition: String){
         if thisPlayer.role != "terrorist"{
             // other player is terrorist
+            print("DEBUG: condition for updateOtherPlayer \(condition)")
             if condition == "terrorist-planted-bomb"{
+                print("DEBUG: went in the if")
                 player2Model.playerRightTextures = terroristRightNone
                 player2Model.playerLeftTextures = terroristLeftNone
             } else if condition == "terrorist-near-bomb"{
                 player2Model.playerRightTextures = terroristRightPentungan
                 player2Model.playerLeftTextures = terroristLeftPentungan
+            } else if condition == "terrorist-planting-bomb"{
+                player2Model.playerRightTextures = terroristRightPlantBomb
+                player2Model.playerLeftTextures = terroristLeftPlantBomb
+            } else if condition == "terrorist-initial"{
+                player2Model.playerRightTextures = terroristRightTextures
+                player2Model.playerLeftTextures = terroristLeftTextures
             }
             player2Model.latestTextureLeft = player2Model.playerLeftTextures[player2Model.playerLeftTextures.count - 1]
             player2Model.latestTextureRight = player2Model.playerRightTextures[player2Model.playerRightTextures.count - 1]
@@ -1006,7 +1084,14 @@ class GameScene: SKScene, ObservableObject {
             if condition == "fbi-near-bomb"{
                 player1Model.playerRightTextures = fbiRightTang
                 player1Model.playerLeftTextures = fbiLeftTang
-            } else {
+            } else if condition == "fbi-defusing-bomb"{
+                player1Model.playerRightTextures = fbiRightDefuseBomb
+                player1Model.playerLeftTextures = fbiLeftDefuseBomb
+            } else if condition == "fbi-cancel-defusing"{
+                // not yet defined left and right
+                player1Model.playerRightTextures = fbiDefuseDelayTexture
+                player1Model.playerLeftTextures = fbiDefuseDelayTexture
+            }  else {
                 player1Model.playerRightTextures = fbiRightTextures
                 player1Model.playerLeftTextures = fbiLeftTextures
             }
@@ -1066,6 +1151,8 @@ extension GameScene: SKPhysicsContactDelegate{
     }
     
     func handlePlayerCollision() {
+        thisPlayer.updatePlayerVulnerability()
+        
         if thisPlayer.role == "fbi"{
             if thisPlayer.isVulnerable{
                 print("DEBUG_COL : you (fbi) lose")
