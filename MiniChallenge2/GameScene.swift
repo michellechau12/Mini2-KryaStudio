@@ -7,11 +7,12 @@
 
 import SpriteKit
 import GameplayKit
+import Combine
 
 class GameScene: SKScene, ObservableObject {
     
     var mpManager: MultipeerConnectionManager!
-    @Published var isGameFinished: Bool!
+    @Published var isGameFinished: Bool = false
     @Published var winner: PlayerModel!
     
     @Published var statementGameOver: String = ""
@@ -498,13 +499,13 @@ class GameScene: SKScene, ObservableObject {
     
     func gameOverByExplodingBomb(){
         // send event to other person
-        let bombCondition = MPBombModel(bomb: .exploded, playerBombCondition: "exploded", winnerId: player2Id)
-        mpManager.send(bomb: bombCondition)
+//        let bombCondition = MPBombModel(bomb: .exploded, playerBombCondition: "exploded", winnerId: player2Id)
+//        mpManager.send(bomb: bombCondition)
         self.winner = player2Model // terrorist win
         
         // print("DEBUG : Yang menang adalah \(player2Model.role)")
         
-        isGameFinished = true
+        self.isGameFinished = true
         if self.winner.id == self.thisPlayer.id{
             statementGameOver = "You Win"
             imageGameOver = "terrorist-bom-rightt-1"
@@ -516,7 +517,7 @@ class GameScene: SKScene, ObservableObject {
             
         }
         
-        if isGameFinished{
+        if self.isGameFinished{
             removeAllNodes()
         }
     }
@@ -645,7 +646,7 @@ class GameScene: SKScene, ObservableObject {
                 thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: fbiDefuseDelayTexture, timePerFrame: 0.1)), withKey: "delayCancelling")
                 
                 //remove defusing animation
-                thisPlayer.playerNode.removeAction(forKey: "defuseAnimation")
+                thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
                 
                 //Start delay timer:
                 defuseCooldownStartTime = Date()
@@ -746,7 +747,7 @@ class GameScene: SKScene, ObservableObject {
                     self.defuseCooldownStartTime = nil
                 }
             }
-            
+            return
         }
         
         // Moving the player
@@ -801,7 +802,7 @@ class GameScene: SKScene, ObservableObject {
                 progressBar?.isHidden = true
                 
                 //remove defusing animation
-                thisPlayer.playerNode.removeAction(forKey: "defuseAnimation")
+                thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
                 
                 //  sending bomb condition to multipeer
                 let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
@@ -868,7 +869,7 @@ class GameScene: SKScene, ObservableObject {
         case .reset:
             print("Start")
         case .end:
-            isGameFinished = true
+            self.isGameFinished = true
             
             if thisPlayer.role == "fbi"{ // OtherPlayer as FBI
                 // If player as fbi winning the game
@@ -920,7 +921,8 @@ class GameScene: SKScene, ObservableObject {
         case .defused:
             print("defused")
             synchronizeOtherPlayerBombCondition(isDefused: true)
-            isGameFinished = true
+            
+            self.isGameFinished = true
             if bomb.winnerId == self.thisPlayer.id{
                 statementGameOver = "You Win"
                 imageGameOver = "fbi-borgol-right-1"
@@ -932,13 +934,14 @@ class GameScene: SKScene, ObservableObject {
                 
             }
             
-            if isGameFinished{
+            if self.isGameFinished{
                 removeAllNodes()
             }
             mpManager.session.disconnect()
         case .exploded:
             print("exploded")
-            isGameFinished = true
+            
+            self.isGameFinished = true
             if bomb.winnerId == self.thisPlayer.id{
                 statementGameOver = "You Win"
                 imageGameOver = "terrorist-bom-rightt-1"
@@ -950,7 +953,7 @@ class GameScene: SKScene, ObservableObject {
                 
             }
             
-            if isGameFinished{
+            if self.isGameFinished{
                 removeAllNodes()
             }
             mpManager.session.disconnect()
@@ -973,23 +976,6 @@ class GameScene: SKScene, ObservableObject {
             self.addBombNode()
         }
     }
-    
-//    func updateCondition(){
-////        if thisPlayer.role != "terrorist"{
-//            //other player is terrorist
-//            if terroristCondition != "terrorist-near-bomb" {
-//                terroristCondition = "terrorist-near-bomb"
-//            }else{
-//                terroristCondition = "terrorist-planted-bomb"
-//            }
-////        } else {
-//            if fbiCondition != "fbi-near-bomb"{
-//                fbiCondition = "fbi-near-bomb"
-//            } else {
-//                fbiCondition = "fbi-far-from-bomb"
-//            }
-////        }
-//    }
     
     func updateOtherPlayerTextures(condition: String){
         if thisPlayer.role != "terrorist"{
@@ -1068,11 +1054,6 @@ extension GameScene: SKPhysicsContactDelegate{
     }
     
     func handlePlayerCollision() {
-        // If thisPlayer win the game
-        if !thisPlayer.isVulnerable{
-            
-        }
-        
         if thisPlayer.role == "fbi"{
             if thisPlayer.isVulnerable{
                 print("DEBUG_COL : you (fbi) lose")
@@ -1093,7 +1074,7 @@ extension GameScene: SKPhysicsContactDelegate{
     }
     
     func gameOverByCollision(winner: String, playerRole: String){
-        isGameFinished = true
+        self.isGameFinished = true
         
         if winner == "fbi"{
             self.winner = player1Model //fbi wins
@@ -1132,7 +1113,7 @@ extension GameScene: SKPhysicsContactDelegate{
             }
         }
         
-        if isGameFinished{
+        if self.isGameFinished{
             removeAllNodes()
         }
     }

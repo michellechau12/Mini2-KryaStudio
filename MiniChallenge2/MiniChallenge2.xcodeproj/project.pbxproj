@@ -103,8 +103,8 @@
 			children = (
 				ECCC189F2C1833140059276B /* MiniChallenge2App.swift */,
 				ECCC18A12C1833140059276B /* ContentView.swift */,
-				ECCC19362C1AA9B50059276B /* View */,
 				ECCC19352C1AA9A20059276B /* Model */,
+				ECCC19362C1AA9B50059276B /* View */,
 				ECCC19322C1A38BB0059276B /* Info.plist */,
 				0B91B1F62C296EFC005E7F99 /* PixelifySans.ttf */,
 				0B91B1F82C296FBA005E7F99 /* ColorExtensions.swift */,

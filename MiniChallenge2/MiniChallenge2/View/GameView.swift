@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SpriteKit
+import Combine
 
 struct GameView: View {
     @EnvironmentObject var gameScene: GameScene
@@ -34,12 +35,15 @@ struct GameView: View {
 //                    isGameFinished = gameScene.isGameFinished
 //                    print("DEBUG isGameFinished : \(isGameFinished)")
 //                }
-                .onReceive(gameScene.$isGameFinished, perform: { _ in
-                    if gameScene.isGameFinished == true {
-                        isGameFinished = true
-                    }
-                    print("DEBUG isGameFinished : \(isGameFinished)")
-                })
+//                .onReceive(gameScene.$isGameFinished, perform: { _ in
+//                    if gameScene.isGameFinished == true {
+//                        self.isGameFinished = true
+//                    }
+//                    print("DEBUG isGameFinished : \(self.isGameFinished)")
+//                })
+                .onReceive(gameScene.$isGameFinished) { value in
+                    isGameFinished = value
+                }
                 .navigationDestination(isPresented: $isGameFinished) {
                     GameOverView()
                 }
