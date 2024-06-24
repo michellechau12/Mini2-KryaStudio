@@ -432,7 +432,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func startTimer() {
-        timeLeft = 10
+        timeLeft = 30
         timerLabel?.text = "Time: \(timeLeft)"
         timerLabel?.isHidden = false
         
@@ -654,6 +654,7 @@ class GameScene: SKScene, ObservableObject {
                 //                sending location of the bomb to other player
                 let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
                 self.mpManager.send(bomb: bombCondition)
+                
             }
         }
         
@@ -665,8 +666,28 @@ class GameScene: SKScene, ObservableObject {
                 self.defuseBombNode()
                 
                 //           sending bomb condition to multipeer
-                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player2Id)
+                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
                 self.mpManager.send(bomb: bombCondition)
+                
+                timer?.invalidate()
+                
+                self.winner = player1Model // fbi wins
+                
+                isGameFinished = true
+                if self.winner.id == self.thisPlayer.id{
+                    statementGameOver = "You Win"
+                    imageGameOver = "fbi-borgol-right-1"
+                    print("DEBUG_GO_COLS: TERRORIST WIN")
+                } else{
+                    statementGameOver = "You Lose"
+                    imageGameOver = "terrorist-bom-rightt-1"
+                    print("DEBUG_GO_COLS: FBI LOSE")
+                    
+                }
+                
+                if isGameFinished{
+                    removeAllNodes()
+                }
             }
         }
         
@@ -763,6 +784,22 @@ class GameScene: SKScene, ObservableObject {
         case .defused:
             print("defused")
             synchronizeOtherPlayerBombCondition(isDefused: true)
+            isGameFinished = true
+            if bomb.winnerId == self.thisPlayer.id{
+                statementGameOver = "You Win"
+                imageGameOver = "fbi-borgol-right-1"
+                print("DEBUG_GO_COLS: TERRORIST WIN")
+            } else{
+                statementGameOver = "You Lose"
+                imageGameOver = "terrorist-bom-rightt-1"
+                print("DEBUG_GO_COLS: FBI LOSE")
+                
+            }
+            
+            if isGameFinished{
+                removeAllNodes()
+            }
+            mpManager.session.disconnect()
         case .exploded:
             print("exploded")
             isGameFinished = true
