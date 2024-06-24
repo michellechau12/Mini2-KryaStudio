@@ -75,6 +75,9 @@ class GameScene: SKScene, ObservableObject {
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
+    private var sabotageButton: SKSpriteNode?
+    private var isSabotageButtonEnabled = true
+    private var sabotageButtonPressCount = 0
     
     private var bombSites: [BombSiteModel] = []
     
@@ -95,11 +98,12 @@ class GameScene: SKScene, ObservableObject {
     
     var terroristCondition = "terrorist-initial"
     var fbiCondition = "fbi-initial"
-    private var viewSabotaged = false
     
     var isDefusing: Bool = false
     var isDelayingMove: Bool = false
     private var defuseCooldownDuration = 3.0
+    
+    var oneTimeTapfunction = false
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -120,10 +124,10 @@ class GameScene: SKScene, ObservableObject {
         createJoystick()
         setUpTimerLabel()
         setupProgressBar()
+        setupSabotageButton()
         
-        if viewSabotaged {
-            setupSabotagedView()
-        }
+        
+       
         
         if thisPlayer.role == "terrorist"{
             setupPlantButton()
@@ -453,21 +457,119 @@ class GameScene: SKScene, ObservableObject {
         progressBar?.size.width = 100 * progress
     }
     
+    func setupSabotageButton() {
+        let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
+        sabotageButton.position = CGPoint(x: 450, y: -280 )
+        sabotageButton.size = CGSize(width: 180, height: 180)
+        sabotageButton.alpha = 1.2
+        sabotageButton.zPosition = 25
+        sabotageButton.name = "sabotageButton"
+        
+        cameraNode?.addChild(sabotageButton)
+        
+        self.sabotageButton = sabotageButton
+    }
+    
     func setupSabotagedView() {
-        maskNode = SKShapeNode(circleOfRadius: 150)
-        maskNode?.fillColor = .white
-        maskNode?.strokeColor = .clear
+           maskNode = SKShapeNode(circleOfRadius: 1000)
+           maskNode?.fillColor = .clear
+           maskNode?.strokeColor = .white
+           maskNode?.lineWidth = 0 // Start with a line width of 0
+           maskNode?.position = thisPlayer.playerNode.position
+           
+           cropNode = SKCropNode()
+           cropNode?.maskNode = maskNode
+           cropNode?.zPosition = 10
+           addChild(cropNode!)
+           
+           let background = SKSpriteNode(color: .black, size: CGSize(width: 5200, height: 5200))
+           background.position = CGPoint(x: frame.midX, y: frame.midY)
+           background.zPosition = 5
+           cropNode?.addChild(background)
+           
+    
+        let lineWidthAction = SKAction.customAction(withDuration: 3.0) { node, elapsedTime in
+            let percentage = elapsedTime / 3.0
+               self.maskNode?.lineWidth = 1825 * percentage
+           }
+           maskNode?.run(lineWidthAction)
         
-        cropNode = SKCropNode()
-        cropNode?.maskNode = maskNode
-        cropNode?.zPosition = 50
-        addChild(cropNode!)
+        let sabotageLabel = SKLabelNode(fontNamed: "Palatino-Bold")
+            sabotageLabel.text = "Your view will be sabotaged for 3 seconds!"
+            sabotageLabel.fontSize = 27
+            sabotageLabel.color = .black
+            sabotageLabel.position = CGPoint(x: 0, y: 92)
+            sabotageLabel.zPosition = 1
+            cameraNode?.addChild(sabotageLabel)
+
+            print("Children: \(self.children)")
+            
+            // Fade in
+            sabotageLabel.alpha = 0
+            let fadeInAction = SKAction.fadeIn(withDuration: 2)
+            sabotageLabel.run(fadeInAction)
         
-        // Create a black background
-        let background = SKSpriteNode(color: .black, size: self.size)
-        background.position = CGPoint(x: frame.midX, y: frame.midY)
-        background.zPosition = 5
-        cropNode?.addChild(background)  // Added to cropNode instead of scene
+        let sabotageLabelDuration = SKAction.wait(forDuration: 5.0)
+            let removeLabel = SKAction.run {
+                sabotageLabel.removeFromParent()
+            }
+            let sequenceAction2 = SKAction.sequence([sabotageLabelDuration, removeLabel])
+            run(sequenceAction2)
+        
+        
+        let waitActionReversed = SKAction.wait(forDuration: 10.0)
+            let reverseLineWidthActionReversed = SKAction.customAction(withDuration: 5.0) { node, elapsedTime in
+                let percentage = 1 - (elapsedTime / 5.0)
+                self.maskNode?.lineWidth = 1825 * percentage
+            }
+            let removeActionReversed = SKAction.run {
+                self.maskNode?.removeFromParent()
+                self.cropNode?.removeFromParent()
+            }
+            let sequenceActionReversed = SKAction.sequence([waitActionReversed, reverseLineWidthActionReversed, removeActionReversed])
+            run(sequenceActionReversed)
+        
+//            sabotageButtonPressCount += 1
+//
+//            if sabotageButtonPressCount > 1 {
+//                sabotageButton?.removeFromParent()
+//                sabotageButton = nil
+//            }
+        
+
+        _ = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] timer in
+               self?.isSabotageButtonEnabled = true
+        
+           }
+        }
+    
+    func animateCooldownTimer() {
+        
+        if !oneTimeTapfunction {
+            oneTimeTapfunction = true
+            
+            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 88, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+            let shapeNode = SKShapeNode(path: path.cgPath)
+            shapeNode.fillColor = .clear
+            shapeNode.strokeColor = .gray
+            shapeNode.lineWidth = 8
+            shapeNode.position = CGPoint(x: 450, y: -285)
+            shapeNode.zPosition = 26
+            cameraNode?.addChild(shapeNode)
+            
+            //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
+            sabotageButton?.alpha = 0.6
+            
+            let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                let percentage = elapsedTime / 20.0
+                shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 88, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+            }
+            shapeNode.run(animation) {
+                shapeNode.removeFromParent()
+                self.isSabotageButtonEnabled = true
+                self.sabotageButton?.alpha = 1
+            }
+        }
     }
     
     func setupPlantButton() {
@@ -626,6 +728,34 @@ class GameScene: SKScene, ObservableObject {
             let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
             mpManager.send(bomb: bombCondition)
         }
+        
+        if let sabotageButton = sabotageButton, let camera = cameraNode {
+            let convertedLocation = camera.convert(location, from: self)
+            if sabotageButton.contains(convertedLocation) && isSabotageButtonEnabled {
+                
+                // sending to multipeer
+                let playerCondition = MPPlayerModel(action: .sabotagedView, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: thisPlayer.id)
+                
+                mpManager.send(player: playerCondition)
+                
+                print("sabotageButton tapped")
+                
+                //Button Cooldown
+                isSabotageButtonEnabled = false
+                //Function cooldownTimer
+                animateCooldownTimer()
+                
+            }
+            else if sabotageButton.contains(convertedLocation) && !isSabotageButtonEnabled{
+                print("Button in cooldown")
+            }
+        }
+        
+        
+        
+        
+        
+        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -931,6 +1061,15 @@ class GameScene: SKScene, ObservableObject {
             self.moveOtherPlayer(id: player.playerId, pos: player.playerPosition, orientation: player.playerOrientation)
         case .sabotagedView:
             print("sabotaged view")
+            setupSabotagedView()
+            
+            sabotageButtonPressCount += 1
+
+            if sabotageButtonPressCount > 1 {
+                sabotageButton?.removeFromParent()
+                sabotageButton = nil
+            }
+            
         case .death:
             print("Start")
         case .reset:
