@@ -66,11 +66,14 @@ class PlayerModel: ObservableObject {
 //        playerNode.physicsBody = SKPhysicsBody(circleOfRadius: playerNode.size.width / 2)
         playerNode.physicsBody = SKPhysicsBody(texture: playerRightTextures[playerTextureIndex], size: playerNode.size)
         playerNode.texture = playerRightTextures[0]
+        
         if(self.id == gameScene.player1Id){
+            // fbi
             playerNode.physicsBody?.categoryBitMask = BitMaskCategory.player1
             playerNode.physicsBody?.contactTestBitMask = BitMaskCategory.player2 | BitMaskCategory.maze
             playerNode.physicsBody?.collisionBitMask = BitMaskCategory.player2 | BitMaskCategory.maze
         } else if (self.id == gameScene.player2Id){
+            // terrorist
             playerNode.physicsBody?.categoryBitMask = BitMaskCategory.player2
             playerNode.physicsBody?.contactTestBitMask = BitMaskCategory.player1 | BitMaskCategory.maze
             playerNode.physicsBody?.collisionBitMask = BitMaskCategory.player1 | BitMaskCategory.maze
