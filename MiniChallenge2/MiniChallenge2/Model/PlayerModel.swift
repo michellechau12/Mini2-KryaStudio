@@ -108,7 +108,59 @@ class PlayerModel: ObservableObject {
         updatePlayerTextures(condition: condition)
         animateWalking(orientation: self.orientation, condition: condition)
         
+        //setting vulnerability
 //        self.checkPlayerVulnerability()
+//        if self.role == "fbi" {
+//            if gameScene.isDefusing || gameScene.isDelayingMove {
+//                self.isVulnerable = true
+//            } else {
+//                self.isVulnerable = false
+//            }
+//        } else if self.role == "terrorist" {
+//            if gameScene.isDefusing || gameScene.isDelayingMove {
+//                self.isVulnerable = false
+//            } else {
+//                self.isVulnerable = true
+//            }
+//        }
+        
+//        if self.role == "fbi" && (gameScene.isDefusing || gameScene.isDelayingMove) {
+//            self.isVulnerable = true
+//        } else {
+//            self.isVulnerable = false
+//        }
+//        
+        print("FBI is defusing? \(gameScene.isDefusing)")
+        print ("FBI is delaying? \(gameScene.isDelayingMove)")
+        
+//        print("role? \(role)")
+        if role == "fbi" {
+            if gameScene.isDefusing {
+                self.isVulnerable = true
+            }
+            else if gameScene.isDelayingMove {
+                self.isVulnerable = true
+            }
+            else {
+                self.isVulnerable = false
+            }
+        }
+        
+        
+        
+//        else if role == "terrorist" {
+//            if gameScene.isDefusing2 {
+//                self.isVulnerable = false
+//            }
+//            else if gameScene.isDelayingMove {
+//                self.isVulnerable = false
+//            }
+//            else {
+//                self.isVulnerable = true
+//            }
+//        }
+            
+        
         
         //sending the movement to multipeer
         let playerCondition = MPPlayerModel(
@@ -124,6 +176,7 @@ class PlayerModel: ObservableObject {
     func updatePlayerVulnerability(){
         // setting vulnerability
         print("DEBUG: condition \(gameScene.fbiCondition), vulnerability \(isVulnerable)")
+        print("DEBUG: condition \(gameScene.terroristCondition), vulnerability \(isVulnerable)")
         if self.role == "fbi"{
             if gameScene.fbiCondition == "fbi-defusing-bomb" || gameScene.fbiCondition == "fbi-cancel-defusing" {
                 self.isVulnerable = true
@@ -137,6 +190,8 @@ class PlayerModel: ObservableObject {
                 self.isVulnerable = false
             }
         }
+        print("DEBUG: condition \(gameScene.fbiCondition), vulnerability \(isVulnerable)")
+        print("DEBUG: condition \(gameScene.terroristCondition), vulnerability \(isVulnerable)")
     }
     
     func updatePlayerTextures(condition: String){

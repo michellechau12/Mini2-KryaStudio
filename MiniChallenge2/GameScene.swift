@@ -97,6 +97,7 @@ class GameScene: SKScene, ObservableObject {
     var fbiCondition = "fbi-initial"
     private var viewSabotaged = false
     
+    var isDefusing: Bool = false
     var isDelayingMove: Bool = false
     private var defuseCooldownDuration = 3.0
     
@@ -615,6 +616,7 @@ class GameScene: SKScene, ObservableObject {
             progressBar?.isHidden = false
             
             self.fbiCondition = "fbi-defusing-bomb"
+            self.isDefusing = true
             
             //run defuse animation
             thisPlayer.updatePlayerTextures(condition: fbiCondition)
@@ -695,6 +697,7 @@ class GameScene: SKScene, ObservableObject {
                 
                 // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
                 self.fbiCondition = "fbi-cancel-defusing"
+                self.isDefusing = false
                 
                 // run cancel defuse animation:
                 thisPlayer.cancelDefuseAnimation() // there's delay after cancelling defuse animation
@@ -803,9 +806,14 @@ class GameScene: SKScene, ObservableObject {
                     isDelayingMove = false
                     self.defuseCooldownStartTime = nil
                     
+                    // setting the vulnerability
+                    player1Model.isVulnerable = true // fbi
+                    player2Model.isVulnerable = false // terrorist
+                    
                     // change from fbi-cancel-defusing
-                    self.fbiCondition = "fbi-initial"
+                    
                 }
+                self.fbiCondition = "fbi-initial"
             }
             return
         }
@@ -1154,25 +1162,28 @@ extension GameScene: SKPhysicsContactDelegate{
     }
     
     func handlePlayerCollision() {
-        thisPlayer.updatePlayerVulnerability()
+//        thisPlayer.updatePlayerVulnerability()
         
         if thisPlayer.role == "fbi"{
-            if thisPlayer.isVulnerable{
+            print("DEBUG handleplayercollision: vulnerable \(player1Model.isVulnerable), role: \(player1Model.role)")
+            if player1Model.isVulnerable{
                 print("DEBUG_COL : you (fbi) lose")
                 gameOverByCollision(winner: "terrorist", playerRole: thisPlayer.role)
-            } else{
+            } else {
                 print("DEBUG_COL : you (fbi) win")
                 gameOverByCollision(winner: "fbi", playerRole: thisPlayer.role)
             }
-        } else if thisPlayer.role == "terrorist" {
-            if thisPlayer.isVulnerable {
-                print("DEBUG_COL : you (terrorist) lose")
-                gameOverByCollision(winner: "fbi", playerRole: thisPlayer.role)
-            } else {
-                print("DEBUG_COL : you (terrorist) win")
-                gameOverByCollision(winner: "terrorist", playerRole: thisPlayer.role)
-            }
-        }
+        } 
+//        else if thisPlayer.role == "terrorist" {
+//            print("DEBUG handleplayercollision: vulnerable \(player2Model.isVulnerable), role: \(player2Model.role)")
+//            if player2Model.isVulnerable {
+//                print("DEBUG_COL : you (terrorist) lose")
+//                gameOverByCollision(winner: "fbi", playerRole: thisPlayer.role)
+//            } else {
+//                print("DEBUG_COL : you (terrorist) win")
+//                gameOverByCollision(winner: "terrorist", playerRole: thisPlayer.role)
+//            }
+//        }
     }
     
     func gameOverByCollision(winner: String, playerRole: String){
@@ -1181,7 +1192,7 @@ extension GameScene: SKPhysicsContactDelegate{
         if winner == "fbi"{
             self.winner = player1Model //fbi wins
             
-            //sending multipeer
+//            sending multipeer
             let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
             
             mpManager.send(player: playerCondition)
@@ -1199,7 +1210,7 @@ extension GameScene: SKPhysicsContactDelegate{
         } else {
             self.winner = player2Model // terrorist wins
             
-            //sending multipeer
+//            sending multipeer
             let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
             
             mpManager.send(player: playerCondition)
