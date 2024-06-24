@@ -40,6 +40,7 @@ class GameScene: SKScene, ObservableObject {
     
     private var defuseTimer: Timer?
     private var defuseTimerStartTime: Date?
+    private var defuseCooldownStartTime: Date?
     
     private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
     private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
@@ -54,6 +55,8 @@ class GameScene: SKScene, ObservableObject {
     private var fbiRightTang: [SKTexture] = []
     private var fbiLeftTang: [SKTexture] = []
     
+    private var fbiDefuseDelayTexture: [SKTexture] = []
+    
     private var terroristRightNone: [SKTexture] = []
     private var terroristLeftNone: [SKTexture] = []
     
@@ -67,17 +70,27 @@ class GameScene: SKScene, ObservableObject {
     private var cropNode: SKCropNode?
     
     private var bombSites: [BombSiteModel] = []
+    
     private let plantButton = SKSpriteNode(imageNamed: "plantButton")
     private let defuseButton = SKSpriteNode(imageNamed: "tang")
+    
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
     
     private var isPlantButtonTapped = false
     private var isDefuseButtonTapped = false
     
+    private var progressBar: SKSpriteNode?
+    private var progressBarBackground: SKSpriteNode?
+    
+    private var plantDuration = 3.0
+    private var defuseDuration = 5.0
+    
     private var terroristCondition = "start"
     private var fbiCondition = "start"
     private var viewSabotaged = false
+    
+    var isDelayingMove: Bool = false
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -97,6 +110,7 @@ class GameScene: SKScene, ObservableObject {
         createCamera()
         createJoystick()
         setUpTimerLabel()
+        setupProgressBar()
         
         if viewSabotaged {
             setupSabotagedView()
@@ -137,6 +151,12 @@ class GameScene: SKScene, ObservableObject {
         for i in 1...5 {
             let texture = SKTexture(imageNamed: "fbi-tang-left-\(i)")
             fbiLeftTang.append(texture)
+        }
+        
+        // defuse delay texture
+        for i in 1...6 {
+            let texture = SKTexture(imageNamed: "delay-texture-\(i)")
+            fbiDefuseDelayTexture.append(texture)
         }
     }
     
@@ -284,10 +304,10 @@ class GameScene: SKScene, ObservableObject {
                         //tileNode.physicsBody?.friction = 20.0
                         
                         tileNode.physicsBody?.mass = 30.0
-                        tileNode.physicsBody?.contactTestBitMask = 2
-                        tileNode.physicsBody?.categoryBitMask = 1
-                        tileNode.physicsBody?.collisionBitMask = 1
                         
+                        tileNode.physicsBody?.categoryBitMask = BitMaskCategory.maze
+                        tileNode.physicsBody?.collisionBitMask = BitMaskCategory.player1 | BitMaskCategory.player2
+                        tileNode.physicsBody?.contactTestBitMask = BitMaskCategory.player1 | BitMaskCategory.player2
                         tileMap.addChild(tileNode)
                     }
                 }
@@ -365,6 +385,27 @@ class GameScene: SKScene, ObservableObject {
         self.timerLabel?.text = "Timer:"
         self.timerLabel?.isHidden = false
         cameraNode?.addChild(timerLabel)
+    }
+    
+    func setupProgressBar() {
+        progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
+        progressBarBackground?.zPosition = 10
+        progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
+        progressBarBackground?.position = CGPoint(x: -52, y: 320)
+        cameraNode?.addChild(progressBarBackground!)
+        progressBarBackground?.isHidden = true
+        
+        progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
+        progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
+        progressBar?.position = CGPoint(x: -52, y: 320)
+        progressBar?.zPosition = 11
+        cameraNode?.addChild(progressBar!)
+        progressBar?.isHidden = true
+    }
+    
+    func updateProgressBar(elapsedTime: TimeInterval, totalTime: TimeInterval) {
+        let progress = min(CGFloat(elapsedTime / totalTime), 1.0)
+        progressBar?.size.width = 100 * progress
     }
     
     func setupSabotagedView() {
@@ -504,12 +545,41 @@ class GameScene: SKScene, ObservableObject {
         if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
             bombPlantTimerStartTime = Date()
             print("lagi plant...")
+            
+            // show progress bar
+            progressBarBackground?.isHidden = false
+            progressBar?.isHidden = false
+            
+            //run planting animation
+            print("DEBUG: previous Orientation \(thisPlayer.previousOrientation)")
+            switch thisPlayer.playerPreviousRightLeft {
+            case "left":
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerLeftTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
+            case "right":
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
+            default:
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "plantingAnimation")
+            }
         }
         
         // Detecting touch on defuse button
         if defuseButton.contains(location) && !defuseButton.isHidden {
             defuseTimerStartTime = Date()
             print("lagi defuse...")
+            
+            // show progress bar
+            progressBarBackground?.isHidden = false
+            progressBar?.isHidden = false
+            
+            //run defuse animation
+            switch thisPlayer.playerPreviousRightLeft {
+            case "left":
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerLeftTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
+            case "right":
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
+            default:
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: thisPlayer.playerRightTextures, timePerFrame: 0.1)), withKey: "defusingAnimation")
+            }
         }
     }
     
@@ -547,17 +617,39 @@ class GameScene: SKScene, ObservableObject {
         
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            if elapsedTime < 2.0 {
+            if elapsedTime < plantDuration {
                 print("cancel planting")
                 self.bombPlantTimerStartTime = nil
+                
+                // remove progress bar
+                progressBarBackground?.isHidden = true
+                progressBar?.isHidden = true
+                
+                //remove planting animation
+                thisPlayer.playerNode.removeAction(forKey: "plantingAnimation")
+                
             }
         }
         
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime < 2.0 {
+            if elapsedTime < defuseDuration {
                 print("cancel defusing")
                 self.defuseTimerStartTime = nil
+                
+                // remove progress bar
+                progressBarBackground?.isHidden = true
+                progressBar?.isHidden = true
+                
+                //run cancel defuse animation:
+                thisPlayer.playerNode.run(SKAction.repeatForever(SKAction.animate(with: fbiDefuseDelayTexture, timePerFrame: 0.1)), withKey: "delayCancelling")
+                
+                //remove defusing animation
+                thisPlayer.playerNode.removeAction(forKey: "defuseAnimation")
+                
+                //Start delay timer:
+                defuseCooldownStartTime = Date()
+                isDelayingMove = true
             }
         }
     }
@@ -570,6 +662,8 @@ class GameScene: SKScene, ObservableObject {
 //        }
         
         guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
+        
+        
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * thisPlayer.speedMultiplier, dy: displacement.dy * thisPlayer.speedMultiplier)
@@ -628,6 +722,32 @@ class GameScene: SKScene, ObservableObject {
                 }
             }
         }
+        //delaymove
+        if isDelayingMove {
+            thisPlayer.playerNode.physicsBody?.velocity = .zero
+            thisPlayer.playerNode.removeAction(forKey: "moveLeft")
+            thisPlayer.playerNode.removeAction(forKey: "moveRight")
+            
+            if let defuseCooldownStartTime = defuseCooldownStartTime {
+                let cooldownElapsedTime = Date().timeIntervalSince(defuseCooldownStartTime)
+                if cooldownElapsedTime >= 3 {
+                    thisPlayer.playerNode.removeAction(forKey: "delayCancelling")
+                    
+                    switch thisPlayer.previousOrientation {
+                    case "left" :
+                        thisPlayer.playerNode.texture = thisPlayer.latestTextureLeft
+                    case "right" :
+                        thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+                    default:
+                        thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+                    }
+                    
+                    isDelayingMove = false
+                    self.defuseCooldownStartTime = nil
+                }
+            }
+            
+        }
         
         // Moving the player
         if thisPlayer.role == "terrorist"{
@@ -647,11 +767,20 @@ class GameScene: SKScene, ObservableObject {
         // add bomb if players already held plant button for a certain period of time
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            if elapsedTime >= 2.0 {
+            updateProgressBar(elapsedTime: elapsedTime, totalTime: plantDuration)
+            if elapsedTime >= plantDuration {
                 print("Success planting bomb")
                 self.addBombNode()
+                self.bombPlantTimerStartTime = nil
                 
-                //                sending location of the bomb to other player
+                //remove the progress bar
+                progressBarBackground?.isHidden = true
+                progressBar?.isHidden = true
+                
+                //remove planting animation
+                thisPlayer.playerNode.removeAction(forKey: "plantingAnimation")
+                
+                //  sending location of the bomb to other player
                 let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
                 self.mpManager.send(bomb: bombCondition)
                 
@@ -661,13 +790,23 @@ class GameScene: SKScene, ObservableObject {
         // defuse bomb if players already held defuse button for a certain period of time
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime >= 2.0 {
+            updateProgressBar(elapsedTime: elapsedTime, totalTime: defuseDuration)
+            if elapsedTime >= defuseDuration {
                 print("Success defusing bomb")
                 self.defuseBombNode()
+                self.defuseTimerStartTime = nil
                 
-                //           sending bomb condition to multipeer
+                //remove the progress bar
+                progressBarBackground?.isHidden = true
+                progressBar?.isHidden = true
+                
+                //remove defusing animation
+                thisPlayer.playerNode.removeAction(forKey: "defuseAnimation")
+                
+                //  sending bomb condition to multipeer
                 let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
                 self.mpManager.send(bomb: bombCondition)
+                
                 
                 timer?.invalidate()
                 
@@ -706,8 +845,6 @@ class GameScene: SKScene, ObservableObject {
         plantButton.isHidden = true
         
         startTimer()
-        
-        self.bombPlantTimerStartTime = nil
     }
     
     func defuseBombNode(){
@@ -716,7 +853,6 @@ class GameScene: SKScene, ObservableObject {
         if let bombNode = self.childNode(withName: "bomb") {
             bombNode.removeFromParent()
         }
-        self.defuseTimerStartTime = nil
     }
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
@@ -884,28 +1020,51 @@ class GameScene: SKScene, ObservableObject {
 
 extension GameScene: SKPhysicsContactDelegate{
     func didBegin(_ contact: SKPhysicsContact) {
+        
         let bodyA = contact.bodyA
         let bodyB = contact.bodyB
         
-        // Determine the categories involved in the collision
-        let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
-        print("DEBUG: bodyA = \(bodyA.categoryBitMask), bodyB = \(bodyB.categoryBitMask)")
-        print("DEBUG: bodyA = \(BitMaskCategory.player1), bodyB = \(BitMaskCategory.player2)")
-        
-        switch collision {
-        case BitMaskCategory.player1 | BitMaskCategory.player2:
-            // FBI and terrorist collided
-            print("FBI and terrorist collided")
+        if (bodyA.categoryBitMask == BitMaskCategory.player1 && bodyB.categoryBitMask == BitMaskCategory.player2) ||
+            (bodyA.categoryBitMask == BitMaskCategory.player2 && bodyB.categoryBitMask == BitMaskCategory.player1) {
+            print("Player 1 and Player 2 collided")
             handlePlayerCollision()
-        case BitMaskCategory.player1 | BitMaskCategory.maze:
-            // FBI and maze collided
-            print("FBI and maze collided")
-        case BitMaskCategory.player2 | BitMaskCategory.maze:
-            // Terrorist and maze collided
-            print("Terrorist and maze collided")
-        default:
-            break
+            
+            // Handle collision between player1 and player2
+        } else if (bodyA.categoryBitMask == BitMaskCategory.player1 && bodyB.categoryBitMask == BitMaskCategory.maze) ||
+                    (bodyA.categoryBitMask == BitMaskCategory.maze && bodyB.categoryBitMask == BitMaskCategory.player1) {
+            print("Player 1 collided with the maze")
+            // Handle collision between player1 and the maze
+        } else if (bodyA.categoryBitMask == BitMaskCategory.player2 && bodyB.categoryBitMask == BitMaskCategory.maze) ||
+                    (bodyA.categoryBitMask == BitMaskCategory.maze && bodyB.categoryBitMask == BitMaskCategory.player2) {
+            print("Player 2 collided with the maze")
+            // Handle collision between player2 and the maze
         }
+        
+        // is not applicable when there's a lot of spritenode
+        //        let bodyA = contact.bodyA
+        //        let bodyB = contact.bodyB
+        //
+        //        // Determine the categories involved in the collision
+        //        let collision = bodyA.categoryBitMask | bodyB.categoryBitMask
+        //        print("DEBUG: bodyA = \(bodyA.categoryBitMask), bodyB = \(bodyB.categoryBitMask)")
+        //        print("DEBUG: bodyA = \(BitMaskCategory.player1), bodyB = \(BitMaskCategory.player2)")
+        //
+        //        switch collision {
+        //        case BitMaskCategory.player1 | BitMaskCategory.player2:
+        //            // FBI and terrorist collided
+        //            print("FBI and terrorist collided")
+        //            handlePlayerCollision()
+        //        case BitMaskCategory.player1 | BitMaskCategory.maze:
+        //            // FBI and maze collided
+        //            print("FBI and maze collided")
+        //
+        //        case BitMaskCategory.player2 | BitMaskCategory.maze:
+        //            // Terrorist and maze collided
+        //            print("Terrorist and maze collided")
+        //
+        //        default:
+        //            break
+        //        }
     }
     
     func handlePlayerCollision() {

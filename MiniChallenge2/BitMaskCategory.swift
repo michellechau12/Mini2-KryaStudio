@@ -8,7 +8,13 @@
 import Foundation
 
 struct BitMaskCategory{
+    
     static let player1: UInt32 = 1
     static let player2: UInt32 = 2
     static let maze: UInt32 = 3
+    
+    
+//    static let player1: UInt32 = 0b1
+//    static let player2: UInt32 = 0b10
+//    static let maze: UInt32 = 0b100
 }

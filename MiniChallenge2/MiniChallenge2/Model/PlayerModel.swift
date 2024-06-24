@@ -25,6 +25,7 @@ class PlayerModel: ObservableObject {
     // For notWalking Texture
     var latestTextureRight: SKTexture
     var latestTextureLeft: SKTexture
+    var playerPreviousRightLeft: String?
     
     init(id: String, playerRightTextures: [SKTexture], playerLeftTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
@@ -93,9 +94,11 @@ class PlayerModel: ObservableObject {
         if velocity.dx > 0 {
             // Move Right
                 self.orientation = "right"
+                playerPreviousRightLeft = "right"
         } else if velocity.dx < 0 {
             // Move Left
                 self.orientation = "left"
+                playerPreviousRightLeft = "left"
             
         } else {
             self.orientation = "not-moving"
