@@ -41,7 +41,9 @@ struct ContentView: View {
                     Spacer()
                     ZStack {
                         Button {
-                            showNameInput = true
+//                            showNameInput = true
+                              startGame = true
+
                         } label: {
                             Image("button-play")
                                 .resizable()
@@ -70,9 +72,9 @@ struct ContentView: View {
 //                mpManager.stopAdvertising()
             }
             .navigationBarBackButtonHidden(true)
-            .overlay(
-                showNameInput ? NameInputOverlay(showNameInput: $showNameInput, newName: $newName, startGame: $startGame) : nil
-            )
+//            .overlay(
+//                showNameInput ? NameInputOverlay(showNameInput: $showNameInput, newName: $newName, startGame: $startGame) : nil
+//            )
             .overlay(
                 showCredit ? CreditOverlay(showCredit: $showCredit) : nil
             )
