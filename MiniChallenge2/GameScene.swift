@@ -95,14 +95,14 @@ class GameScene: SKScene, ObservableObject {
     private var progressBarBackground: SKSpriteNode?
     
     private var plantDuration = 3.0
-    private var defuseDuration = 5.0
+    private var defuseDuration = 4.0
     
     var terroristCondition = "terrorist-initial"
     var fbiCondition = "fbi-initial"
     
     var isDefusing: Bool = false
     var isDelayingMove: Bool = false
-    private var defuseCooldownDuration = 3.0
+    private var defuseCooldownDuration = 2.0
     
     var oneTimeTapfunction = false
     
@@ -342,7 +342,8 @@ class GameScene: SKScene, ObservableObject {
                         let tileNode = SKNode()
                         
                         tileNode.position = CGPoint(x: x, y: y)
-                        tileNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: (tileTexture.size().width), height: tileTexture.size().height))
+//                        tileNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: (tileTexture.size().width), height: tileTexture.size().height))
+                        tileNode.physicsBody = SKPhysicsBody(texture: tileTexture, size: tileTexture.size())
                         tileNode.physicsBody?.affectedByGravity = false
                         tileNode.physicsBody?.allowsRotation = false
                         tileNode.physicsBody?.restitution = 0
