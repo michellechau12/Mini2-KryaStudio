@@ -82,8 +82,8 @@ class GameScene: SKScene, ObservableObject {
     
     private var bombSites: [BombSiteModel] = []
     
-    private let plantButton = SKSpriteNode(imageNamed: "plantButton")
-    private let defuseButton = SKSpriteNode(imageNamed: "tang")
+    private var plantButton = SKSpriteNode(imageNamed: "plantButton")
+    private var defuseButton = SKSpriteNode(imageNamed: "tang")
     
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
@@ -401,14 +401,16 @@ class GameScene: SKScene, ObservableObject {
     func createJoystick() {
         //Otak-atik posisi Joystick
         let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
-        joystickBase.position = CGPoint(x: -480, y: -310)
+//        joystickBase.position = CGPoint(x: -480, y: -310)
+        joystickBase.position = CGPoint(x: -450, y: -250)
         joystickBase.setScale(1.5)
         joystickBase.alpha = 0.5
         joystickBase.zPosition = 80
         joystickBase.name = "joystickBase2"
         
         let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
-        joystickKnob.position = CGPoint(x: -480, y: -310)
+//        joystickKnob.position = CGPoint(x: -480, y: -310)
+        joystickKnob.position = CGPoint(x: -450, y: -250)
         joystickKnob.setScale(1.5)
         joystickKnob.zPosition = 88
         joystickKnob.name = "joystickKnob2"
@@ -468,6 +470,7 @@ class GameScene: SKScene, ObservableObject {
     func setupSabotageButton() {
         let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
         sabotageButton.position = CGPoint(x: 450, y: -280 )
+//        sabotageButton.position = CGPoint(x: 350, y: -280 )
         sabotageButton.size = CGSize(width: 180, height: 180)
         sabotageButton.alpha = 1.2
         sabotageButton.zPosition = 25
@@ -580,19 +583,43 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func setupPlantButton() {
-        plantButton.size = CGSize(width: 40, height: 40)
-        plantButton.zPosition = 20
-        plantButton.alpha = 1
-        addChild(plantButton)
-        plantButton.isHidden = true
+//    func setupPlantButton() {
+//        plantButton.size = CGSize(width: 40, height: 40)
+//        plantButton.zPosition = 20
+//        plantButton.alpha = 1
+//        addChild(plantButton)
+//        plantButton.isHidden = true
+//    }
+    
+    func setupPlantButton(){
+        plantButton.position = CGPoint(x: 450, y: -110 )
+        plantButton.size = CGSize(width: 130, height: 130)
+        plantButton.alpha = 0.2
+        plantButton.zPosition = 25
+        plantButton.name = "plantButton"
+        
+        cameraNode?.addChild(plantButton)
+        
+//        self.plantButton = plantButton
     }
     
-    func setupDefuseButton() {
-        defuseButton.size = CGSize(width: 70, height: 70)
-        defuseButton.zPosition = 20
-        addChild(defuseButton)
-        defuseButton.isHidden = true
+//    func setupDefuseButton() {
+//        defuseButton.size = CGSize(width: 40, height: 40)
+//        defuseButton.zPosition = 20
+//        addChild(defuseButton)
+//        defuseButton.isHidden = true
+//    }
+    
+    func setupDefuseButton(){
+        defuseButton.position = CGPoint(x: 450, y: -110 )
+        defuseButton.size = CGSize(width: 130, height: 130)
+        defuseButton.alpha = 0.2
+        defuseButton.zPosition = 25
+        defuseButton.name = "defuseButton"
+        
+        cameraNode?.addChild(defuseButton)
+        
+//        self.plantButton = plantButton
     }
     
     func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
@@ -884,18 +911,21 @@ class GameScene: SKScene, ObservableObject {
         if thisPlayer.role == "fbi" {
             //If FBI near bomb, defuse button will appear
             if isPlayerNearBomb() {
-                let offset: CGFloat = 20.0
-                defuseButton.position = CGPoint(
-                    x: thisPlayer.playerNode.position.x,
-                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset)
-                defuseButton.isHidden = false
+//                let offset: CGFloat = 20.0
+//                defuseButton.position = CGPoint(
+//                    x: thisPlayer.playerNode.position.x,
+//                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset
+//                )
+//                defuseButton.isHidden = false
+                defuseButton.alpha = 1
                 fbiCondition = "fbi-near-bomb"
                 
                 //sending to multipeer
                 let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-near-bomb", winnerId: thisPlayer.id)
                 mpManager.send(bomb: bombCondition)
             } else {
-                defuseButton.isHidden = true
+//                defuseButton.isHidden = true
+                defuseButton.alpha = 0.2
                 fbiCondition = "fbi-far-from-bomb"
                 
                 //sending to multipeer
@@ -907,22 +937,26 @@ class GameScene: SKScene, ObservableObject {
         else {
             if isPlayerInBombSite() && !isBombPlanted {
                 // func to enable plantButton
-                let offset: CGFloat = 10.0
-                plantButton.position = CGPoint(
-                    x: thisPlayer.playerNode.position.x,
-                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
+//                let offset: CGFloat = 10.0
+//                plantButton.position = CGPoint(
+//                    x: thisPlayer.playerNode.position.x,
+//                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset
+//
+//                )
+//                plantButton.isHidden = false
+                plantButton.alpha = 1
                 
-                plantButton.isHidden = false
+                
                 // Debugging print:
 //                    print("Plant button is visible")
             } else {
-                plantButton.isHidden = true
+//                plantButton.isHidden = true
+                plantButton.alpha = 0.2
             }
             
             if isBombPlanted {
                 if isPlayerNearBomb() {
                     terroristCondition = "terrorist-near-bomb"
-                    
                     
                     //sending to multipeer
                     let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-near-bomb", winnerId: thisPlayer.id)
