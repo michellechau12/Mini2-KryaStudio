@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FBIInstructionView: View {
+
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @EnvironmentObject var gameScene: GameScene
     
