@@ -72,6 +72,7 @@ class GameScene: SKScene, ObservableObject {
     
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
+    private var joystickTouchArea : SKShapeNode?
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
@@ -420,6 +421,15 @@ class GameScene: SKScene, ObservableObject {
         self.joystick = joystickBase
         self.joystickKnob = joystickKnob
         
+        let joystickTouchArea = SKShapeNode (circleOfRadius: 400)
+        joystickTouchArea.position = joystickBase.position
+        joystickTouchArea.zPosition = 19
+        joystickTouchArea.strokeColor = .clear
+        joystickTouchArea.fillColor = .clear
+        joystickTouchArea.name = "joystickTouchArea"
+        cameraNode?.addChild(joystickTouchArea)
+        
+        self.joystickTouchArea = joystickTouchArea
     }
     
     func setUpTimerLabel(){
@@ -770,19 +780,21 @@ class GameScene: SKScene, ObservableObject {
             
             //Convert Lokasi touch dari Scene ke Cam
             let convertedLocation = camera.convert(location, from: self)
-            if joystick.contains(convertedLocation){
-                //Setup seberapa jauh Knob bisa ditarik
-                let maxDistance: CGFloat = 50.0
-                
-                let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
-                let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
-                
-                if distance <= maxDistance {
-                    joystickKnob.position = convertedLocation
-                } else {
-                    let angle = atan2(displacement.dy, displacement.dx)
-                    joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
-                                                    y: joystick.position.y + sin(angle) * maxDistance)
+            if let unwrappedJoystickTouchArea = joystickTouchArea {
+                if unwrappedJoystickTouchArea.contains(convertedLocation) {
+                    //Setup seberapa jauh Knob bisa ditarik
+                    let maxDistance: CGFloat = 50.0
+                    
+                    let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
+                    let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
+                    
+                    if distance <= maxDistance {
+                        joystickKnob.position = convertedLocation
+                    } else {
+                        let angle = atan2(displacement.dy, displacement.dx)
+                        joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
+                                                        y: joystick.position.y + sin(angle) * maxDistance)
+                    }
                 }
             }
         }
