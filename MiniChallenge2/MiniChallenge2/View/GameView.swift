@@ -37,7 +37,7 @@ struct GameView: View {
 //                }
                 .onAppear(){
                     AudioManager.shared.stopMusic()
-                    AudioManager.shared.playGameMusic()
+                    //AudioManager.shared.playGameMusic()
 
                 }
 //                .onReceive(gameScene.$isGameFinished, perform: { _ in
@@ -50,7 +50,14 @@ struct GameView: View {
                     isGameFinished = value
                 }
                 .navigationDestination(isPresented: $isGameFinished) {
-                    GameOverView()
+                    // GameOverView()
+                    if gameScene.statementGameOver == "FBI_WIN"{
+                        FBIWinningView()
+                    } else if gameScene.statementGameOver == "TERRORIST_WIN"{
+                        TerroristWinningView()
+                    } else{
+                        GameOverView()
+                    }
                 }
             
 //                .navigationDestination(isPresented: $isGameFinished) {

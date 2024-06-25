@@ -663,11 +663,11 @@ class GameScene: SKScene, ObservableObject {
         if self.winner.id == self.thisPlayer.id{
             statementGameOver = "You Win"
             imageGameOver = "terrorist-bom-rightt-1"
-            print("DEBUG_GO_COLS: TERRORIST WIN")
+            print("DEBUG_GO_EXPLODING_FUNC: TERRORIST WIN")
         } else{
             statementGameOver = "You Lose"
             imageGameOver = "fbi-borgol-right-1"
-            print("DEBUG_GO_COLS: FBI LOSE")
+            print("DEBUG_GO_EXPLODING_FUNC: FBI LOSE")
             
         }
         
@@ -1079,6 +1079,7 @@ class GameScene: SKScene, ObservableObject {
         self.timerLabel?.isHidden = true
         if let bombNode = self.childNode(withName: "bomb") {
             bombNode.removeFromParent()
+            
         }
     }
     
@@ -1097,31 +1098,26 @@ class GameScene: SKScene, ObservableObject {
         case .reset:
             print("Start")
         case .end:
-            self.isGameFinished = true
-            
-            if thisPlayer.role == "fbi"{ // OtherPlayer as FBI
-                // If player as fbi winning the game
-                if player.winnerId == thisPlayer.id{
-                    statementGameOver = "You Win"
-                    imageGameOver = "fbi-borgol-right-1"
-                    print("DEBUG_GO_COLS_handle: FBI WIN")
-                } else {
-                    statementGameOver = "You Lose"
-                    imageGameOver = "fbi-borgol-right-1"
-                    print("DEBUG_GO_COLS_handle: TERRORIST LOSE")
+            print("DEBUG_GAMEOVER awal : role \(thisPlayer.id) || \(statementGameOver)")
+            if player.winnerId == thisPlayer.id{
+                if thisPlayer.role == "fbi"{
+                    statementGameOver = "FBI_WIN"
+                    print("DEBUG_GAMEOVER role FBI : \(statementGameOver)")
+                } else if thisPlayer.role == "terrorist"{
+                    statementGameOver = "TERRORIST_WIN"
+                    print("DEBUG_GAMEOVER role TERRORIST : \(statementGameOver)")
                 }
-            } else {
-                // If player as terrorist winning the game
-                if player.winnerId == thisPlayer.id{
-                    statementGameOver = "You Win"
-                    imageGameOver = "terrorist-bom-rightt-1"
-                    print("DEBUG_GO_COLS_handle: TERRORIST WIN")
-                } else{
-                    statementGameOver = "You Lose"
-                    imageGameOver = "terrorist-bom-rightt-1"
-                    print("DEBUG_GO_COLS_handle: FBI LOSE")
+            } else if player.winnerId != thisPlayer.id{
+                if thisPlayer.role == "fbi"{
+                    statementGameOver = "TERRORIST_WIN"
+                    print("DEBUG_GAMEOVER role FBI : \(statementGameOver)")
+                } else if thisPlayer.role == "terrorist" {
+                    statementGameOver = "FBI_WIN"
+                    print("DEBUG_GAMEOVER role TERRORIST : \(statementGameOver)")
                 }
             }
+            
+            self.isGameFinished = true
             
             if isGameFinished{
                 removeAllNodes()
@@ -1180,11 +1176,11 @@ class GameScene: SKScene, ObservableObject {
             if bomb.winnerId == self.thisPlayer.id{
                 statementGameOver = "You Win"
                 imageGameOver = "fbi-borgol-right-1"
-                print("DEBUG_GO_COLS: TERRORIST WIN")
+                print("DEBUG_GO_COLS_DEFUSED: TERRORIST WIN")
             } else{
                 statementGameOver = "You Lose"
                 imageGameOver = "terrorist-bom-rightt-1"
-                print("DEBUG_GO_COLS: FBI LOSE")
+                print("DEBUG_GO_COLS_DEFUSED: FBI LOSE")
                 
             }
             
@@ -1199,11 +1195,11 @@ class GameScene: SKScene, ObservableObject {
             if bomb.winnerId == self.thisPlayer.id{
                 statementGameOver = "You Win"
                 imageGameOver = "terrorist-bom-rightt-1"
-                print("DEBUG_GO_COLS: TERRORIST WIN")
+                print("DEBUG_GO_EXPLODED: TERRORIST WIN")
             } else{
                 statementGameOver = "You Lose"
                 imageGameOver = "fbi-borgol-right-1"
-                print("DEBUG_GO_COLS: FBI LOSE")
+                print("DEBUG_GO_EXPLODED: FBI LOSE")
                 
             }
             
@@ -1358,16 +1354,7 @@ extension GameScene: SKPhysicsContactDelegate{
             
             mpManager.send(player: playerCondition)
             
-            // If player as fbi winning the game
-            if self.winner.id == self.thisPlayer.id{
-                statementGameOver = "You Win"
-                imageGameOver = "fbi-borgol-right-1"
-                print("DEBUG_GO_COLS: FBI WIN")
-            } else { // If player as terrorist losing the game
-                statementGameOver = "You Lose"
-                imageGameOver = "terrorist-bom-rightt-1"
-                print("DEBUG_GO_COLS: TERRORIST LOSE")
-            }
+            statementGameOver = "FBI_WIN"
         } else {
             self.winner = player2Model // terrorist wins
             
@@ -1376,15 +1363,7 @@ extension GameScene: SKPhysicsContactDelegate{
             
             mpManager.send(player: playerCondition)
             
-            if self.winner.id == self.thisPlayer.id{
-                statementGameOver = "You Win"
-                imageGameOver = "terrorist-bom-rightt-1"
-                print("DEBUG_GO_COLS: TERRORIST WIN")
-            } else{
-                statementGameOver = "You Lose"
-                imageGameOver = "fbi-borgol-right-1"
-                print("DEBUG_GO_COLS: FBI LOSE")
-            }
+            statementGameOver = "TERRORIST_WIN"
         }
         
         if self.isGameFinished{
