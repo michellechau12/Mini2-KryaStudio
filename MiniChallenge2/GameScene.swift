@@ -76,6 +76,7 @@ class GameScene: SKScene, ObservableObject {
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
+    
     private var sabotageButton: SKSpriteNode?
     private var isSabotageButtonEnabled = true
     private var sabotageButtonPressCount = 0
@@ -104,7 +105,16 @@ class GameScene: SKScene, ObservableObject {
     var isDelayingMove: Bool = false
     private var defuseCooldownDuration = 2.0
     
-    var oneTimeTapfunction = false
+    var sabotageOneTimeTapfunction = false
+    var sprintOneTimeTapfunction = false
+    
+    private var sprintButton = SKSpriteNode(imageNamed: "sprint-button")
+    private var isSprintButtonEnabled: Bool = true
+    private var sprintButtonPressCount = 0
+    
+    private var extraSpeed = 2.0 // for sprint
+    private var sprintStartTime: Date?
+    private var sprintDuration = 5.0
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -126,7 +136,7 @@ class GameScene: SKScene, ObservableObject {
         setUpTimerLabel()
         setupProgressBar()
         setupSabotageButton()
-
+        setupSprintButton()
         
         if thisPlayer.role == "terrorist"{
             setupPlantButton()
@@ -402,7 +412,7 @@ class GameScene: SKScene, ObservableObject {
         //Otak-atik posisi Joystick
         let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
 //        joystickBase.position = CGPoint(x: -480, y: -310)
-        joystickBase.position = CGPoint(x: -450, y: -250)
+        joystickBase.position = CGPoint(x: -420, y: -220)
         joystickBase.setScale(1.5)
         joystickBase.alpha = 0.5
         joystickBase.zPosition = 80
@@ -410,7 +420,7 @@ class GameScene: SKScene, ObservableObject {
         
         let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
 //        joystickKnob.position = CGPoint(x: -480, y: -310)
-        joystickKnob.position = CGPoint(x: -450, y: -250)
+        joystickKnob.position = CGPoint(x: -420, y: -220)
         joystickKnob.setScale(1.5)
         joystickKnob.zPosition = 88
         joystickKnob.name = "joystickKnob2"
@@ -554,10 +564,10 @@ class GameScene: SKScene, ObservableObject {
            }
         }
     
-    func animateCooldownTimer() {
+    func animateSabotageCooldownTimer() {
         
-        if !oneTimeTapfunction {
-            oneTimeTapfunction = true
+        if !sabotageOneTimeTapfunction {
+            sabotageOneTimeTapfunction = true
             
             let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 77, startAngle: 0, endAngle:.pi * 2, clockwise: true)
             let shapeNode = SKShapeNode(path: path.cgPath)
@@ -565,7 +575,7 @@ class GameScene: SKScene, ObservableObject {
             shapeNode.strokeColor = .gray
             shapeNode.lineWidth = 8
             shapeNode.position = CGPoint(x: 450, y: -256)
-            shapeNode.zPosition = 26
+            shapeNode.zPosition = 10
             cameraNode?.addChild(shapeNode)
             
             //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
@@ -581,6 +591,98 @@ class GameScene: SKScene, ObservableObject {
                 self.sabotageButton?.alpha = 1
             }
         }
+    }
+    
+    func animateSprintCooldownTimer() {
+        
+        if !sprintOneTimeTapfunction {
+            sprintOneTimeTapfunction = true
+            
+            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 50, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+            let shapeNode = SKShapeNode(path: path.cgPath)
+            shapeNode.fillColor = .clear
+            shapeNode.strokeColor = .gray
+            shapeNode.lineWidth = 8
+            shapeNode.position = CGPoint(x: 300, y: -220 )
+            shapeNode.zPosition = 10
+            cameraNode?.addChild(shapeNode)
+            
+            //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sprintButton menjadi 0.2
+            sprintButton.alpha = 0.6
+            
+            let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                let percentage = elapsedTime / 20.0
+                shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 88, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+            }
+            shapeNode.run(animation) {
+                shapeNode.removeFromParent()
+                self.isSprintButtonEnabled = true
+                self.sprintButton.alpha = 1
+            }
+        }
+        
+        
+        
+        
+    }
+    
+    func stopSprintCondition(){
+        print("DEBUG: initial speed \(thisPlayer.speedMultiplier)")
+        if let sprintStartTime = sprintStartTime {
+            let sprintElapsedTime = Date().timeIntervalSince(sprintStartTime)
+            if sprintElapsedTime > sprintDuration {
+                print("DEBUG: elapsed time more than sprint duration")
+                thisPlayer.speedMultiplier -= self.extraSpeed
+                self.sprintStartTime = nil
+            }
+            print("DEBUG: sprint speed \(thisPlayer.speedMultiplier)")
+        }
+        
+       
+        
+//        let sprintForce = CGVector(dx: 10, dy: 10)
+//        
+//        thisPlayer.playerNode.physicsBody?.applyForce(<#T##CGVector#>)
+    }
+    
+    func setupStartSprintLabel(){
+        
+        _ = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] timer in
+               self?.isSprintButtonEnabled = true
+        
+           }
+        
+        let sprintLabel = SKLabelNode(fontNamed: "Palatino-Bold")
+            sprintLabel.text = "Your speed will be greatly increased for 5 seconds!"
+            sprintLabel.fontSize = 27
+            sprintLabel.color = .black
+            sprintLabel.position = CGPoint(x: 0, y: 92)
+            sprintLabel.zPosition = 40
+            cameraNode?.addChild(sprintLabel)
+
+            print("Children: \(self.children)")
+            
+            // Fade in
+            sprintLabel.alpha = 0
+            let fadeInAction = SKAction.fadeIn(withDuration: 2)
+            sprintLabel.run(fadeInAction)
+        
+        let sprintLabelDuration = SKAction.wait(forDuration: 5.0)
+            let removeLabel3 = SKAction.run {
+                sprintLabel.removeFromParent()
+            }
+            let sequenceAction3 = SKAction.sequence([sprintLabelDuration, removeLabel3])
+            run(sequenceAction3)
+    }
+    
+    func setupSprintButton() {
+        sprintButton.position = CGPoint(x: 300, y: -220 )
+        sprintButton.size = CGSize(width: 130, height: 130)
+        sprintButton.alpha = 1.2
+        sprintButton.zPosition = 25
+        sprintButton.name = "plantButton"
+        
+        cameraNode?.addChild(sprintButton)
     }
     
 //    func setupPlantButton() {
@@ -716,8 +818,17 @@ class GameScene: SKScene, ObservableObject {
     func removeSabotageButtonAfterUse(){
         sabotageButtonPressCount += 1
 
-        if sabotageButtonPressCount > 1 {
+        if sabotageButtonPressCount == 2 {
             sabotageButton?.removeFromParent()
+//            sabotageButton = nil
+        }
+    }
+    
+    func setNumberOfSprintAllowed(){
+        sprintButtonPressCount += 1
+
+        if sprintButtonPressCount == 2 {
+            sprintButton.removeFromParent()
 //            sabotageButton = nil
         }
     }
@@ -791,12 +902,35 @@ class GameScene: SKScene, ObservableObject {
                 //Button Cooldown
                 isSabotageButtonEnabled = false
                 //Function cooldownTimer
-                animateCooldownTimer()
+                animateSabotageCooldownTimer()
                 //function to remove sabotage button after 2x tap
                 removeSabotageButtonAfterUse()
                 
             }
             else if sabotageButton.contains(convertedLocation) && !isSabotageButtonEnabled{
+                print("Button in cooldown")
+            }
+        }
+        
+        // sprint button
+        if let camera = cameraNode{
+            let convertedLocation = camera.convert(location, from: self)
+            if sprintButton.contains(convertedLocation) && isSprintButtonEnabled {
+                sprintStartTime = Date()
+                
+                // Button Cooldown
+                isSprintButtonEnabled = false
+                //Function cooldownTimer
+//                setupSprintCondition()
+                setupStartSprintLabel()
+                animateSprintCooldownTimer()
+                setNumberOfSprintAllowed()
+                
+                // adding speed multiplier
+                thisPlayer.speedMultiplier += self.extraSpeed
+
+                
+            } else if sprintButton.contains(convertedLocation) && !isSprintButtonEnabled {
                 print("Button in cooldown")
             }
         }
@@ -1042,7 +1176,6 @@ class GameScene: SKScene, ObservableObject {
                     //  sending location of the bomb to other player
                     let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
                     self.mpManager.send(bomb: bombCondition)
-                    
                 }
             }
         }
@@ -1091,6 +1224,9 @@ class GameScene: SKScene, ObservableObject {
                 }
             }
         }
+        
+        // sprint condition
+        stopSprintCondition()
     }
     
     func addBombNode() {
