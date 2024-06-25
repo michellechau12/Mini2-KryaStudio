@@ -16,6 +16,11 @@
 		0B91B1FD2C297276005E7F99 /* TerroristInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1FC2C297276005E7F99 /* TerroristInstructionView.swift */; };
 		0B91B1FF2C2972B0005E7F99 /* FBIWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B1FE2C2972B0005E7F99 /* FBIWinningView.swift */; };
 		0B91B2012C2972EF005E7F99 /* TerroristWinningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B2002C2972EF005E7F99 /* TerroristWinningView.swift */; };
+		0B91B2032C2A6BC3005E7F99 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B91B2022C2A6BC3005E7F99 /* AudioManager.swift */; };
+		0B91B2062C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B2052C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 */; };
+		0B91B20A2C2A837F005E7F99 /* Famicom Battle-bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */; };
+		0B91B20E2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */; };
+		0B91B2102C2AB782005E7F99 /* police-sirene-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -45,6 +50,11 @@
 		0B91B1FC2C297276005E7F99 /* TerroristInstructionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristInstructionView.swift; sourceTree = "<group>"; };
 		0B91B1FE2C2972B0005E7F99 /* FBIWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBIWinningView.swift; sourceTree = "<group>"; };
 		0B91B2002C2972EF005E7F99 /* TerroristWinningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerroristWinningView.swift; sourceTree = "<group>"; };
+		0B91B2022C2A6BC3005E7F99 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		0B91B2052C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Hot-Wet-and-Happy-bgm.mp3"; sourceTree = "<group>"; };
+		0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Famicom Battle-bgm.mp3"; sourceTree = "<group>"; };
+		0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "explode-bomb-sfx.mp3"; sourceTree = "<group>"; };
+		0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "police-sirene-sfx.mp3"; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
@@ -108,6 +118,11 @@
 				ECCC19322C1A38BB0059276B /* Info.plist */,
 				0B91B1F62C296EFC005E7F99 /* PixelifySans.ttf */,
 				0B91B1F82C296FBA005E7F99 /* ColorExtensions.swift */,
+				0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */,
+				0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */,
+				0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */,
+				0B91B2052C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 */,
+				0B91B2022C2A6BC3005E7F99 /* AudioManager.swift */,
 				ECCC192B2C194FA70059276B /* MultipeerConnectivity */,
 				ECCC18A32C1833160059276B /* Assets.xcassets */,
 				EF7A022B2C28596000457237 /* MazeTileSet.sks */,
@@ -223,9 +238,13 @@
 			files = (
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
 				EF7A022C2C28596000457237 /* MazeTileSet.sks in Resources */,
+				0B91B20A2C2A837F005E7F99 /* Famicom Battle-bgm.mp3 in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
+				0B91B2102C2AB782005E7F99 /* police-sirene-sfx.mp3 in Resources */,
 				0B91B1F72C296EFC005E7F99 /* PixelifySans.ttf in Resources */,
 				EF7A022E2C28596500457237 /* MazeScene.sks in Resources */,
+				0B91B20E2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 in Resources */,
+				0B91B2062C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +275,7 @@
 				EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */,
 				ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
+				0B91B2032C2A6BC3005E7F99 /* AudioManager.swift in Sources */,
 				0B91B1F92C296FBA005E7F99 /* ColorExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -386,7 +406,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = H68BB9ZMUS;
+				DEVELOPMENT_TEAM = MW3B4GVT77;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -425,7 +445,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = H68BB9ZMUS;
+				DEVELOPMENT_TEAM = MW3B4GVT77;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

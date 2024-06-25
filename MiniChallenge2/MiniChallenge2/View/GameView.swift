@@ -35,6 +35,11 @@ struct GameView: View {
 //                    isGameFinished = gameScene.isGameFinished
 //                    print("DEBUG isGameFinished : \(isGameFinished)")
 //                }
+                .onAppear(){
+                    AudioManager.shared.stopMusic()
+                    AudioManager.shared.playGameMusic()
+
+                }
 //                .onReceive(gameScene.$isGameFinished, perform: { _ in
 //                    if gameScene.isGameFinished == true {
 //                        self.isGameFinished = true

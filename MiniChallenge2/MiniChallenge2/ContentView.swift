@@ -35,7 +35,7 @@ struct ContentView: View {
                         .frame(width: 1000)
                         .offset(y: textPosition)
                         .onAppear {
-                            withAnimation(.easeOut(duration: 1).delay(1)) {
+                            withAnimation(.easeOut(duration: 1.5).delay(0)) {
                                 textPosition = 100}
                         }
                     Spacer()

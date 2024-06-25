@@ -73,10 +73,9 @@ struct PlayerPairingView: View {
                                 .scaledToFit()
                                 .frame(width: 200)
                             ScrollView(.horizontal) {
-                                HStack {
+                                HStack (spacing: 5) {
                                     ForEach(mpManager.availablePlayers, id: \.self) { player in
                                         AvailablePlayerCard(playerName: player.displayName, imageName: "circle-fbi-left")
-                                            .padding(.leading, 50)
                                             .onTapGesture {
                                                 print("DEBUG: Touch Detected on \(player.displayName)")
                                                 inviteOtherPlayer = true
@@ -86,9 +85,19 @@ struct PlayerPairingView: View {
                                                 gameScene.player2Id = player.displayName
                                                 print("DEBUG: inviteReceived \(mpManager.inviteReceived)")
                                             }
+                                            .scrollTransition {content, phase in content
+                                                    .opacity(phase.isIdentity ? 1.0 : 0.3)
+                                                    .scaleEffect(x: phase.isIdentity ? 1.0 : 0.3,
+                                                                 y: phase.isIdentity ? 1.0 : 0.3)
+                                                    .offset(y: phase.isIdentity ? 0 : 20)
+                                            }
                                     }
                                 }
+                                .scrollTargetLayout()
                             }
+                            .safeAreaPadding(20)
+                            .contentMargins(16, for: .scrollContent)
+                            .scrollTargetBehavior(.viewAligned)
                             .alert("Received invitation from  \(mpManager.inviteReceivedFrom?.displayName ?? "Unknown")", isPresented: $mpManager.inviteReceived) {
                                 Button {
                                     print("DEBUG: Decline Invite")
@@ -113,8 +122,8 @@ struct PlayerPairingView: View {
                         .padding(.bottom, 120)
                         Spacer()
                     }
-    //                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
-    //                )
+                    //                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
+                    //                )
                     .onAppear(){
                         mpManager.isAvailableToPlay = true
                         mpManager.startBrowsing()
@@ -137,7 +146,7 @@ struct PlayerPairingView: View {
                 .navigationDestination(
                     isPresented: $startGame) {
                         GameView()
-                }
+                    }
             }
         }
     }
