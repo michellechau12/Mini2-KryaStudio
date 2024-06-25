@@ -72,6 +72,7 @@ class GameScene: SKScene, ObservableObject {
     
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
+    private var joystickTouchArea : SKShapeNode?
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
@@ -125,9 +126,7 @@ class GameScene: SKScene, ObservableObject {
         setUpTimerLabel()
         setupProgressBar()
         setupSabotageButton()
-        
-        
-       
+
         
         if thisPlayer.role == "terrorist"{
             setupPlantButton()
@@ -420,6 +419,15 @@ class GameScene: SKScene, ObservableObject {
         self.joystick = joystickBase
         self.joystickKnob = joystickKnob
         
+        let joystickTouchArea = SKShapeNode (circleOfRadius: 400)
+        joystickTouchArea.position = joystickBase.position
+        joystickTouchArea.zPosition = 19
+        joystickTouchArea.strokeColor = .clear
+        joystickTouchArea.fillColor = .clear
+        joystickTouchArea.name = "joystickTouchArea"
+        cameraNode?.addChild(joystickTouchArea)
+        
+        self.joystickTouchArea = joystickTouchArea
     }
     
     func setUpTimerLabel(){
@@ -438,16 +446,16 @@ class GameScene: SKScene, ObservableObject {
     
     func setupProgressBar() {
         progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
-        progressBarBackground?.zPosition = 10
+        progressBarBackground?.zPosition = 30
         progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
-        progressBarBackground?.position = CGPoint(x: -52, y: 320)
+        progressBarBackground?.position = CGPoint(x: -52, y: 245)
         cameraNode?.addChild(progressBarBackground!)
         progressBarBackground?.isHidden = true
         
         progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
         progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
-        progressBar?.position = CGPoint(x: -52, y: 320)
-        progressBar?.zPosition = 11
+        progressBar?.position = CGPoint(x: -52, y: 245)
+        progressBar?.zPosition = 31
         cameraNode?.addChild(progressBar!)
         progressBar?.isHidden = true
     }
@@ -499,7 +507,7 @@ class GameScene: SKScene, ObservableObject {
             sabotageLabel.fontSize = 27
             sabotageLabel.color = .black
             sabotageLabel.position = CGPoint(x: 0, y: 92)
-            sabotageLabel.zPosition = 1
+            sabotageLabel.zPosition = 40
             cameraNode?.addChild(sabotageLabel)
 
             print("Children: \(self.children)")
@@ -548,12 +556,12 @@ class GameScene: SKScene, ObservableObject {
         if !oneTimeTapfunction {
             oneTimeTapfunction = true
             
-            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 88, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 77, startAngle: 0, endAngle:.pi * 2, clockwise: true)
             let shapeNode = SKShapeNode(path: path.cgPath)
             shapeNode.fillColor = .clear
             shapeNode.strokeColor = .gray
             shapeNode.lineWidth = 8
-            shapeNode.position = CGPoint(x: 450, y: -285)
+            shapeNode.position = CGPoint(x: 450, y: -256)
             shapeNode.zPosition = 26
             cameraNode?.addChild(shapeNode)
             
@@ -573,15 +581,15 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setupPlantButton() {
-        plantButton.size = CGSize(width: 120, height: 70)
+        plantButton.size = CGSize(width: 40, height: 40)
         plantButton.zPosition = 20
-        plantButton.alpha = 0.7
+        plantButton.alpha = 1
         addChild(plantButton)
         plantButton.isHidden = true
     }
     
     func setupDefuseButton() {
-        defuseButton.size = CGSize(width: 60, height: 60)
+        defuseButton.size = CGSize(width: 70, height: 70)
         defuseButton.zPosition = 20
         addChild(defuseButton)
         defuseButton.isHidden = true
@@ -678,6 +686,15 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
+    func removeSabotageButtonAfterUse(){
+        sabotageButtonPressCount += 1
+
+        if sabotageButtonPressCount > 1 {
+            sabotageButton?.removeFromParent()
+//            sabotageButton = nil
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -689,44 +706,48 @@ class GameScene: SKScene, ObservableObject {
         }
         
         // Detecting touch on plant button
-        if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
-            bombPlantTimerStartTime = Date()
-            print("lagi plant...")
-            
-            // show progress bar
-            progressBarBackground?.isHidden = false
-            progressBar?.isHidden = false
-            
-            self.terroristCondition = "terrorist-planting-bomb"
-            
-            //run planting animation
-            thisPlayer.updatePlayerTextures(condition: terroristCondition)
-            thisPlayer.animatePlantingBombAnimation()
-            
-            // sending to multipeer
-            let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
-            mpManager.send(bomb: bombCondition)
+        if thisPlayer.role == "terrorist"{
+            if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
+                bombPlantTimerStartTime = Date()
+                print("lagi plant...")
+                
+                // show progress bar
+                progressBarBackground?.isHidden = false
+                progressBar?.isHidden = false
+                
+                self.terroristCondition = "terrorist-planting-bomb"
+                
+                //run planting animation
+                thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                thisPlayer.animatePlantingBombAnimation()
+                
+                // sending to multipeer
+                let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+                mpManager.send(bomb: bombCondition)
+            }
         }
         
         // Detecting touch on defuse button
-        if defuseButton.contains(location) && !defuseButton.isHidden {
-            defuseTimerStartTime = Date()
-            print("lagi defuse...")
-            
-            // show progress bar
-            progressBarBackground?.isHidden = false
-            progressBar?.isHidden = false
-            
-            self.fbiCondition = "fbi-defusing-bomb"
-            self.isDefusing = true
-            
-            //run defuse animation
-            thisPlayer.updatePlayerTextures(condition: fbiCondition)
-            thisPlayer.animateDefusingBomb()
-            
-            // sending to multipeer
-            let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
-            mpManager.send(bomb: bombCondition)
+        if thisPlayer.role == "fbi" {
+            if defuseButton.contains(location) && !defuseButton.isHidden {
+                defuseTimerStartTime = Date()
+                print("lagi defuse...")
+                
+                // show progress bar
+                progressBarBackground?.isHidden = false
+                progressBar?.isHidden = false
+                
+                self.fbiCondition = "fbi-defusing-bomb"
+                self.isDefusing = true
+                
+                //run defuse animation
+                thisPlayer.updatePlayerTextures(condition: fbiCondition)
+                thisPlayer.animateDefusingBomb()
+                
+                // sending to multipeer
+                let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+                mpManager.send(bomb: bombCondition)
+            }
         }
         
         if let sabotageButton = sabotageButton, let camera = cameraNode {
@@ -744,18 +765,14 @@ class GameScene: SKScene, ObservableObject {
                 isSabotageButtonEnabled = false
                 //Function cooldownTimer
                 animateCooldownTimer()
+                //function to remove sabotage button after 2x tap
+                removeSabotageButtonAfterUse()
                 
             }
             else if sabotageButton.contains(convertedLocation) && !isSabotageButtonEnabled{
                 print("Button in cooldown")
             }
         }
-        
-        
-        
-        
-        
-        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -766,19 +783,21 @@ class GameScene: SKScene, ObservableObject {
             
             //Convert Lokasi touch dari Scene ke Cam
             let convertedLocation = camera.convert(location, from: self)
-            if joystick.contains(convertedLocation){
-                //Setup seberapa jauh Knob bisa ditarik
-                let maxDistance: CGFloat = 50.0
-                
-                let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
-                let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
-                
-                if distance <= maxDistance {
-                    joystickKnob.position = convertedLocation
-                } else {
-                    let angle = atan2(displacement.dy, displacement.dx)
-                    joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
-                                                    y: joystick.position.y + sin(angle) * maxDistance)
+            if let unwrappedJoystickTouchArea = joystickTouchArea {
+                if unwrappedJoystickTouchArea.contains(convertedLocation) {
+                    //Setup seberapa jauh Knob bisa ditarik
+                    let maxDistance: CGFloat = 50.0
+                    
+                    let displacement = CGVector(dx: convertedLocation.x - joystick.position.x, dy: convertedLocation.y - joystick.position.y)
+                    let distance = sqrt(displacement.dx * displacement.dx + displacement.dy * displacement.dy)
+                    
+                    if distance <= maxDistance {
+                        joystickKnob.position = convertedLocation
+                    } else {
+                        let angle = atan2(displacement.dy, displacement.dx)
+                        joystickKnob.position = CGPoint(x: joystick.position.x + cos(angle) * maxDistance,
+                                                        y: joystick.position.y + sin(angle) * maxDistance)
+                    }
                 }
             }
         }
@@ -791,57 +810,61 @@ class GameScene: SKScene, ObservableObject {
         joystickKnob.run(moveBack)
         
         // Terrorist cancelled planting bomb
-        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            if elapsedTime < plantDuration {
-                print("cancel planting")
-                self.bombPlantTimerStartTime = nil
-                
-                // remove progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                // change terrorist condition from terrorist-planting-bomb to terrorist-initial
-                self.terroristCondition = "terrorist-initial"
-                thisPlayer.updatePlayerTextures(condition: terroristCondition)
-                
-                //remove planting animation
-                thisPlayer.stopPlantingBombAnimation()
-                
-                // sending to multipeer
-                let bombCondition = MPBombModel(bomb: .cancelledPlanting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
-                mpManager.send(bomb: bombCondition)
-                
+        if thisPlayer.role == "terrorist"{
+            if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+                if elapsedTime < plantDuration {
+                    print("cancel planting")
+                    self.bombPlantTimerStartTime = nil
+                    
+                    // remove progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    // change terrorist condition from terrorist-planting-bomb to terrorist-initial
+                    self.terroristCondition = "terrorist-initial"
+                    thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                    
+                    //remove planting animation
+                    thisPlayer.stopPlantingBombAnimation()
+                    
+                    // sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .cancelledPlanting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+                    mpManager.send(bomb: bombCondition)
+                    
+                }
             }
         }
         
-        if let defuseTimerStartTime = defuseTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime < defuseDuration {
-                print("cancel defusing")
-                self.defuseTimerStartTime = nil
-                
-                // remove progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
-                self.fbiCondition = "fbi-cancel-defusing"
-                self.isDefusing = false
-                
-                // run cancel defuse animation:
-                thisPlayer.cancelDefuseAnimation() // there's delay after cancelling defuse animation
-                
-                // remove defusing animation
-                thisPlayer.stopDefusingBombAnimation()
-                
-                // sending to multipeer
-                let bombCondition = MPBombModel(bomb: .cancelledDefusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
-                mpManager.send(bomb: bombCondition)
-                
-                //Start delay timer:
-                defuseCooldownStartTime = Date()
-                isDelayingMove = true
+        if thisPlayer.role == "fbi"{
+            if let defuseTimerStartTime = defuseTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+                if elapsedTime < defuseDuration {
+                    print("cancel defusing")
+                    self.defuseTimerStartTime = nil
+                    
+                    // remove progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
+                    self.fbiCondition = "fbi-cancel-defusing"
+                    self.isDefusing = false
+                    
+                    // run cancel defuse animation:
+                    thisPlayer.cancelDefuseAnimation() // there's delay after cancelling defuse animation
+                    
+                    // remove defusing animation
+                    thisPlayer.stopDefusingBombAnimation()
+                    
+                    // sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .cancelledDefusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+                    mpManager.send(bomb: bombCondition)
+                    
+                    //Start delay timer:
+                    defuseCooldownStartTime = Date()
+                    isDelayingMove = true
+                }
             }
         }
     }
@@ -884,7 +907,7 @@ class GameScene: SKScene, ObservableObject {
         else {
             if isPlayerInBombSite() && !isBombPlanted {
                 // func to enable plantButton
-                let offset: CGFloat = 20.0
+                let offset: CGFloat = 10.0
                 plantButton.position = CGPoint(
                     x: thisPlayer.playerNode.position.x,
                     y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
@@ -914,38 +937,40 @@ class GameScene: SKScene, ObservableObject {
             }
         }
         //delaymove
-        if isDelayingMove {
-            thisPlayer.playerNode.physicsBody?.velocity = .zero
-            thisPlayer.playerNode.removeAction(forKey: "moveLeft")
-            thisPlayer.playerNode.removeAction(forKey: "moveRight")
-            
-            if let defuseCooldownStartTime = defuseCooldownStartTime {
-                let cooldownElapsedTime = Date().timeIntervalSince(defuseCooldownStartTime)
-                if cooldownElapsedTime >= defuseCooldownDuration {
-                    thisPlayer.playerNode.removeAction(forKey: "delayCancelling")
-                    
-                    switch thisPlayer.previousOrientation {
-                    case "left" :
-                        thisPlayer.playerNode.texture = thisPlayer.latestTextureLeft
-                    case "right" :
-                        thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
-                    default:
-                        thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+        if thisPlayer.role == "fbi"{
+            if isDelayingMove {
+                thisPlayer.playerNode.physicsBody?.velocity = .zero
+                thisPlayer.playerNode.removeAction(forKey: "moveLeft")
+                thisPlayer.playerNode.removeAction(forKey: "moveRight")
+                
+                if let defuseCooldownStartTime = defuseCooldownStartTime {
+                    let cooldownElapsedTime = Date().timeIntervalSince(defuseCooldownStartTime)
+                    if cooldownElapsedTime >= defuseCooldownDuration {
+                        thisPlayer.playerNode.removeAction(forKey: "delayCancelling")
+                        
+                        switch thisPlayer.previousOrientation {
+                        case "left" :
+                            thisPlayer.playerNode.texture = thisPlayer.latestTextureLeft
+                        case "right" :
+                            thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+                        default:
+                            thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+                        }
+                        
+                        isDelayingMove = false
+                        self.defuseCooldownStartTime = nil
+                        
+                        // setting the vulnerability
+                        player1Model.isVulnerable = true // fbi
+                        player2Model.isVulnerable = false // terrorist
+                        
+                        // change from fbi-cancel-defusing
+                        
                     }
-                    
-                    isDelayingMove = false
-                    self.defuseCooldownStartTime = nil
-                    
-                    // setting the vulnerability
-                    player1Model.isVulnerable = true // fbi
-                    player2Model.isVulnerable = false // terrorist
-                    
-                    // change from fbi-cancel-defusing
-                    
+                    self.fbiCondition = "fbi-initial"
                 }
-                self.fbiCondition = "fbi-initial"
+                return
             }
-            return
         }
         
         // Moving the player
@@ -964,67 +989,71 @@ class GameScene: SKScene, ObservableObject {
         maskNode?.position = thisPlayer.playerNode.position
         
         // add bomb if players already held plant button for a certain period of time
-        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            updateProgressBar(elapsedTime: elapsedTime, totalTime: plantDuration)
-            if elapsedTime >= plantDuration {
-                print("Success planting bomb")
-                self.addBombNode()
-                self.bombPlantTimerStartTime = nil
-                
-                //remove the progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                //remove planting animation
-                thisPlayer.stopPlantingBombAnimation()
-                
-                //  sending location of the bomb to other player
-                let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
-                self.mpManager.send(bomb: bombCondition)
-                
+        if thisPlayer.role == "terrorist"{
+            if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+                updateProgressBar(elapsedTime: elapsedTime, totalTime: plantDuration)
+                if elapsedTime >= plantDuration {
+                    print("Success planting bomb")
+                    self.addBombNode()
+                    self.bombPlantTimerStartTime = nil
+                    
+                    //remove the progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    //remove planting animation
+                    thisPlayer.stopPlantingBombAnimation()
+                    
+                    //  sending location of the bomb to other player
+                    let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
+                    self.mpManager.send(bomb: bombCondition)
+                    
+                }
             }
         }
         
         // defuse bomb if players already held defuse button for a certain period of time
-        if let defuseTimerStartTime = defuseTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            updateProgressBar(elapsedTime: elapsedTime, totalTime: defuseDuration)
-            if elapsedTime >= defuseDuration {
-                print("Success defusing bomb")
-                self.defuseBombNode()
-                self.defuseTimerStartTime = nil
-                
-                //remove the progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                //remove defusing animation
-                thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
-                
-                //  sending bomb condition to multipeer
-                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
-                self.mpManager.send(bomb: bombCondition)
-                
-                
-                timer?.invalidate()
-                
-                self.winner = player1Model // fbi wins
-                
-                isGameFinished = true
-                if self.winner.id == self.thisPlayer.id{
-                    statementGameOver = "You Win"
-                    imageGameOver = "fbi-borgol-right-1"
-                    print("DEBUG_GO_COLS: TERRORIST WIN")
-                } else{
-                    statementGameOver = "You Lose"
-                    imageGameOver = "terrorist-bom-rightt-1"
-                    print("DEBUG_GO_COLS: FBI LOSE")
+        if thisPlayer.role == "fbi"{
+            if let defuseTimerStartTime = defuseTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+                updateProgressBar(elapsedTime: elapsedTime, totalTime: defuseDuration)
+                if elapsedTime >= defuseDuration {
+                    print("Success defusing bomb")
+                    self.defuseBombNode()
+                    self.defuseTimerStartTime = nil
                     
-                }
-                
-                if isGameFinished{
-                    removeAllNodes()
+                    //remove the progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    //remove defusing animation
+                    thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
+                    
+                    //  sending bomb condition to multipeer
+                    let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
+                    self.mpManager.send(bomb: bombCondition)
+                    
+                    
+                    timer?.invalidate()
+                    
+                    self.winner = player1Model // fbi wins
+                    
+                    isGameFinished = true
+                    if self.winner.id == self.thisPlayer.id{
+                        statementGameOver = "You Win"
+                        imageGameOver = "fbi-borgol-right-1"
+                        print("DEBUG_GO_COLS: TERRORIST WIN")
+                    } else{
+                        statementGameOver = "You Lose"
+                        imageGameOver = "terrorist-bom-rightt-1"
+                        print("DEBUG_GO_COLS: FBI LOSE")
+                        
+                    }
+                    
+                    if isGameFinished{
+                        removeAllNodes()
+                    }
                 }
             }
         }
@@ -1062,13 +1091,6 @@ class GameScene: SKScene, ObservableObject {
         case .sabotagedView:
             print("sabotaged view")
             setupSabotagedView()
-            
-            sabotageButtonPressCount += 1
-
-            if sabotageButtonPressCount > 1 {
-                sabotageButton?.removeFromParent()
-                sabotageButton = nil
-            }
             
         case .death:
             print("Start")
