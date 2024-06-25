@@ -26,6 +26,7 @@ class PlayerModel: ObservableObject {
     var latestTextureRight: SKTexture
     var latestTextureLeft: SKTexture
     var playerPreviousRightLeft: String?
+    var isWalkingSoundPlaying = false
     
     init(id: String, playerRightTextures: [SKTexture], playerLeftTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
@@ -95,13 +96,26 @@ class PlayerModel: ObservableObject {
             // Move Right
                 self.orientation = "right"
                 playerPreviousRightLeft = "right"
+            
+            if !isWalkingSoundPlaying {
+                                AudioManager.shared.playWalkSound()
+                                isWalkingSoundPlaying = true
+                            }
+            
         } else if velocity.dx < 0 {
             // Move Left
                 self.orientation = "left"
                 playerPreviousRightLeft = "left"
             
+            if !isWalkingSoundPlaying {
+                                AudioManager.shared.playWalkSound()
+                                isWalkingSoundPlaying = true
+                            }
+            
         } else {
             self.orientation = "not-moving"
+            AudioManager.shared.stopWalkSound()
+            isWalkingSoundPlaying = false
         }
         
         // assigning player textures

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FBIInstructionView: View {
+    
     @State private var navigateToGameView: Bool = false
 
     var body: some View {

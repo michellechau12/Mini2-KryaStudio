@@ -106,6 +106,9 @@ class GameScene: SKScene, ObservableObject {
     
     var oneTimeTapfunction = false
     
+    var isWalkingSoundPlaying = false
+
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         isGameFinished = false
@@ -129,8 +132,12 @@ class GameScene: SKScene, ObservableObject {
 
         
         if thisPlayer.role == "terrorist"{
+            //Audio starting terrorist
+            AudioManager.shared.playTerroristStartingMusic()
             setupPlantButton()
         }else{
+            //Audio starting FBI
+            AudioManager.shared.playFbiStartingMusic()
             setupDefuseButton()
         }
         
@@ -629,7 +636,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func startTimer() {
-        timeLeft = 30
+        timeLeft = 60
         timerLabel?.text = "Time: \(timeLeft)"
         timerLabel?.isHidden = false
         
@@ -800,7 +807,15 @@ class GameScene: SKScene, ObservableObject {
                                                         y: joystick.position.y + sin(angle) * maxDistance)
                     }
                 }
+//                                if !isWalkingSoundPlaying {
+//                                                    AudioManager.shared.playWalkSound()
+//                                                    isWalkingSoundPlaying = true
+//                                                }
             }
+//            else {
+//                AudioManager.shared.stopWalkSound()
+//                isWalkingSoundPlaying = false
+//            }
         }
     }
     
@@ -1072,16 +1087,20 @@ class GameScene: SKScene, ObservableObject {
         isBombPlanted = true
         plantButton.isHidden = true
         
+        
+        AudioManager.shared.playBombTimerSound()
+        AudioManager.shared.playBombPlantedAlertMusic()
         startTimer()
     }
     
     func defuseBombNode(){
+        
         self.defuseButton.isHidden = true
         self.timerLabel?.isHidden = true
         if let bombNode = self.childNode(withName: "bomb") {
             bombNode.removeFromParent()
-            
         }
+        
     }
     
     func handlePlayer(player: MPPlayerModel, mpManager: MultipeerConnectionManager) {
@@ -1169,9 +1188,11 @@ class GameScene: SKScene, ObservableObject {
             player1Model.cancelDefuseAnimation() // there's delay when cancelled defusing bomb
             player1Model.stopDefusingBombAnimation() // fbi stop animate defusing bomb
             updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            
         case .defused:
             print("defused")
             synchronizeOtherPlayerBombCondition(isDefused: true)
+            AudioManager.shared.stopBombTimerSound()
             
             self.isGameFinished = true
             if bomb.winnerId == self.thisPlayer.id{
