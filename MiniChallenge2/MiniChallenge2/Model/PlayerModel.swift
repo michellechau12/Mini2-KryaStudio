@@ -56,7 +56,7 @@ class PlayerModel: ObservableObject {
             role = "fbi"
         } else {
             playerNode.name = "Player2"
-            playerNode.position = CGPoint(x: 48.57, y: -354)
+            playerNode.position = CGPoint(x: 48.57, y: -350)
 //            playerNode.position = CGPoint(x: -335, y: -116)
             speedMultiplier = 1.5
             isVulnerable = true

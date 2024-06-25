@@ -450,13 +450,13 @@ class GameScene: SKScene, ObservableObject {
         progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
         progressBarBackground?.zPosition = 10
         progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
-        progressBarBackground?.position = CGPoint(x: -52, y: 320)
+        progressBarBackground?.position = CGPoint(x: -52, y: 280)
         cameraNode?.addChild(progressBarBackground!)
         progressBarBackground?.isHidden = true
         
         progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
         progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
-        progressBar?.position = CGPoint(x: -52, y: 320)
+        progressBar?.position = CGPoint(x: -52, y: 280)
         progressBar?.zPosition = 11
         cameraNode?.addChild(progressBar!)
         progressBar?.isHidden = true
@@ -558,12 +558,12 @@ class GameScene: SKScene, ObservableObject {
         if !oneTimeTapfunction {
             oneTimeTapfunction = true
             
-            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 88, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 77, startAngle: 0, endAngle:.pi * 2, clockwise: true)
             let shapeNode = SKShapeNode(path: path.cgPath)
             shapeNode.fillColor = .clear
             shapeNode.strokeColor = .gray
             shapeNode.lineWidth = 8
-            shapeNode.position = CGPoint(x: 450, y: -285)
+            shapeNode.position = CGPoint(x: 450, y: -256)
             shapeNode.zPosition = 26
             cameraNode?.addChild(shapeNode)
             
@@ -583,15 +583,15 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setupPlantButton() {
-        plantButton.size = CGSize(width: 120, height: 70)
+        plantButton.size = CGSize(width: 70, height: 70)
         plantButton.zPosition = 20
-        plantButton.alpha = 0.7
+        plantButton.alpha = 1
         addChild(plantButton)
         plantButton.isHidden = true
     }
     
     func setupDefuseButton() {
-        defuseButton.size = CGSize(width: 60, height: 60)
+        defuseButton.size = CGSize(width: 70, height: 70)
         defuseButton.zPosition = 20
         addChild(defuseButton)
         defuseButton.isHidden = true
@@ -688,6 +688,15 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
+    func removeSabotageButtonAfterUse(){
+        sabotageButtonPressCount += 1
+
+        if sabotageButtonPressCount > 1 {
+            sabotageButton?.removeFromParent()
+//            sabotageButton = nil
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -758,18 +767,14 @@ class GameScene: SKScene, ObservableObject {
                 isSabotageButtonEnabled = false
                 //Function cooldownTimer
                 animateCooldownTimer()
+                //function to remove sabotage button after 2x tap
+                removeSabotageButtonAfterUse()
                 
             }
             else if sabotageButton.contains(convertedLocation) && !isSabotageButtonEnabled{
                 print("Button in cooldown")
             }
         }
-        
-        
-        
-        
-        
-        
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -1088,13 +1093,6 @@ class GameScene: SKScene, ObservableObject {
         case .sabotagedView:
             print("sabotaged view")
             setupSabotagedView()
-            
-            sabotageButtonPressCount += 1
-
-            if sabotageButtonPressCount > 1 {
-                sabotageButton?.removeFromParent()
-                sabotageButton = nil
-            }
             
         case .death:
             print("Start")
