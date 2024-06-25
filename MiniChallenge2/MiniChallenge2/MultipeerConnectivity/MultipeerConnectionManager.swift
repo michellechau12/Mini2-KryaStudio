@@ -16,7 +16,7 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     @Published var gameScene: GameScene!
 
     let serviceType = String.serviceName
-    let session: MCSession
+    var session: MCSession
     var myConnectionId: MCPeerID
 
     @Published var availablePlayers: [MCPeerID] = []
@@ -25,8 +25,8 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     @Published var invitationHandler: ((Bool, MCSession?) -> Void)?
     @Published var paired: Bool = false
 
-    let shareVisibility: MCNearbyServiceAdvertiser
-    let searchPlayers: MCNearbyServiceBrowser
+    var shareVisibility: MCNearbyServiceAdvertiser
+    var searchPlayers: MCNearbyServiceBrowser
 
     var isAvailableToPlay: Bool = false {
         didSet {
@@ -41,7 +41,8 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     }
 
     init(playerName: String){
-        self.myConnectionId = MCPeerID(displayName: playerName)
+        self.myConnectionId = MCPeerID(displayName: UIDevice.current.name)
+        print("DEBUG: my ui device: \(self.myConnectionId)")
         self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
         self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
         self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
@@ -53,7 +54,7 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
     }
 
     init(playerId: UUID) {
-        self.myConnectionId = MCPeerID(displayName: playerId.uuidString)
+        self.myConnectionId = MCPeerID(displayName: String(playerId.uuidString.prefix(4)))
         self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
         self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
         self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
@@ -95,6 +96,7 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
         self.gameScene.mpManager = self
     }
 
+    // sending data
     func send(player: MPPlayerModel) {
         guard !session.connectedPeers.isEmpty else { return }
         do {
@@ -127,12 +129,34 @@ class MultipeerConnectionManager: NSObject, ObservableObject {
             print("DEBUG Error: \(error.localizedDescription)")
         }
     }
+    
+    func updatePeerID(with displayName: String) {
+            // Stop current session
+            stopAdvertising()
+            stopBrowsing()
+            session.disconnect()
+            
+            // Reinitialize with new peer ID
+            self.myConnectionId = MCPeerID(displayName: displayName)
+            self.session = MCSession(peer: myConnectionId, securityIdentity: nil, encryptionPreference: .required)
+            self.session.delegate = self
+            self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
+            self.shareVisibility.delegate = self
+            self.searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
+            self.searchPlayers.delegate = self
+            
+            // Start new session
+            startAdvertising()
+            startBrowsing()
+    }
 }
 
 // MARK: - MCNearbyServiceBrowserDelegate
+// Searching players
 extension MultipeerConnectionManager: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         DispatchQueue.main.async {
+            // adding advertising players to availablePlayers
             if !self.availablePlayers.contains(peerID) {
                 self.availablePlayers.append(peerID)
                 print("DEBUG: Found peer \(peerID.displayName)")
@@ -154,6 +178,7 @@ extension MultipeerConnectionManager: MCNearbyServiceBrowserDelegate {
 }
 
 // MARK: - MCNearbyServiceAdvertiserDelegate
+// Showing Visibility and Accepting Invites
 extension MultipeerConnectionManager: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         DispatchQueue.main.async {
@@ -170,6 +195,8 @@ extension MultipeerConnectionManager: MCNearbyServiceAdvertiserDelegate {
 }
 
 // MARK: - MCSessionDelegate
+// session status: connected, connecting, or not
+// session event: what happen in the game session that is shared between players
 extension MultipeerConnectionManager: MCSessionDelegate {
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         DispatchQueue.main.async {
@@ -198,6 +225,7 @@ extension MultipeerConnectionManager: MCSessionDelegate {
             return
         }
         
+        // receiving data
         if let player = try? JSONDecoder().decode(MPPlayerModel.self, from: data) {
             DispatchQueue.main.async {
                 self.gameScene.handlePlayer(player: player, mpManager: self)
@@ -209,216 +237,12 @@ extension MultipeerConnectionManager: MCSessionDelegate {
         }
     }
 
+    // mandatory function for MCSessionDelegate
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) { }
 
+    // mandatory function for MCSessionDelegate
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) { }
 
+    // mandatory function for MCSessionDelegate
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) { }
 }
-
-
-//import MultipeerConnectivity
-//import SwiftUI
-//
-//extension String {
-//    static var serviceName = "BombnChase"
-//}
-//
-//class MultipeerConnectionManager: NSObject, ObservableObject {
-//    // published var of the inGameManager
-//    @Published var gameScene: GameScene!
-//
-//    let serviceType = String.serviceName
-//    let session: MCSession
-//    let myConnectionId: MCPeerID
-//
-//
-//    @Published var availablePlayers: [MCPeerID] = []
-//    @Published var inviteReceived: Bool = false
-//    @Published var inviteReceivedFrom: MCPeerID?
-//    @Published var invitationHandler: ((Bool, MCSession?) -> Void)?
-//    @Published var paired: Bool = false
-//
-//    let shareVisibility: MCNearbyServiceAdvertiser
-//
-//    let searchPlayers: MCNearbyServiceBrowser
-//
-//    var isAvailableToPlay: Bool = false {
-//        didSet {
-//            if isAvailableToPlay {
-//                startAdvertising()
-//            }
-//            else {
-//                stopAdvertising()
-//            }
-//        }
-//    }
-//
-//    init(playerId: UUID) {
-//        self.myConnectionId = MCPeerID(displayName: playerId.uuidString)
-//        self.session = MCSession(peer: myConnectionId)
-//        self.shareVisibility = MCNearbyServiceAdvertiser(peer: myConnectionId, discoveryInfo: nil, serviceType: serviceType)
-//        self .searchPlayers = MCNearbyServiceBrowser(peer: myConnectionId, serviceType: serviceType)
-//
-//        super.init()
-//        session.delegate = self
-//        shareVisibility.delegate = self
-//        searchPlayers.delegate = self
-//
-//    }
-//
-//    deinit {
-//        stopAdvertising()
-//        stopBrowsing()
-//    }
-//
-//    func startAdvertising() {
-//        shareVisibility.startAdvertisingPeer()
-//    }
-//
-//    func stopAdvertising() {
-//        shareVisibility.stopAdvertisingPeer()
-//    }
-//
-//    func startBrowsing(){
-//        searchPlayers.startBrowsingForPeers()
-//    }
-//
-//    func stopBrowsing(){
-//        searchPlayers.stopBrowsingForPeers()
-//        availablePlayers.removeAll() // remove all data if stop browsing
-//    }
-//
-//    func setupGame(gameScene: GameScene){
-//        self.gameScene = gameScene
-//        self.gameScene.mpManager = self
-//    }
-//
-//    func send(player: MPPlayerModel){
-//        if session.connectedPeers.isEmpty == false {
-//            do {
-//                if let data = player.data() {
-//                    try session.send(data, toPeers: session.connectedPeers, with: .reliable)
-//                }
-//            }
-//            catch {
-//                print("DEBUG Error: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//
-//    func send(map: MPMapModel){
-//        if session.connectedPeers.isEmpty == false {
-//            do {
-//                if let data = map.data() {
-//                    try session.send(data, toPeers: session.connectedPeers, with: .reliable)
-//                }
-//            }
-//            catch {
-//                print("DEBUG Error: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//
-//    func send(bomb: MPBombModel){
-//        if session.connectedPeers.isEmpty == false {
-//            do {
-//                if let data = bomb.data() {
-//                    try session.send(data, toPeers: session.connectedPeers, with: .reliable)
-//                }
-//            }
-//            catch {
-//                print("DEBUG Error: \(error.localizedDescription)")
-//            }
-//        }
-//    }
-//
-//}
-//
-//// extension of the class to find others to play
-//extension MultipeerConnectionManager: MCNearbyServiceBrowserDelegate {
-//    // function that will be called if found someone sharing their visibility
-//    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-//        DispatchQueue.main.async {
-//            // only add to list available peers if not in the list
-//            if self.availablePlayers.contains(peerID) == false {
-//                self.availablePlayers.append(peerID)
-//            }
-//        }
-//    }
-//
-//    // function that will be called if someone stop sharing their visibility
-//    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-//        // check if someone is not in available peers, it will return
-//        guard let index = availablePlayers.firstIndex(of: peerID) else { return }
-//        DispatchQueue.main.async {
-//            self.availablePlayers.remove(at: index)
-//        }
-//    }
-//}
-//
-//extension MultipeerConnectionManager: MCNearbyServiceAdvertiserDelegate {
-//    // this function will be called if the user received invitation
-//    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-//        DispatchQueue.main.async {
-//            self.inviteReceived = true
-//            self.inviteReceivedFrom = peerID
-//            self.invitationHandler = invitationHandler
-//        }
-//    }
-//}
-//
-//extension MultipeerConnectionManager: MCSessionDelegate {
-//    // this function will handle connection
-//    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-//        switch state {
-//            case .notConnected:
-//                DispatchQueue.main.async {
-//                    self.paired = false
-//                    self.isAvailableToPlay = true
-//                }
-//            case .connected:
-//                DispatchQueue.main.async {
-//                    self.paired = true
-//                    self.isAvailableToPlay = false
-//                }
-//            default:
-//                DispatchQueue.main.async {
-//                    self.paired = false
-//                    self.isAvailableToPlay = true
-//                }
-//            }
-//    }
-//
-//    // this function will handle receiving data
-//    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-//        if let player = try? JSONDecoder().decode(MPPlayerModel.self, from: data) {
-//            DispatchQueue.main.async {
-//                self.gameScene.handlePlayer(player: player, mpManager: self)
-//            }
-//        }
-//        else if let bomb = try? JSONDecoder().decode(MPBombModel.self, from: data){
-//            DispatchQueue.main.async {
-//                self.gameScene.handleBomb(bomb: bomb, mpManager: self)
-//            }
-//        }
-//
-//        //add map event later
-//    }
-//
-//    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
-//
-//    }
-//
-//    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
-//
-//    }
-//
-//    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: (any Error)?) {
-//
-//    }
-//
-//
-//}
-
-
