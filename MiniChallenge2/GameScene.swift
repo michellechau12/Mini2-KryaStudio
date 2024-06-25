@@ -76,14 +76,15 @@ class GameScene: SKScene, ObservableObject {
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
+    
     private var sabotageButton: SKSpriteNode?
     private var isSabotageButtonEnabled = true
     private var sabotageButtonPressCount = 0
     
     private var bombSites: [BombSiteModel] = []
     
-    private let plantButton = SKSpriteNode(imageNamed: "plantButton")
-    private let defuseButton = SKSpriteNode(imageNamed: "tang")
+    private var plantButton = SKSpriteNode(imageNamed: "plantButton")
+    private var defuseButton = SKSpriteNode(imageNamed: "tang")
     
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
@@ -104,7 +105,16 @@ class GameScene: SKScene, ObservableObject {
     var isDelayingMove: Bool = false
     private var defuseCooldownDuration = 2.0
     
-    var oneTimeTapfunction = false
+    var sabotageOneTimeTapfunction = false
+    var sprintOneTimeTapfunction = false
+    
+    private var sprintButton = SKSpriteNode(imageNamed: "sprint-button")
+    private var isSprintButtonEnabled: Bool = true
+    private var sprintButtonPressCount = 0
+    
+    private var extraSpeed = 2.0 // for sprint
+    private var sprintStartTime: Date?
+    private var sprintDuration = 5.0
     
     var isWalkingSoundPlaying = false
 
@@ -129,7 +139,7 @@ class GameScene: SKScene, ObservableObject {
         setUpTimerLabel()
         setupProgressBar()
         setupSabotageButton()
-
+        setupSprintButton()
         
         if thisPlayer.role == "terrorist"{
             //Audio starting terrorist
@@ -308,7 +318,6 @@ class GameScene: SKScene, ObservableObject {
     
     func setThisPlayer() {
         // temp: player1 is fbi, player 2 is terrorist
-        
         guard let playerPeerId = playerPeerId,
               let player1Id = player1Id,
               let player2Id = player2Id else {
@@ -409,14 +418,16 @@ class GameScene: SKScene, ObservableObject {
     func createJoystick() {
         //Otak-atik posisi Joystick
         let joystickBase = SKSpriteNode(imageNamed: "joystickBase2")
-        joystickBase.position = CGPoint(x: -480, y: -310)
+//        joystickBase.position = CGPoint(x: -480, y: -310)
+        joystickBase.position = CGPoint(x: -420, y: -220)
         joystickBase.setScale(1.5)
         joystickBase.alpha = 0.5
         joystickBase.zPosition = 80
         joystickBase.name = "joystickBase2"
         
         let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob2")
-        joystickKnob.position = CGPoint(x: -480, y: -310)
+//        joystickKnob.position = CGPoint(x: -480, y: -310)
+        joystickKnob.position = CGPoint(x: -420, y: -220)
         joystickKnob.setScale(1.5)
         joystickKnob.zPosition = 88
         joystickKnob.name = "joystickKnob2"
@@ -476,6 +487,7 @@ class GameScene: SKScene, ObservableObject {
     func setupSabotageButton() {
         let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
         sabotageButton.position = CGPoint(x: 450, y: -280 )
+//        sabotageButton.position = CGPoint(x: 350, y: -280 )
         sabotageButton.size = CGSize(width: 180, height: 180)
         sabotageButton.alpha = 1.2
         sabotageButton.zPosition = 25
@@ -559,10 +571,10 @@ class GameScene: SKScene, ObservableObject {
            }
         }
     
-    func animateCooldownTimer() {
+    func animateSabotageCooldownTimer() {
         
-        if !oneTimeTapfunction {
-            oneTimeTapfunction = true
+        if !sabotageOneTimeTapfunction {
+            sabotageOneTimeTapfunction = true
             
             let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 77, startAngle: 0, endAngle:.pi * 2, clockwise: true)
             let shapeNode = SKShapeNode(path: path.cgPath)
@@ -570,7 +582,7 @@ class GameScene: SKScene, ObservableObject {
             shapeNode.strokeColor = .gray
             shapeNode.lineWidth = 8
             shapeNode.position = CGPoint(x: 450, y: -256)
-            shapeNode.zPosition = 26
+            shapeNode.zPosition = 10
             cameraNode?.addChild(shapeNode)
             
             //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
@@ -588,19 +600,135 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func setupPlantButton() {
-        plantButton.size = CGSize(width: 40, height: 40)
-        plantButton.zPosition = 20
-        plantButton.alpha = 1
-        addChild(plantButton)
-        plantButton.isHidden = true
+    func animateSprintCooldownTimer() {
+        
+        if !sprintOneTimeTapfunction {
+            sprintOneTimeTapfunction = true
+            
+            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 50, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+            let shapeNode = SKShapeNode(path: path.cgPath)
+            shapeNode.fillColor = .clear
+            shapeNode.strokeColor = .gray
+            shapeNode.lineWidth = 8
+            shapeNode.position = CGPoint(x: 300, y: -220 )
+            shapeNode.zPosition = 10
+            cameraNode?.addChild(shapeNode)
+            
+            //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sprintButton menjadi 0.2
+            sprintButton.alpha = 0.6
+            
+            let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                let percentage = elapsedTime / 20.0
+                shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 88, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+            }
+            shapeNode.run(animation) {
+                shapeNode.removeFromParent()
+                self.isSprintButtonEnabled = true
+                self.sprintButton.alpha = 1
+            }
+        }
+        
+        
+        
+        
     }
     
-    func setupDefuseButton() {
-        defuseButton.size = CGSize(width: 70, height: 70)
-        defuseButton.zPosition = 20
-        addChild(defuseButton)
-        defuseButton.isHidden = true
+    func stopSprintCondition(){
+        print("DEBUG: initial speed \(thisPlayer.speedMultiplier)")
+        if let sprintStartTime = sprintStartTime {
+            let sprintElapsedTime = Date().timeIntervalSince(sprintStartTime)
+            if sprintElapsedTime > sprintDuration {
+                print("DEBUG: elapsed time more than sprint duration")
+                thisPlayer.speedMultiplier -= self.extraSpeed
+                self.sprintStartTime = nil
+            }
+            print("DEBUG: sprint speed \(thisPlayer.speedMultiplier)")
+        }
+        
+       
+        
+//        let sprintForce = CGVector(dx: 10, dy: 10)
+//        
+//        thisPlayer.playerNode.physicsBody?.applyForce(<#T##CGVector#>)
+    }
+    
+    func setupStartSprintLabel(){
+        
+        _ = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] timer in
+               self?.isSprintButtonEnabled = true
+        
+           }
+        
+        let sprintLabel = SKLabelNode(fontNamed: "Palatino-Bold")
+            sprintLabel.text = "Your speed will be greatly increased for 5 seconds!"
+            sprintLabel.fontSize = 27
+            sprintLabel.color = .black
+            sprintLabel.position = CGPoint(x: 0, y: 92)
+            sprintLabel.zPosition = 40
+            cameraNode?.addChild(sprintLabel)
+
+            print("Children: \(self.children)")
+            
+            // Fade in
+            sprintLabel.alpha = 0
+            let fadeInAction = SKAction.fadeIn(withDuration: 2)
+            sprintLabel.run(fadeInAction)
+        
+        let sprintLabelDuration = SKAction.wait(forDuration: 5.0)
+            let removeLabel3 = SKAction.run {
+                sprintLabel.removeFromParent()
+            }
+            let sequenceAction3 = SKAction.sequence([sprintLabelDuration, removeLabel3])
+            run(sequenceAction3)
+    }
+    
+    func setupSprintButton() {
+        sprintButton.position = CGPoint(x: 300, y: -220 )
+        sprintButton.size = CGSize(width: 130, height: 130)
+        sprintButton.alpha = 1.2
+        sprintButton.zPosition = 25
+        sprintButton.name = "plantButton"
+        
+        cameraNode?.addChild(sprintButton)
+    }
+    
+//    func setupPlantButton() {
+//        plantButton.size = CGSize(width: 40, height: 40)
+//        plantButton.zPosition = 20
+//        plantButton.alpha = 1
+//        addChild(plantButton)
+//        plantButton.isHidden = true
+//    }
+    
+    func setupPlantButton(){
+        plantButton.position = CGPoint(x: 450, y: -110 )
+        plantButton.size = CGSize(width: 130, height: 130)
+        plantButton.alpha = 0.2
+        plantButton.zPosition = 25
+        plantButton.name = "plantButton"
+        
+        cameraNode?.addChild(plantButton)
+        
+//        self.plantButton = plantButton
+    }
+    
+//    func setupDefuseButton() {
+//        defuseButton.size = CGSize(width: 40, height: 40)
+//        defuseButton.zPosition = 20
+//        addChild(defuseButton)
+//        defuseButton.isHidden = true
+//    }
+    
+    func setupDefuseButton(){
+        defuseButton.position = CGPoint(x: 450, y: -110 )
+        defuseButton.size = CGSize(width: 130, height: 130)
+        defuseButton.alpha = 0.2
+        defuseButton.zPosition = 25
+        defuseButton.name = "defuseButton"
+        
+        cameraNode?.addChild(defuseButton)
+        
+//        self.plantButton = plantButton
     }
     
     func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
@@ -697,8 +825,17 @@ class GameScene: SKScene, ObservableObject {
     func removeSabotageButtonAfterUse(){
         sabotageButtonPressCount += 1
 
-        if sabotageButtonPressCount > 1 {
+        if sabotageButtonPressCount == 2 {
             sabotageButton?.removeFromParent()
+//            sabotageButton = nil
+        }
+    }
+    
+    func setNumberOfSprintAllowed(){
+        sprintButtonPressCount += 1
+
+        if sprintButtonPressCount == 2 {
+            sprintButton.removeFromParent()
 //            sabotageButton = nil
         }
     }
@@ -772,12 +909,35 @@ class GameScene: SKScene, ObservableObject {
                 //Button Cooldown
                 isSabotageButtonEnabled = false
                 //Function cooldownTimer
-                animateCooldownTimer()
+                animateSabotageCooldownTimer()
                 //function to remove sabotage button after 2x tap
                 removeSabotageButtonAfterUse()
                 
             }
             else if sabotageButton.contains(convertedLocation) && !isSabotageButtonEnabled{
+                print("Button in cooldown")
+            }
+        }
+        
+        // sprint button
+        if let camera = cameraNode{
+            let convertedLocation = camera.convert(location, from: self)
+            if sprintButton.contains(convertedLocation) && isSprintButtonEnabled {
+                sprintStartTime = Date()
+                
+                // Button Cooldown
+                isSprintButtonEnabled = false
+                //Function cooldownTimer
+//                setupSprintCondition()
+                setupStartSprintLabel()
+                animateSprintCooldownTimer()
+                setNumberOfSprintAllowed()
+                
+                // adding speed multiplier
+                thisPlayer.speedMultiplier += self.extraSpeed
+
+                
+            } else if sprintButton.contains(convertedLocation) && !isSprintButtonEnabled {
                 print("Button in cooldown")
             }
         }
@@ -900,18 +1060,21 @@ class GameScene: SKScene, ObservableObject {
         if thisPlayer.role == "fbi" {
             //If FBI near bomb, defuse button will appear
             if isPlayerNearBomb() {
-                let offset: CGFloat = 20.0
-                defuseButton.position = CGPoint(
-                    x: thisPlayer.playerNode.position.x,
-                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset)
-                defuseButton.isHidden = false
+//                let offset: CGFloat = 20.0
+//                defuseButton.position = CGPoint(
+//                    x: thisPlayer.playerNode.position.x,
+//                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset
+//                )
+//                defuseButton.isHidden = false
+                defuseButton.alpha = 1
                 fbiCondition = "fbi-near-bomb"
                 
                 //sending to multipeer
                 let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "fbi-near-bomb", winnerId: thisPlayer.id)
                 mpManager.send(bomb: bombCondition)
             } else {
-                defuseButton.isHidden = true
+//                defuseButton.isHidden = true
+                defuseButton.alpha = 0.2
                 fbiCondition = "fbi-far-from-bomb"
                 
                 //sending to multipeer
@@ -923,22 +1086,26 @@ class GameScene: SKScene, ObservableObject {
         else {
             if isPlayerInBombSite() && !isBombPlanted {
                 // func to enable plantButton
-                let offset: CGFloat = 10.0
-                plantButton.position = CGPoint(
-                    x: thisPlayer.playerNode.position.x,
-                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)
+//                let offset: CGFloat = 10.0
+//                plantButton.position = CGPoint(
+//                    x: thisPlayer.playerNode.position.x,
+//                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset
+//
+//                )
+//                plantButton.isHidden = false
+                plantButton.alpha = 1
                 
-                plantButton.isHidden = false
+                
                 // Debugging print:
 //                    print("Plant button is visible")
             } else {
-                plantButton.isHidden = true
+//                plantButton.isHidden = true
+                plantButton.alpha = 0.2
             }
             
             if isBombPlanted {
                 if isPlayerNearBomb() {
                     terroristCondition = "terrorist-near-bomb"
-                    
                     
                     //sending to multipeer
                     let bombCondition = MPBombModel(bomb: .approachedByPlayers, playerBombCondition: "terrorist-near-bomb", winnerId: thisPlayer.id)
@@ -1024,7 +1191,6 @@ class GameScene: SKScene, ObservableObject {
                     //  sending location of the bomb to other player
                     let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
                     self.mpManager.send(bomb: bombCondition)
-                    
                 }
             }
         }
@@ -1073,6 +1239,9 @@ class GameScene: SKScene, ObservableObject {
                 }
             }
         }
+        
+        // sprint condition
+        stopSprintCondition()
     }
     
     func addBombNode() {

@@ -13,7 +13,7 @@ struct PlayerPairingView: View {
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @EnvironmentObject var gameScene: GameScene
     
-    @State var startGame: Bool = false
+    @State var instructionGame: Bool = false
     @State private var sendInvitation = false
     @Environment (\.dismiss) private var dismiss
     
@@ -84,6 +84,10 @@ struct PlayerPairingView: View {
                                                 gameScene.player1Id = mpManager.myConnectionId.displayName
                                                 gameScene.player2Id = player.displayName
                                                 print("DEBUG: inviteReceived \(mpManager.inviteReceived)")
+                                                
+                                                // Set peerId to thisPlayer
+//                                                gameScene.playerPeerId = gameScene.player1Id
+                                                // print("DEBUG: this player id \(gameScene.playerPeerId ?? "none")")
                                             }
                                             .scrollTransition {content, phase in content
                                                     .opacity(phase.isIdentity ? 1.0 : 0.3)
@@ -113,6 +117,10 @@ struct PlayerPairingView: View {
                                         invitationHandler(true, mpManager.session)
                                         gameScene.player1Id = mpManager.inviteReceivedFrom?.displayName ?? "Unknown"
                                         gameScene.player2Id = mpManager.myConnectionId.displayName
+                                        
+                                        // Set peerId to thisPlayer
+                                        // gameScene.playerPeerId = gameScene.player2Id
+                                        //print("DEBUG: this player id \(gameScene.playerPeerId ?? "none")")
                                     }
                                 } label: {
                                     Text("Accept")
@@ -135,17 +143,30 @@ struct PlayerPairingView: View {
                         mpManager.stopAdvertising()
                     }
                     .onChange(of: mpManager.paired) { oldValue, newValue in
-                        startGame = newValue
+                        instructionGame = newValue
                         sendInvitation = false
                     }
                 }
                 .navigationBarBackButtonHidden(true)
                 .onAppear(){
                     mpManager.setupGame(gameScene: gameScene)
+                    gameScene.playerPeerId = mpManager.myConnectionId.displayName
                 }
                 .navigationDestination(
-                    isPresented: $startGame) {
-                        GameView()
+                    isPresented: $instructionGame) {
+                        // gameScene.player1Id = mpManager.myConnectionId.displayName
+                        // gameScene.player2Id = player.displayName
+                        
+                        
+                        // player1 is FBI
+                        if gameScene.player1Id == mpManager.myConnectionId.displayName {
+                            FBIInstructionView()
+                        }
+                        // player2 is Terrorist
+                        else{
+                            TerroristInstructionView()
+                        }
+                        // GameView()
                     }
             }
         }
@@ -165,7 +186,8 @@ struct AvailablePlayerCard: View {
                     .frame(width: 200)
             }
             Text(playerName)
-                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))                .foregroundColor(.white)
+                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))                
+                .foregroundColor(.white)
                 .padding()
         } .frame(width:300)
     }
