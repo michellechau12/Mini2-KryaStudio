@@ -34,7 +34,6 @@
 		ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC192C2C1975CB0059276B /* GameScene.swift */; };
 		ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC192E2C19790E0059276B /* PlayerModel.swift */; };
 		ECCC19342C1A3F890059276B /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19332C1A3F890059276B /* GameView.swift */; };
-		ECCC19382C1AD2E30059276B /* GameSceneTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19372C1AD2E30059276B /* GameSceneTest.swift */; };
 		EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF18C2A62C241CDB000B7808 /* YourNameView.swift */; };
 		EF7A022C2C28596000457237 /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF7A022B2C28596000457237 /* MazeTileSet.sks */; };
 		EF7A022E2C28596500457237 /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF7A022D2C28596500457237 /* MazeScene.sks */; };
@@ -72,7 +71,6 @@
 		ECCC192E2C19790E0059276B /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
 		ECCC19322C1A38BB0059276B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ECCC19332C1A3F890059276B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
-		ECCC19372C1AD2E30059276B /* GameSceneTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneTest.swift; sourceTree = "<group>"; };
 		EF18C2A62C241CDB000B7808 /* YourNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourNameView.swift; sourceTree = "<group>"; };
 		EF7A022B2C28596000457237 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
 		EF7A022D2C28596500457237 /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
@@ -93,7 +91,6 @@
 			isa = PBXGroup;
 			children = (
 				ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */,
-				ECCC19372C1AD2E30059276B /* GameSceneTest.swift */,
 				ECCC192C2C1975CB0059276B /* GameScene.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
 				ECCC189D2C1833140059276B /* Products */,
@@ -266,7 +263,6 @@
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
 				ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */,
-				ECCC19382C1AD2E30059276B /* GameSceneTest.swift in Sources */,
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,
 				ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */,
 				0B91B1F52C296EE3005E7F99 /* CreditOverlay.swift in Sources */,

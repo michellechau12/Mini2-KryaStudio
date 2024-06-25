@@ -179,8 +179,8 @@ class GameScene: SKScene, ObservableObject {
         }
         
         // defuse delay texture
-        for i in 1...6 {
-            let texture = SKTexture(imageNamed: "delay-texture-\(i)")
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "delayed-texture-\(i)")
             fbiDefuseDelayTexture.append(texture)
         }
     }
