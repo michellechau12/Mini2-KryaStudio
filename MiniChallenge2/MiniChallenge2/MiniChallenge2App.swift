@@ -26,7 +26,7 @@ struct MiniChallenge2App: App {
     //            wrappedValue: GameScene(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
     //        )
 //            BACKGROUND MUSIC
-            AudioManager.shared.playBackgroundMusic()
+//            AudioManager.shared.playBackgroundMusic()
         }
     
     var body: some Scene {
