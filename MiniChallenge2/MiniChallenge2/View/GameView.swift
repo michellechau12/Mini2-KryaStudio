@@ -23,7 +23,7 @@ struct GameView: View {
                 .environmentObject(mpManager)
                 .ignoresSafeArea()
                 .onAppear(){
-                    gameScene.playerPeerId = mpManager.myConnectionId.displayName
+                    // gameScene.playerPeerId = mpManager.myConnectionId.displayName
                     print("DEBUG: this player id \(gameScene.playerPeerId ?? "none")")
                 }
                 .onReceive(mpManager.$paired, perform: { _ in

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TerroristInstructionView: View {
+    @EnvironmentObject var mpManager: MultipeerConnectionManager
+    @EnvironmentObject var gameScene: GameScene
+    
     @State private var navigateToGameView: Bool = false
 
     var body: some View {
@@ -49,25 +52,33 @@ struct TerroristInstructionView: View {
                                 .padding(.bottom, 60)
                                 .padding(.trailing, 100)
                             
-                            Button {
-                                navigateToGameView = true
-                            } label: {
-                                Image("button-ready")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 300, height: 100)
-                            }
-                            .padding(.trailing, 96)
+//                            Button {
+//                                navigateToGameView = true
+//                            } label: {
+//                                Image("button-ready")
+//                                    .resizable()
+//                                    .scaledToFit()
+//                                    .frame(width: 300, height: 100)
+//                            }
+//                            .padding(.trailing, 96)
                         }
                     }
                     
                     Spacer()
                 }
             }
+            .onAppear(){
+                mpManager.setupGame(gameScene: gameScene)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    navigateToGameView = true
+                    print("DEBUG: heree!")
+                }
+            }
             .navigationDestination(isPresented: $navigateToGameView) {
                 GameView()
-                    .environmentObject(MultipeerConnectionManager(playerId: UUID()))
-                    .environmentObject(GameScene())
+                    .environmentObject(mpManager)
+                    .environmentObject(gameScene)
             }
         }
         .navigationBarBackButtonHidden(true)

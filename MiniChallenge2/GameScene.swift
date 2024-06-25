@@ -301,7 +301,6 @@ class GameScene: SKScene, ObservableObject {
     
     func setThisPlayer() {
         // temp: player1 is fbi, player 2 is terrorist
-        
         guard let playerPeerId = playerPeerId,
               let player1Id = player1Id,
               let player2Id = player2Id else {
