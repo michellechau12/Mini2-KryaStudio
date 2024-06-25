@@ -689,44 +689,48 @@ class GameScene: SKScene, ObservableObject {
         }
         
         // Detecting touch on plant button
-        if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
-            bombPlantTimerStartTime = Date()
-            print("lagi plant...")
-            
-            // show progress bar
-            progressBarBackground?.isHidden = false
-            progressBar?.isHidden = false
-            
-            self.terroristCondition = "terrorist-planting-bomb"
-            
-            //run planting animation
-            thisPlayer.updatePlayerTextures(condition: terroristCondition)
-            thisPlayer.animatePlantingBombAnimation()
-            
-            // sending to multipeer
-            let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
-            mpManager.send(bomb: bombCondition)
+        if thisPlayer.role == "terrorist"{
+            if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
+                bombPlantTimerStartTime = Date()
+                print("lagi plant...")
+                
+                // show progress bar
+                progressBarBackground?.isHidden = false
+                progressBar?.isHidden = false
+                
+                self.terroristCondition = "terrorist-planting-bomb"
+                
+                //run planting animation
+                thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                thisPlayer.animatePlantingBombAnimation()
+                
+                // sending to multipeer
+                let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+                mpManager.send(bomb: bombCondition)
+            }
         }
         
         // Detecting touch on defuse button
-        if defuseButton.contains(location) && !defuseButton.isHidden {
-            defuseTimerStartTime = Date()
-            print("lagi defuse...")
-            
-            // show progress bar
-            progressBarBackground?.isHidden = false
-            progressBar?.isHidden = false
-            
-            self.fbiCondition = "fbi-defusing-bomb"
-            self.isDefusing = true
-            
-            //run defuse animation
-            thisPlayer.updatePlayerTextures(condition: fbiCondition)
-            thisPlayer.animateDefusingBomb()
-            
-            // sending to multipeer
-            let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
-            mpManager.send(bomb: bombCondition)
+        if thisPlayer.role == "fbi" {
+            if defuseButton.contains(location) && !defuseButton.isHidden {
+                defuseTimerStartTime = Date()
+                print("lagi defuse...")
+                
+                // show progress bar
+                progressBarBackground?.isHidden = false
+                progressBar?.isHidden = false
+                
+                self.fbiCondition = "fbi-defusing-bomb"
+                self.isDefusing = true
+                
+                //run defuse animation
+                thisPlayer.updatePlayerTextures(condition: fbiCondition)
+                thisPlayer.animateDefusingBomb()
+                
+                // sending to multipeer
+                let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+                mpManager.send(bomb: bombCondition)
+            }
         }
         
         if let sabotageButton = sabotageButton, let camera = cameraNode {
@@ -791,57 +795,61 @@ class GameScene: SKScene, ObservableObject {
         joystickKnob.run(moveBack)
         
         // Terrorist cancelled planting bomb
-        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            if elapsedTime < plantDuration {
-                print("cancel planting")
-                self.bombPlantTimerStartTime = nil
-                
-                // remove progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                // change terrorist condition from terrorist-planting-bomb to terrorist-initial
-                self.terroristCondition = "terrorist-initial"
-                thisPlayer.updatePlayerTextures(condition: terroristCondition)
-                
-                //remove planting animation
-                thisPlayer.stopPlantingBombAnimation()
-                
-                // sending to multipeer
-                let bombCondition = MPBombModel(bomb: .cancelledPlanting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
-                mpManager.send(bomb: bombCondition)
-                
+        if thisPlayer.role == "terrorist"{
+            if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+                if elapsedTime < plantDuration {
+                    print("cancel planting")
+                    self.bombPlantTimerStartTime = nil
+                    
+                    // remove progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    // change terrorist condition from terrorist-planting-bomb to terrorist-initial
+                    self.terroristCondition = "terrorist-initial"
+                    thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                    
+                    //remove planting animation
+                    thisPlayer.stopPlantingBombAnimation()
+                    
+                    // sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .cancelledPlanting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+                    mpManager.send(bomb: bombCondition)
+                    
+                }
             }
         }
         
-        if let defuseTimerStartTime = defuseTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime < defuseDuration {
-                print("cancel defusing")
-                self.defuseTimerStartTime = nil
-                
-                // remove progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
-                self.fbiCondition = "fbi-cancel-defusing"
-                self.isDefusing = false
-                
-                // run cancel defuse animation:
-                thisPlayer.cancelDefuseAnimation() // there's delay after cancelling defuse animation
-                
-                // remove defusing animation
-                thisPlayer.stopDefusingBombAnimation()
-                
-                // sending to multipeer
-                let bombCondition = MPBombModel(bomb: .cancelledDefusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
-                mpManager.send(bomb: bombCondition)
-                
-                //Start delay timer:
-                defuseCooldownStartTime = Date()
-                isDelayingMove = true
+        if thisPlayer.role == "fbi"{
+            if let defuseTimerStartTime = defuseTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+                if elapsedTime < defuseDuration {
+                    print("cancel defusing")
+                    self.defuseTimerStartTime = nil
+                    
+                    // remove progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
+                    self.fbiCondition = "fbi-cancel-defusing"
+                    self.isDefusing = false
+                    
+                    // run cancel defuse animation:
+                    thisPlayer.cancelDefuseAnimation() // there's delay after cancelling defuse animation
+                    
+                    // remove defusing animation
+                    thisPlayer.stopDefusingBombAnimation()
+                    
+                    // sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .cancelledDefusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+                    mpManager.send(bomb: bombCondition)
+                    
+                    //Start delay timer:
+                    defuseCooldownStartTime = Date()
+                    isDelayingMove = true
+                }
             }
         }
     }
@@ -914,38 +922,40 @@ class GameScene: SKScene, ObservableObject {
             }
         }
         //delaymove
-        if isDelayingMove {
-            thisPlayer.playerNode.physicsBody?.velocity = .zero
-            thisPlayer.playerNode.removeAction(forKey: "moveLeft")
-            thisPlayer.playerNode.removeAction(forKey: "moveRight")
-            
-            if let defuseCooldownStartTime = defuseCooldownStartTime {
-                let cooldownElapsedTime = Date().timeIntervalSince(defuseCooldownStartTime)
-                if cooldownElapsedTime >= defuseCooldownDuration {
-                    thisPlayer.playerNode.removeAction(forKey: "delayCancelling")
-                    
-                    switch thisPlayer.previousOrientation {
-                    case "left" :
-                        thisPlayer.playerNode.texture = thisPlayer.latestTextureLeft
-                    case "right" :
-                        thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
-                    default:
-                        thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+        if thisPlayer.role == "fbi"{
+            if isDelayingMove {
+                thisPlayer.playerNode.physicsBody?.velocity = .zero
+                thisPlayer.playerNode.removeAction(forKey: "moveLeft")
+                thisPlayer.playerNode.removeAction(forKey: "moveRight")
+                
+                if let defuseCooldownStartTime = defuseCooldownStartTime {
+                    let cooldownElapsedTime = Date().timeIntervalSince(defuseCooldownStartTime)
+                    if cooldownElapsedTime >= defuseCooldownDuration {
+                        thisPlayer.playerNode.removeAction(forKey: "delayCancelling")
+                        
+                        switch thisPlayer.previousOrientation {
+                        case "left" :
+                            thisPlayer.playerNode.texture = thisPlayer.latestTextureLeft
+                        case "right" :
+                            thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+                        default:
+                            thisPlayer.playerNode.texture = thisPlayer.latestTextureRight
+                        }
+                        
+                        isDelayingMove = false
+                        self.defuseCooldownStartTime = nil
+                        
+                        // setting the vulnerability
+                        player1Model.isVulnerable = true // fbi
+                        player2Model.isVulnerable = false // terrorist
+                        
+                        // change from fbi-cancel-defusing
+                        
                     }
-                    
-                    isDelayingMove = false
-                    self.defuseCooldownStartTime = nil
-                    
-                    // setting the vulnerability
-                    player1Model.isVulnerable = true // fbi
-                    player2Model.isVulnerable = false // terrorist
-                    
-                    // change from fbi-cancel-defusing
-                    
+                    self.fbiCondition = "fbi-initial"
                 }
-                self.fbiCondition = "fbi-initial"
+                return
             }
-            return
         }
         
         // Moving the player
@@ -964,67 +974,71 @@ class GameScene: SKScene, ObservableObject {
         maskNode?.position = thisPlayer.playerNode.position
         
         // add bomb if players already held plant button for a certain period of time
-        if let bombPlantTimerStartTime = bombPlantTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            updateProgressBar(elapsedTime: elapsedTime, totalTime: plantDuration)
-            if elapsedTime >= plantDuration {
-                print("Success planting bomb")
-                self.addBombNode()
-                self.bombPlantTimerStartTime = nil
-                
-                //remove the progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                //remove planting animation
-                thisPlayer.stopPlantingBombAnimation()
-                
-                //  sending location of the bomb to other player
-                let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
-                self.mpManager.send(bomb: bombCondition)
-                
+        if thisPlayer.role == "terrorist"{
+            if let bombPlantTimerStartTime = bombPlantTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
+                updateProgressBar(elapsedTime: elapsedTime, totalTime: plantDuration)
+                if elapsedTime >= plantDuration {
+                    print("Success planting bomb")
+                    self.addBombNode()
+                    self.bombPlantTimerStartTime = nil
+                    
+                    //remove the progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    //remove planting animation
+                    thisPlayer.stopPlantingBombAnimation()
+                    
+                    //  sending location of the bomb to other player
+                    let bombCondition = MPBombModel(bomb: .planted, playerBombCondition: "terrorist-planted-bomb", winnerId: thisPlayer.id)
+                    self.mpManager.send(bomb: bombCondition)
+                    
+                }
             }
         }
         
         // defuse bomb if players already held defuse button for a certain period of time
-        if let defuseTimerStartTime = defuseTimerStartTime {
-            let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            updateProgressBar(elapsedTime: elapsedTime, totalTime: defuseDuration)
-            if elapsedTime >= defuseDuration {
-                print("Success defusing bomb")
-                self.defuseBombNode()
-                self.defuseTimerStartTime = nil
-                
-                //remove the progress bar
-                progressBarBackground?.isHidden = true
-                progressBar?.isHidden = true
-                
-                //remove defusing animation
-                thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
-                
-                //  sending bomb condition to multipeer
-                let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
-                self.mpManager.send(bomb: bombCondition)
-                
-                
-                timer?.invalidate()
-                
-                self.winner = player1Model // fbi wins
-                
-                isGameFinished = true
-                if self.winner.id == self.thisPlayer.id{
-                    statementGameOver = "You Win"
-                    imageGameOver = "fbi-borgol-right-1"
-                    print("DEBUG_GO_COLS: TERRORIST WIN")
-                } else{
-                    statementGameOver = "You Lose"
-                    imageGameOver = "terrorist-bom-rightt-1"
-                    print("DEBUG_GO_COLS: FBI LOSE")
+        if thisPlayer.role == "fbi"{
+            if let defuseTimerStartTime = defuseTimerStartTime {
+                let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
+                updateProgressBar(elapsedTime: elapsedTime, totalTime: defuseDuration)
+                if elapsedTime >= defuseDuration {
+                    print("Success defusing bomb")
+                    self.defuseBombNode()
+                    self.defuseTimerStartTime = nil
                     
-                }
-                
-                if isGameFinished{
-                    removeAllNodes()
+                    //remove the progress bar
+                    progressBarBackground?.isHidden = true
+                    progressBar?.isHidden = true
+                    
+                    //remove defusing animation
+                    thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
+                    
+                    //  sending bomb condition to multipeer
+                    let bombCondition = MPBombModel(bomb: .defused, playerBombCondition: "fbi-defused-bomb", winnerId: player1Id)
+                    self.mpManager.send(bomb: bombCondition)
+                    
+                    
+                    timer?.invalidate()
+                    
+                    self.winner = player1Model // fbi wins
+                    
+                    isGameFinished = true
+                    if self.winner.id == self.thisPlayer.id{
+                        statementGameOver = "You Win"
+                        imageGameOver = "fbi-borgol-right-1"
+                        print("DEBUG_GO_COLS: TERRORIST WIN")
+                    } else{
+                        statementGameOver = "You Lose"
+                        imageGameOver = "terrorist-bom-rightt-1"
+                        print("DEBUG_GO_COLS: FBI LOSE")
+                        
+                    }
+                    
+                    if isGameFinished{
+                        removeAllNodes()
+                    }
                 }
             }
         }
