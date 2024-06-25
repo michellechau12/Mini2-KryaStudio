@@ -39,12 +39,12 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
     private let plantButton = SKSpriteNode(imageNamed: "plantButton")
     private var isBombPlanted = false
     private var bombPlantTimerStartTime: Date?
+    private var plantDuration = 3.0
     
     private let defuseButton = SKSpriteNode(imageNamed: "defuseButton")
     private var defuseTimerStartTime: Date?
     private var defuseRadius: CGFloat = 50.0
-    private var defuseProgressBar: SKSpriteNode?
-    private var defuseProgressBarBackground: SKSpriteNode?
+    private var defuseDuration = 3.0
     private var delayStartTime: Date?
     private var previousTexture: SKTexture?
     private var lastMovementDirection: MovementDirection = .none
@@ -496,7 +496,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            if elapsedTime < 2.0 {
+            if elapsedTime < plantDuration {
                 print("cancel planting")
                 self.bombPlantTimerStartTime = nil
                 //cancel plant texture and progress bar
@@ -508,7 +508,7 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            if elapsedTime < 5.0 {
+            if elapsedTime < defuseDuration {
                 print("cancel defusing")
                 self.defuseTimerStartTime = nil
                 //cancel defuse texture and progress bar
@@ -630,9 +630,9 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         // add bomb if players already held plant button for a certain period of time
         if let bombPlantTimerStartTime = bombPlantTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(bombPlantTimerStartTime)
-            updateProgressBar(elapsedTime: elapsedTime, totalTime: 2.0)
+            updateProgressBar(elapsedTime: elapsedTime, totalTime: plantDuration)
             
-            if elapsedTime >= 2.0 {
+            if elapsedTime >= plantDuration {
                 print("Success planting bomb")
                 self.addBombNode()
                 self.bombPlantTimerStartTime = nil
@@ -644,9 +644,9 @@ class GameSceneTest: SKScene, SKPhysicsContactDelegate {
         // defuse bomb if players already held defuse button for a certain period of time
         if let defuseTimerStartTime = defuseTimerStartTime {
             let elapsedTime = Date().timeIntervalSince(defuseTimerStartTime)
-            updateProgressBar(elapsedTime: elapsedTime, totalTime: 5.0)
+            updateProgressBar(elapsedTime: elapsedTime, totalTime: defuseDuration)
             
-            if elapsedTime >= 5.0 {
+            if elapsedTime >= defuseDuration {
                 print("Success defusing bomb")
                 self.defuseButton.isHidden = true
                 self.timerLabel?.isHidden = true
