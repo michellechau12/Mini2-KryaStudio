@@ -126,9 +126,7 @@ class GameScene: SKScene, ObservableObject {
         setUpTimerLabel()
         setupProgressBar()
         setupSabotageButton()
-        
-        
-       
+
         
         if thisPlayer.role == "terrorist"{
             setupPlantButton()
@@ -448,16 +446,16 @@ class GameScene: SKScene, ObservableObject {
     
     func setupProgressBar() {
         progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
-        progressBarBackground?.zPosition = 10
+        progressBarBackground?.zPosition = 30
         progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
-        progressBarBackground?.position = CGPoint(x: -52, y: 280)
+        progressBarBackground?.position = CGPoint(x: -52, y: 245)
         cameraNode?.addChild(progressBarBackground!)
         progressBarBackground?.isHidden = true
         
         progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
         progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
-        progressBar?.position = CGPoint(x: -52, y: 280)
-        progressBar?.zPosition = 11
+        progressBar?.position = CGPoint(x: -52, y: 245)
+        progressBar?.zPosition = 31
         cameraNode?.addChild(progressBar!)
         progressBar?.isHidden = true
     }
@@ -509,7 +507,7 @@ class GameScene: SKScene, ObservableObject {
             sabotageLabel.fontSize = 27
             sabotageLabel.color = .black
             sabotageLabel.position = CGPoint(x: 0, y: 92)
-            sabotageLabel.zPosition = 1
+            sabotageLabel.zPosition = 40
             cameraNode?.addChild(sabotageLabel)
 
             print("Children: \(self.children)")
@@ -583,7 +581,7 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setupPlantButton() {
-        plantButton.size = CGSize(width: 70, height: 70)
+        plantButton.size = CGSize(width: 40, height: 40)
         plantButton.zPosition = 20
         plantButton.alpha = 1
         addChild(plantButton)
@@ -909,7 +907,7 @@ class GameScene: SKScene, ObservableObject {
         else {
             if isPlayerInBombSite() && !isBombPlanted {
                 // func to enable plantButton
-                let offset: CGFloat = 20.0
+                let offset: CGFloat = 10.0
                 plantButton.position = CGPoint(
                     x: thisPlayer.playerNode.position.x,
                     y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + plantButton.size.height / 2 + offset)

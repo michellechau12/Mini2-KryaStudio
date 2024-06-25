@@ -38,7 +38,7 @@ class PlayerModel: ObservableObject {
         self.latestTextureRight = playerRightTextures[0]
         self.latestTextureLeft = playerLeftTextures[0]
         
-        playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 30, height: 30))
+        playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 28, height: 28))
         playerNode.zPosition = 2
         
         print("DEBUG")
@@ -49,16 +49,16 @@ class PlayerModel: ObservableObject {
         
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
-            playerNode.position = CGPoint(x: 3.57, y: 945.85)
-//            playerNode.position = CGPoint(x: -269, y: -31)
-            speedMultiplier = 2
+    //        playerNode.position = CGPoint(x: 3.57, y: 945.85)
+          playerNode.position = CGPoint(x: -269, y: -31)
+            speedMultiplier = 1.95
             isVulnerable = false
             role = "fbi"
         } else {
             playerNode.name = "Player2"
-            playerNode.position = CGPoint(x: 48.57, y: -350)
-//            playerNode.position = CGPoint(x: -335, y: -116)
-            speedMultiplier = 1.5
+     //       playerNode.position = CGPoint(x: 48.57, y: -350)
+            playerNode.position = CGPoint(x: -335, y: -116)
+            speedMultiplier = 1.8
             isVulnerable = true
             role = "terrorist"
         }
