@@ -21,13 +21,13 @@
 		0B91B20A2C2A837F005E7F99 /* Famicom Battle-bgm.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */; };
 		0B91B20E2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */; };
 		0B91B2102C2AB782005E7F99 /* police-sirene-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */; };
-		2FA1EABE2C2B41840051B0A9 /* 60sec-beep-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EAB72C2B41840051B0A9 /* 60sec-beep-bomb-sfx.mp3 */; };
-		2FA1EABF2C2B41840051B0A9 /* walk-step-faster-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EAB82C2B41840051B0A9 /* walk-step-faster-sfx.mp3 */; };
-		2FA1EAC02C2B41840051B0A9 /* vo-gamestart-terrorist-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EAB92C2B41840051B0A9 /* vo-gamestart-terrorist-sfx.mp3 */; };
-		2FA1EAC12C2B41840051B0A9 /* vo-bomb-planted-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EABA2C2B41840051B0A9 /* vo-bomb-planted-sfx.mp3 */; };
-		2FA1EAC22C2B41840051B0A9 /* defusing-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EABB2C2B41840051B0A9 /* defusing-bomb-sfx.mp3 */; };
-		2FA1EAC32C2B41840051B0A9 /* defusing-delay-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EABC2C2B41840051B0A9 /* defusing-delay-sfx.mp3 */; };
-		2FA1EAC42C2B41840051B0A9 /* vo-gamestart-fbi-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2FA1EABD2C2B41840051B0A9 /* vo-gamestart-fbi-sfx.mp3 */; };
+		0BB133842C2BB4FF00B0AFD6 /* defusing-delay-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB1337D2C2BB4FF00B0AFD6 /* defusing-delay-sfx.mp3 */; };
+		0BB133852C2BB4FF00B0AFD6 /* walk-step-faster-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB1337E2C2BB4FF00B0AFD6 /* walk-step-faster-sfx.mp3 */; };
+		0BB133862C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB1337F2C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 */; };
+		0BB133872C2BB4FF00B0AFD6 /* vo-gamestart-fbi-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133802C2BB4FF00B0AFD6 /* vo-gamestart-fbi-sfx.mp3 */; };
+		0BB133882C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133812C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 */; };
+		0BB133892C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */; };
+		0BB1338A2C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -61,19 +61,19 @@
 		0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Famicom Battle-bgm.mp3"; sourceTree = "<group>"; };
 		0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "explode-bomb-sfx.mp3"; sourceTree = "<group>"; };
 		0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "police-sirene-sfx.mp3"; sourceTree = "<group>"; };
+		0BB1337D2C2BB4FF00B0AFD6 /* defusing-delay-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "defusing-delay-sfx.mp3"; sourceTree = "<group>"; };
+		0BB1337E2C2BB4FF00B0AFD6 /* walk-step-faster-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "walk-step-faster-sfx.mp3"; sourceTree = "<group>"; };
+		0BB1337F2C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "60sec-beep-bomb-sfx.mp3"; sourceTree = "<group>"; };
+		0BB133802C2BB4FF00B0AFD6 /* vo-gamestart-fbi-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "vo-gamestart-fbi-sfx.mp3"; sourceTree = "<group>"; };
+		0BB133812C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "defusing-bomb-sfx.mp3"; sourceTree = "<group>"; };
+		0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "vo-bomb-planted-sfx.mp3"; sourceTree = "<group>"; };
+		0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "vo-gamestart-terrorist-sfx.mp3"; sourceTree = "<group>"; };
 		2FA1EAA22C2AD2560051B0A9 /* walk-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "walk-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EAB72C2B41840051B0A9 /* 60sec-beep-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "60sec-beep-bomb-sfx.mp3"; path = "../../../../../../60sec-beep-bomb-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EAB82C2B41840051B0A9 /* walk-step-faster-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "walk-step-faster-sfx.mp3"; path = "../../../../../../walk-step-faster-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EAB92C2B41840051B0A9 /* vo-gamestart-terrorist-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "vo-gamestart-terrorist-sfx.mp3"; path = "../../../../../../vo-gamestart-terrorist-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EABA2C2B41840051B0A9 /* vo-bomb-planted-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "vo-bomb-planted-sfx.mp3"; path = "../../../../../../vo-bomb-planted-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EABB2C2B41840051B0A9 /* defusing-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "defusing-bomb-sfx.mp3"; path = "../../../../../../defusing-bomb-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EABC2C2B41840051B0A9 /* defusing-delay-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "defusing-delay-sfx.mp3"; path = "../../../../../../defusing-delay-sfx.mp3"; sourceTree = "<group>"; };
-		2FA1EABD2C2B41840051B0A9 /* vo-gamestart-fbi-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "vo-gamestart-fbi-sfx.mp3"; path = "../../../../../../vo-gamestart-fbi-sfx.mp3"; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
 		ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
-		ECCC189C2C1833140059276B /* MiniChallenge2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniChallenge2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ECCC189C2C1833140059276B /* Bomb 'n Chase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bomb 'n Chase.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ECCC189F2C1833140059276B /* MiniChallenge2App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniChallenge2App.swift; sourceTree = "<group>"; };
 		ECCC18A12C1833140059276B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		ECCC18A32C1833160059276B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -105,13 +105,13 @@
 		ECCC18932C1833140059276B = {
 			isa = PBXGroup;
 			children = (
-				2FA1EAB72C2B41840051B0A9 /* 60sec-beep-bomb-sfx.mp3 */,
-				2FA1EABB2C2B41840051B0A9 /* defusing-bomb-sfx.mp3 */,
-				2FA1EABC2C2B41840051B0A9 /* defusing-delay-sfx.mp3 */,
-				2FA1EABA2C2B41840051B0A9 /* vo-bomb-planted-sfx.mp3 */,
-				2FA1EABD2C2B41840051B0A9 /* vo-gamestart-fbi-sfx.mp3 */,
-				2FA1EAB92C2B41840051B0A9 /* vo-gamestart-terrorist-sfx.mp3 */,
-				2FA1EAB82C2B41840051B0A9 /* walk-step-faster-sfx.mp3 */,
+				0BB1337F2C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 */,
+				0BB133812C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 */,
+				0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */,
+				0BB133802C2BB4FF00B0AFD6 /* vo-gamestart-fbi-sfx.mp3 */,
+				0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */,
+				0BB1337D2C2BB4FF00B0AFD6 /* defusing-delay-sfx.mp3 */,
+				0BB1337E2C2BB4FF00B0AFD6 /* walk-step-faster-sfx.mp3 */,
 				ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */,
 				ECCC192C2C1975CB0059276B /* GameScene.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
@@ -122,7 +122,7 @@
 		ECCC189D2C1833140059276B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				ECCC189C2C1833140059276B /* MiniChallenge2.app */,
+				ECCC189C2C1833140059276B /* Bomb 'n Chase.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -215,7 +215,7 @@
 			);
 			name = MiniChallenge2;
 			productName = MiniChallenge2;
-			productReference = ECCC189C2C1833140059276B /* MiniChallenge2.app */;
+			productReference = ECCC189C2C1833140059276B /* Bomb 'n Chase.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -257,20 +257,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECCC18A82C1833160059276B /* Preview Assets.xcassets in Resources */,
-				2FA1EABF2C2B41840051B0A9 /* walk-step-faster-sfx.mp3 in Resources */,
+				0BB133852C2BB4FF00B0AFD6 /* walk-step-faster-sfx.mp3 in Resources */,
 				EF7A022C2C28596000457237 /* MazeTileSet.sks in Resources */,
-				2FA1EAC12C2B41840051B0A9 /* vo-bomb-planted-sfx.mp3 in Resources */,
 				0B91B20A2C2A837F005E7F99 /* Famicom Battle-bgm.mp3 in Resources */,
 				ECCC18A42C1833160059276B /* Assets.xcassets in Resources */,
 				0B91B2102C2AB782005E7F99 /* police-sirene-sfx.mp3 in Resources */,
-				2FA1EAC32C2B41840051B0A9 /* defusing-delay-sfx.mp3 in Resources */,
+				0BB133872C2BB4FF00B0AFD6 /* vo-gamestart-fbi-sfx.mp3 in Resources */,
 				0B91B1F72C296EFC005E7F99 /* PixelifySans.ttf in Resources */,
-				2FA1EAC02C2B41840051B0A9 /* vo-gamestart-terrorist-sfx.mp3 in Resources */,
-				2FA1EABE2C2B41840051B0A9 /* 60sec-beep-bomb-sfx.mp3 in Resources */,
+				0BB133862C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 in Resources */,
+				0BB133892C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 in Resources */,
 				EF7A022E2C28596500457237 /* MazeScene.sks in Resources */,
-				2FA1EAC42C2B41840051B0A9 /* vo-gamestart-fbi-sfx.mp3 in Resources */,
-				2FA1EAC22C2B41840051B0A9 /* defusing-bomb-sfx.mp3 in Resources */,
+				0BB1338A2C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 in Resources */,
 				0B91B20E2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 in Resources */,
+				0BB133882C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 in Resources */,
+				0BB133842C2BB4FF00B0AFD6 /* defusing-delay-sfx.mp3 in Resources */,
 				0B91B2062C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -453,7 +453,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.taniaCresentia.MiniChallenge2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Bomb 'n Chase";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -492,7 +492,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.3;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.taniaCresentia.MiniChallenge2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Bomb 'n Chase";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
