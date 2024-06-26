@@ -11,8 +11,11 @@ struct TerroristInstructionView: View {
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @EnvironmentObject var gameScene: GameScene
     
+    @State private var progress = 0.0
+    @State private var isAnimatingProgress = false
+    
     @State private var navigateToGameView: Bool = false
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -45,22 +48,29 @@ struct TerroristInstructionView: View {
                         Spacer()
                         
                         VStack {
-                            Image("terrorist-none-left-1")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 360)
-                                .padding(.bottom, 60)
-                                .padding(.trailing, 100)
+                            ZStack {
+                                Image("terrorist-none-left-1")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 360)
+                                    .padding(.bottom, 150)
+                                    .padding(.trailing, 100)
+                                
+                                VStack {
+                                    ProgressView(value: progress, total: 1.0)
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .scaleEffect(3)
+                                    
+                                    Text("Loading...")
+                                        .font(Font.custom("PixelifySans-Regular", size: 18))
+                                        .foregroundColor(.white)
+                                        .offset(y: 30)
+                                }
+                                .offset(y:260)
+                                .offset(x:140)
+                                
+                            }
                             
-//                            Button {
-//                                navigateToGameView = true
-//                            } label: {
-//                                Image("button-ready")
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .frame(width: 300, height: 100)
-//                            }
-//                            .padding(.trailing, 96)
                         }
                     }
                     

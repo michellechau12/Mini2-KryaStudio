@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct FBIInstructionView: View {
-
+    
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @EnvironmentObject var gameScene: GameScene
+    
+    @State private var progress = 0.0
+    @State private var isAnimatingProgress = false
+    
     
     @State private var navigateToGameView: Bool = false
     var body: some View {
@@ -45,22 +49,29 @@ struct FBIInstructionView: View {
                         Spacer()
                         
                         VStack {
-                            Image("fbi-none-1")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 360)
-                                .padding(.bottom, 60)
-                                .padding(.trailing, 100)
+                            ZStack {
+                                Image("fbi-none-1")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 360)
+                                    .padding(.bottom, 130)
+                                    .padding(.trailing, 100)
+                                
+                                VStack {
+                                    ProgressView(value: progress, total: 1.0)
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .scaleEffect(3)
+                                    
+                                    Text("Loading...")
+                                        .font(Font.custom("PixelifySans-Regular", size: 18))
+                                        .foregroundColor(.white)
+                                        .offset(y: 30)
+                                }
+                                .offset(y:260)
+                                .offset(x:140)
+                                
+                            }
                             
-//                            Button {
-//                                 navigateToGameView = true
-//                            } label: {
-//                                Image("button-ready")
-//                                    .resizable()
-//                                    .scaledToFit()
-//                                    .frame(width: 300, height: 100)
-//                            }
-//                            .padding(.trailing, 96)
                         }
                     }
                     

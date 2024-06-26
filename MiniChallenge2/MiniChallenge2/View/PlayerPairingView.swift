@@ -17,6 +17,10 @@ struct PlayerPairingView: View {
     @State private var sendInvitation = false
     @Environment (\.dismiss) private var dismiss
     
+    @State private var waitingForResponse = false // New state for waiting alert
+    @State private var invitationAccepted = false // New state for invitation accepted alert
+    @State private var invitationDeclined = false // New state for invitation declined alert
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -84,6 +88,8 @@ struct PlayerPairingView: View {
                                                 gameScene.player1Id = mpManager.myConnectionId.displayName
                                                 gameScene.player2Id = player.displayName
                                                 print("DEBUG: inviteReceived \(mpManager.inviteReceived)")
+                                                waitingForResponse = true // Show waiting alert
+
                                                 
                                                 // Set peerId to thisPlayer
 //                                                gameScene.playerPeerId = gameScene.player1Id
@@ -126,6 +132,45 @@ struct PlayerPairingView: View {
                                     Text("Accept")
                                 }
                             }
+                            // Waiting for response alert
+                            .alert("Waiting for response", isPresented: $waitingForResponse) {
+                                Button {
+                                    waitingForResponse = false
+                                } label: {
+                                    Text("Cancel")
+                                }
+                            } message: {
+                                Text("Waiting for response from \(gameScene.player2Id ?? "other player")")
+                            }
+                            
+                            // Invitation accepted alert
+                            .alert("Invitation accepted", isPresented: $invitationAccepted) {
+                                Button {
+                                    invitationAccepted = false
+                                } label: {
+                                    Text("OK")
+                                }
+                            } message: {
+                                if let player2Id = gameScene.player2Id {
+                                    Text("Invitation accepted by \(player2Id)")
+                                } else {
+                                    Text("Invitation accepted")
+                                }
+                            }
+                            // Invitation declined alert
+                            .alert("Invitation declined", isPresented: $invitationDeclined) {
+                                Button {
+                                    invitationDeclined = false
+                                } label: {
+                                    Text("OK")
+                                }
+                            } message: {
+                                if let player2Id = gameScene.player2Id {
+                                    Text("Invitation declined by \(player2Id)")
+                                } else {
+                                    Text("Invitation declined")
+                                }
+                            }
                         }
                         .padding(.bottom, 120)
                         Spacer()
@@ -145,6 +190,13 @@ struct PlayerPairingView: View {
                     .onChange(of: mpManager.paired) { oldValue, newValue in
                         instructionGame = newValue
                         sendInvitation = false
+                        waitingForResponse = false
+                           if newValue {
+//                            if using invitation accepted alert
+//                            invitationAccepted = true
+                           } else {
+                               invitationDeclined = true
+                           }
                     }
                 }
                 .navigationBarBackButtonHidden(true)
@@ -186,7 +238,7 @@ struct AvailablePlayerCard: View {
                     .frame(width: 200)
             }
             Text(playerName)
-                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))                
+                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))
                 .foregroundColor(.white)
                 .padding()
         } .frame(width:300)
@@ -196,6 +248,3 @@ struct AvailablePlayerCard: View {
 #Preview {
     PlayerPairingView()
 }
-
-
-
