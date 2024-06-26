@@ -84,7 +84,9 @@ class GameScene: SKScene, ObservableObject {
     private var bombSites: [BombSiteModel] = []
     
     private var plantButton = SKSpriteNode(imageNamed: "plantButton")
+    private var isPlantButtonEnabled = false
     private var defuseButton = SKSpriteNode(imageNamed: "tang")
+    private var isDefuseButtonEnabled = false
     
     private var isBombPlanted = false
     private var defuseRadius: CGFloat = 50.0
@@ -852,46 +854,52 @@ class GameScene: SKScene, ObservableObject {
         
         // Detecting touch on plant button
         if thisPlayer.role == "terrorist"{
-            if plantButton.contains(location) && !plantButton.isHidden && !isBombPlanted {
-                bombPlantTimerStartTime = Date()
-                print("lagi plant...")
-                
-                // show progress bar
-                progressBarBackground?.isHidden = false
-                progressBar?.isHidden = false
-                
-                self.terroristCondition = "terrorist-planting-bomb"
-                
-                //run planting animation
-                thisPlayer.updatePlayerTextures(condition: terroristCondition)
-                thisPlayer.animatePlantingBombAnimation()
-                
-                // sending to multipeer
-                let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
-                mpManager.send(bomb: bombCondition)
+            if let camera = cameraNode {
+                let convertedLocation = camera.convert(location, from: self)
+                if plantButton.contains(convertedLocation) && isPlantButtonEnabled {
+                    bombPlantTimerStartTime = Date()
+                    print("lagi plant...")
+                    
+                    // show progress bar
+                    progressBarBackground?.isHidden = false
+                    progressBar?.isHidden = false
+                    
+                    self.terroristCondition = "terrorist-planting-bomb"
+                    
+                    //run planting animation
+                    thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                    thisPlayer.animatePlantingBombAnimation()
+                    
+                    // sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .planting, playerBombCondition: terroristCondition, winnerId: thisPlayer.id)
+                    mpManager.send(bomb: bombCondition)
+                }
             }
         }
         
         // Detecting touch on defuse button
         if thisPlayer.role == "fbi" {
-            if defuseButton.contains(location) && !defuseButton.isHidden {
-                defuseTimerStartTime = Date()
-                print("lagi defuse...")
-                
-                // show progress bar
-                progressBarBackground?.isHidden = false
-                progressBar?.isHidden = false
-                
-                self.fbiCondition = "fbi-defusing-bomb"
-                self.isDefusing = true
-                
-                //run defuse animation
-                thisPlayer.updatePlayerTextures(condition: fbiCondition)
-                thisPlayer.animateDefusingBomb()
-                
-                // sending to multipeer
-                let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
-                mpManager.send(bomb: bombCondition)
+            if let camera = cameraNode {
+                let convertedLocation = camera.convert(location, from: self)
+                if defuseButton.contains(convertedLocation) && isDefuseButtonEnabled {
+                    defuseTimerStartTime = Date()
+                    print("lagi defuse...")
+                    
+                    // show progress bar
+                    progressBarBackground?.isHidden = false
+                    progressBar?.isHidden = false
+                    
+                    self.fbiCondition = "fbi-defusing-bomb"
+                    self.isDefusing = true
+                    
+                    //run defuse animation
+                    thisPlayer.updatePlayerTextures(condition: fbiCondition)
+                    thisPlayer.animateDefusingBomb()
+                    
+                    // sending to multipeer
+                    let bombCondition = MPBombModel(bomb: .defusing, playerBombCondition: fbiCondition, winnerId: thisPlayer.id)
+                    mpManager.send(bomb: bombCondition)
+                }
             }
         }
         
@@ -1066,6 +1074,7 @@ class GameScene: SKScene, ObservableObject {
 //                    y: thisPlayer.playerNode.position.y + thisPlayer.playerNode.size.height / 2 + defuseButton.size.height / 2 + offset
 //                )
 //                defuseButton.isHidden = false
+                isDefuseButtonEnabled = true
                 defuseButton.alpha = 1
                 fbiCondition = "fbi-near-bomb"
                 
@@ -1074,6 +1083,7 @@ class GameScene: SKScene, ObservableObject {
                 mpManager.send(bomb: bombCondition)
             } else {
 //                defuseButton.isHidden = true
+                isDefuseButtonTapped = false
                 defuseButton.alpha = 0.2
                 fbiCondition = "fbi-far-from-bomb"
                 
@@ -1093,6 +1103,7 @@ class GameScene: SKScene, ObservableObject {
 //
 //                )
 //                plantButton.isHidden = false
+                isPlantButtonEnabled = true
                 plantButton.alpha = 1
                 
                 
@@ -1100,6 +1111,7 @@ class GameScene: SKScene, ObservableObject {
 //                    print("Plant button is visible")
             } else {
 //                plantButton.isHidden = true
+                isPlantButtonEnabled = false
                 plantButton.alpha = 0.2
             }
             
