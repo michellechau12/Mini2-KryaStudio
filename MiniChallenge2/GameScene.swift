@@ -153,6 +153,8 @@ class GameScene: SKScene, ObservableObject {
             setupDefuseButton()
         }
         
+        AudioManager.shared.playGameMusic()
+        
         addChild(player1Model.playerNode)
         addChild(player2Model.playerNode)
     }

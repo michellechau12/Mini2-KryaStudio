@@ -56,6 +56,9 @@ struct FBIWinningView: View {
             }
         }
         .onAppear(){
+            AudioManager.shared.stopWalkSound()
+            AudioManager.shared.stopBombTimerSound()
+            
             AudioManager.shared.stopMusic()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0) {
                 AudioManager.shared.playFbiWinningMusic()
