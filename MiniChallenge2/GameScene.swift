@@ -798,16 +798,7 @@ class GameScene: SKScene, ObservableObject {
         // print("DEBUG : Yang menang adalah \(player2Model.role)")
         
         self.isGameFinished = true
-        if self.winner.id == self.thisPlayer.id{
-            statementGameOver = "You Win"
-            imageGameOver = "terrorist-bom-rightt-1"
-            print("DEBUG_GO_EXPLODING_FUNC: TERRORIST WIN")
-        } else{
-            statementGameOver = "You Lose"
-            imageGameOver = "fbi-borgol-right-1"
-            print("DEBUG_GO_EXPLODING_FUNC: FBI LOSE")
-            
-        }
+        statementGameOver = "TERRORIST_WIN"
         
         if self.isGameFinished{
             removeAllNodes()
@@ -1234,16 +1225,7 @@ class GameScene: SKScene, ObservableObject {
                     self.winner = player1Model // fbi wins
                     
                     isGameFinished = true
-                    if self.winner.id == self.thisPlayer.id{
-                        statementGameOver = "You Win"
-                        imageGameOver = "fbi-borgol-right-1"
-                        print("DEBUG_GO_COLS: TERRORIST WIN")
-                    } else{
-                        statementGameOver = "You Lose"
-                        imageGameOver = "terrorist-bom-rightt-1"
-                        print("DEBUG_GO_COLS: FBI LOSE")
-                        
-                    }
+                    statementGameOver = "FBI_WIN"
                     
                     if isGameFinished{
                         removeAllNodes()
@@ -1293,7 +1275,6 @@ class GameScene: SKScene, ObservableObject {
         case .sabotagedView:
             print("sabotaged view")
             setupSabotagedView()
-            
         case .death:
             print("Start")
         case .reset:
@@ -1376,16 +1357,7 @@ class GameScene: SKScene, ObservableObject {
             AudioManager.shared.stopBombTimerSound()
             
             self.isGameFinished = true
-            if bomb.winnerId == self.thisPlayer.id{
-                statementGameOver = "You Win"
-                imageGameOver = "fbi-borgol-right-1"
-                print("DEBUG_GO_COLS_DEFUSED: TERRORIST WIN")
-            } else{
-                statementGameOver = "You Lose"
-                imageGameOver = "terrorist-bom-rightt-1"
-                print("DEBUG_GO_COLS_DEFUSED: FBI LOSE")
-                
-            }
+            statementGameOver = "FBI_WIN"
             
             if self.isGameFinished{
                 removeAllNodes()
@@ -1395,16 +1367,7 @@ class GameScene: SKScene, ObservableObject {
             print("exploded")
             
             self.isGameFinished = true
-            if bomb.winnerId == self.thisPlayer.id{
-                statementGameOver = "You Win"
-                imageGameOver = "terrorist-bom-rightt-1"
-                print("DEBUG_GO_EXPLODED: TERRORIST WIN")
-            } else{
-                statementGameOver = "You Lose"
-                imageGameOver = "fbi-borgol-right-1"
-                print("DEBUG_GO_EXPLODED: FBI LOSE")
-                
-            }
+            statementGameOver = "TERRORIST_WIN"
             
             if self.isGameFinished{
                 removeAllNodes()
