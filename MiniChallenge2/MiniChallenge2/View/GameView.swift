@@ -18,7 +18,7 @@ struct GameView: View {
     
     var body: some View {
         NavigationStack{
-            SpriteView(scene: gameScene)
+            SpriteView(gameScene: gameScene)
                 .environmentObject(gameScene)
                 .environmentObject(mpManager)
                 .ignoresSafeArea()

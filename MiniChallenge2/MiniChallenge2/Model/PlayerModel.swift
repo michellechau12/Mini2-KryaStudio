@@ -27,6 +27,7 @@ class PlayerModel: ObservableObject {
     var latestTextureLeft: SKTexture
     var playerPreviousRightLeft: String?
     var isWalkingSoundPlaying = false
+//    var playerVelocity: Double = 0.0
     
     init(id: String, playerRightTextures: [SKTexture], playerLeftTextures: [SKTexture], gameScene: GameScene) {
         self.id = id
@@ -52,7 +53,7 @@ class PlayerModel: ObservableObject {
             playerNode.name = "Player1"
             playerNode.position = CGPoint(x: 3.57, y: 945.85)
 //          playerNode.position = CGPoint(x: -269, y: -31)
-            speedMultiplier = 1.95
+            speedMultiplier = 1.9
             isVulnerable = false
             role = "fbi"
         } else {

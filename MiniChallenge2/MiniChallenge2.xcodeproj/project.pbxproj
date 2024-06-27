@@ -28,6 +28,7 @@
 		0BB133882C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133812C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 */; };
 		0BB133892C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */; };
 		0BB1338A2C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */; };
+		2F4D4A822C2DDD7700D24EB9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -68,6 +69,7 @@
 		0BB133812C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "defusing-bomb-sfx.mp3"; sourceTree = "<group>"; };
 		0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "vo-bomb-planted-sfx.mp3"; sourceTree = "<group>"; };
 		0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "vo-gamestart-terrorist-sfx.mp3"; sourceTree = "<group>"; };
+		2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2FA1EAA22C2AD2560051B0A9 /* walk-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "walk-sfx.mp3"; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 			children = (
 				ECCC189F2C1833140059276B /* MiniChallenge2App.swift */,
 				ECCC18A12C1833140059276B /* ContentView.swift */,
+				2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */,
 				ECCC19352C1AA9A20059276B /* Model */,
 				ECCC19362C1AA9B50059276B /* View */,
 				ECCC19322C1A38BB0059276B /* Info.plist */,
@@ -286,6 +289,7 @@
 				ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */,
 				0B91B1FD2C297276005E7F99 /* TerroristInstructionView.swift in Sources */,
 				0B91B2012C2972EF005E7F99 /* TerroristWinningView.swift in Sources */,
+				2F4D4A822C2DDD7700D24EB9 /* ViewController.swift in Sources */,
 				0B91B1F32C296ED2005E7F99 /* NameInputOverlay.swift in Sources */,
 				ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */,
 				0B91B1FF2C2972B0005E7F99 /* FBIWinningView.swift in Sources */,
@@ -432,7 +436,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = 9HR48NXTG8;
+				DEVELOPMENT_TEAM = 6P2G97Y26J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -471,7 +475,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = 9HR48NXTG8;
+				DEVELOPMENT_TEAM = 6P2G97Y26J;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
