@@ -61,6 +61,7 @@ struct GameView: View {
                         GameOverView()
                     }
                 }
+                .navigationBarBackButtonHidden(true)
             
 //                .navigationDestination(isPresented: $isGameFinished) {
 //                    GameOverView(statementGameOver: $statementGameOver, imageGameOver: $imageGameOver)
