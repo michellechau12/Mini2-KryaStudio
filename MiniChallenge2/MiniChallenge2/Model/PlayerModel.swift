@@ -12,33 +12,50 @@ class PlayerModel: ObservableObject {
     @Published var id: String
     @Published var playerNode: SKSpriteNode
     
-    var playerRightTextures: [SKTexture]
-    var playerLeftTextures: [SKTexture]
+    var playerRightTextures: [SKTexture] = []
+    var playerLeftTextures: [SKTexture] = []
     var gameScene: GameScene
-    var speedMultiplier: Double
-    var isVulnerable: Bool
-    var role: String
+    var speedMultiplier: Double = 0.0
+    var isVulnerable: Bool = false
+    var role: String = ""
     var playerTextureIndex: Int = 0
     var orientation: String = ""
     var previousCondition: String = ""
     var previousOrientation: String = "not-moving"
     // For notWalking Texture
-    var latestTextureRight: SKTexture
-    var latestTextureLeft: SKTexture
+    var latestTextureRight: SKTexture = SKTexture(imageNamed: "")
+    var latestTextureLeft: SKTexture = SKTexture(imageNamed: "")
     var playerPreviousRightLeft: String?
     var isWalkingSoundPlaying = false
 //    var playerVelocity: Double = 0.0
     
-    init(id: String, playerRightTextures: [SKTexture], playerLeftTextures: [SKTexture], gameScene: GameScene) {
+    private var fbiRightTextures: [SKTexture] = []
+    private var fbiLeftTextures: [SKTexture] = []
+    
+    private var terroristRightTextures: [SKTexture] = []
+    private var terroristLeftTextures: [SKTexture] = []
+    
+    // custom textures
+    private var fbiRightTang: [SKTexture] = []
+    private var fbiLeftTang: [SKTexture] = []
+    
+    private var fbiRightDefuseBomb: [SKTexture] = []
+    private var fbiLeftDefuseBomb: [SKTexture] = []
+    
+    private var fbiDefuseDelayTexture: [SKTexture] = []
+    
+    private var terroristRightNone: [SKTexture] = []
+    private var terroristLeftNone: [SKTexture] = []
+    
+    private var terroristRightPentungan: [SKTexture] = []
+    private var terroristLeftPentungan: [SKTexture] = []
+    
+    private var terroristRightPlantBomb: [SKTexture] = []
+    private var terroristLeftPlantBomb: [SKTexture] = []
+    
+    init(id: String, gameScene: GameScene) {
         self.id = id
-        self.playerRightTextures = playerRightTextures
-        self.playerLeftTextures = playerLeftTextures
         self.gameScene = gameScene
-        self.speedMultiplier = 0
-        self.isVulnerable = true
-        self.role = ""
-        self.latestTextureRight = playerRightTextures[0]
-        self.latestTextureLeft = playerLeftTextures[0]
         
         playerNode = SKSpriteNode(color: UIColor.gray, size: CGSize(width: 28, height: 28))
         playerNode.zPosition = 2
@@ -53,6 +70,8 @@ class PlayerModel: ObservableObject {
             playerNode.name = "Player1"
             playerNode.position = CGPoint(x: 3.57, y: 945.85)
 //          playerNode.position = CGPoint(x: -269, y: -31)
+            self.playerRightTextures = fbiRightTextures
+            self.playerLeftTextures = fbiLeftTextures
             speedMultiplier = 1.9
             isVulnerable = false
             role = "fbi"
@@ -60,10 +79,15 @@ class PlayerModel: ObservableObject {
             playerNode.name = "Player2"
             playerNode.position = CGPoint(x: 48.57, y: -350)
 //            playerNode.position = CGPoint(x: -335, y: -116)
+            self.playerRightTextures = fbiRightTextures
+            self.playerLeftTextures = fbiLeftTextures
             speedMultiplier = 1.8
             isVulnerable = true
             role = "terrorist"
         }
+//        // assigning latest texture
+        self.latestTextureRight = playerRightTextures[0]
+        self.latestTextureLeft = playerLeftTextures[0]
         
         // Setting up Physics Body to player
 //        playerNode.physicsBody = SKPhysicsBody(circleOfRadius: playerNode.size.width / 2)
@@ -86,6 +110,107 @@ class PlayerModel: ObservableObject {
         playerNode.physicsBody?.isDynamic = true
         playerNode.physicsBody?.allowsRotation = false
         playerNode.physicsBody?.usesPreciseCollisionDetection = true
+    }
+    
+    func loadFBITextures(){
+        //general textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-borgol-right-\(i)")
+            fbiRightTextures.append(texture)
+        }
+    
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-borgol-left-\(i)")
+            fbiLeftTextures.append(texture)
+        }
+        
+        //Tang textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-tang-right-\(i)")
+            fbiRightTang.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "fbi-tang-left-\(i)")
+            fbiLeftTang.append(texture)
+        }
+        
+        //Defusing bomb textures
+        //right
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "fbi-defuse-right-\(i)")
+            fbiRightDefuseBomb.append(texture)
+        }
+        
+        //left
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "fbi-defuse-left-\(i)")
+            fbiLeftDefuseBomb.append(texture)
+        }
+        
+        // defuse delay texture
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "delayed-texture-\(i)")
+            fbiDefuseDelayTexture.append(texture)
+        }
+    }
+    
+    func loadTerroristsTextures(){
+        //general textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-bom-rightt-\(i)")
+            terroristRightTextures.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-bom-left-\(i)")
+            terroristLeftTextures.append(texture)
+        }
+        
+        //none textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-none-right-\(i)")
+            terroristRightNone.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-none-left-\(i)")
+            terroristLeftNone.append(texture)
+        }
+        
+        //pentungan textures
+        //right
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-pentungan-right-\(i)")
+            terroristRightPentungan.append(texture)
+        }
+        
+        //left
+        for i in 1...5 {
+            let texture = SKTexture(imageNamed: "terrorist-pentungan-left-\(i)")
+            terroristLeftPentungan.append(texture)
+        }
+        
+        //planting bomb textures
+        //right
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-right-\(i)")
+            terroristRightPlantBomb.append(texture)
+        }
+        
+        //left
+        for i in 1...4 {
+            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-left-\(i)")
+            terroristLeftPlantBomb.append(texture)
+        }
     }
     
     func movePlayer(velocity: CGVector, mpManager: MultipeerConnectionManager, condition: String) {
@@ -120,31 +245,9 @@ class PlayerModel: ObservableObject {
         }
         
         // assigning player textures
-        updatePlayerTextures(condition: condition)
+        updatePlayerTextures(condition: condition, role: self.role)
         animateWalking(orientation: self.orientation, condition: condition)
-        
-        //setting vulnerability
-//        self.checkPlayerVulnerability()
-//        if self.role == "fbi" {
-//            if gameScene.isDefusing || gameScene.isDelayingMove {
-//                self.isVulnerable = true
-//            } else {
-//                self.isVulnerable = false
-//            }
-//        } else if self.role == "terrorist" {
-//            if gameScene.isDefusing || gameScene.isDelayingMove {
-//                self.isVulnerable = false
-//            } else {
-//                self.isVulnerable = true
-//            }
-//        }
-        
-//        if self.role == "fbi" && (gameScene.isDefusing || gameScene.isDelayingMove) {
-//            self.isVulnerable = true
-//        } else {
-//            self.isVulnerable = false
-//        }
-//        
+              
         print("FBI is defusing? \(gameScene.isDefusing)")
         print ("FBI is delaying? \(gameScene.isDelayingMove)")
         
@@ -160,23 +263,7 @@ class PlayerModel: ObservableObject {
                 self.isVulnerable = false
             }
         }
-        
-        
-        
-//        else if role == "terrorist" {
-//            if gameScene.isDefusing2 {
-//                self.isVulnerable = false
-//            }
-//            else if gameScene.isDelayingMove {
-//                self.isVulnerable = false
-//            }
-//            else {
-//                self.isVulnerable = true
-//            }
-//        }
             
-        
-        
         //sending the movement to multipeer
         let playerCondition = MPPlayerModel(
                 action: .move,
@@ -188,59 +275,38 @@ class PlayerModel: ObservableObject {
         mpManager.send(player: playerCondition)
     }
     
-    func updatePlayerVulnerability(){
-        // setting vulnerability
-        print("DEBUG: condition \(gameScene.fbiCondition), vulnerability \(isVulnerable)")
-        print("DEBUG: condition \(gameScene.terroristCondition), vulnerability \(isVulnerable)")
-        if self.role == "fbi"{
-            if gameScene.fbiCondition == "fbi-defusing-bomb" || gameScene.fbiCondition == "fbi-cancel-defusing" {
-                self.isVulnerable = true
-            } else{
-                self.isVulnerable = false
-            }
-        } else if self.role == "terrorist"{
-            if gameScene.terroristCondition == "terrorist-initial" || gameScene.terroristCondition == "terrorist-planting-bomb" || gameScene.terroristCondition == "terrorist-planted-bomb" {
-                self.isVulnerable = true
-            }else if gameScene.terroristCondition == "terrorist-near-bomb" && (gameScene.fbiCondition == "fbi-defusing-bomb" || gameScene.fbiCondition == "fbi-cancel-defusing"){
-                self.isVulnerable = false
-            }
-        }
-        print("DEBUG: condition \(gameScene.fbiCondition), vulnerability \(isVulnerable)")
-        print("DEBUG: condition \(gameScene.terroristCondition), vulnerability \(isVulnerable)")
-    }
-    
-    func updatePlayerTextures(condition: String){
+    func updatePlayerTextures(condition: String, role: String){
         print("DEBUG: role \(self.role)")
         print("DEBUG: condition \(condition)")
-        if self.role == "terrorist"{
+        if role == "terrorist"{
             if condition == "terrorist-planted-bomb"{
-                playerRightTextures = gameScene.getTerroristTextures(type: "none-right")
-                playerLeftTextures = gameScene.getTerroristTextures(type: "none-left")
+                playerRightTextures = terroristRightNone
+                playerLeftTextures = terroristLeftNone
             } else if condition == "terrorist-near-bomb"{
-                playerRightTextures = gameScene.getTerroristTextures(type: "pentungan-right")
-                playerLeftTextures = gameScene.getTerroristTextures(type: "pentungan-left")
+                playerRightTextures = terroristRightPentungan
+                playerLeftTextures = terroristLeftPentungan
             } else if condition == "terrorist-planting-bomb"{
-                playerRightTextures = gameScene.getTerroristTextures(type: "plantbomb-right")
-                playerLeftTextures = gameScene.getTerroristTextures(type: "plantbomb-left")
+                playerRightTextures = terroristRightPlantBomb
+                playerLeftTextures = terroristLeftPlantBomb
             } else if condition == "terrorist-initial"{
-                playerRightTextures = gameScene.getTerroristTextures(type: "bomb-right")
-                playerLeftTextures = gameScene.getTerroristTextures(type: "bomb-left")
+                playerRightTextures = terroristRightTextures
+                playerLeftTextures = terroristLeftTextures
             }
         }
         // role fbi
         else {
             if condition == "fbi-near-bomb"{
-                playerRightTextures = gameScene.getFBITextures(type: "tang-right")
-                playerLeftTextures = gameScene.getFBITextures(type: "tang-left")
+                playerRightTextures = fbiRightTang
+                playerLeftTextures = fbiLeftTang
             } else if condition == "fbi-far-from-bomb"{
-                playerRightTextures = gameScene.getFBITextures(type: "borgol-right")
-                playerLeftTextures = gameScene.getFBITextures(type: "borgol-left")
+                playerRightTextures = fbiRightTextures
+                playerLeftTextures = fbiLeftTextures
             } else if condition == "fbi-defusing-bomb"{
-                playerRightTextures = gameScene.getFBITextures(type: "defuse-right")
-                playerLeftTextures = gameScene.getFBITextures(type: "defuse-left")
+                playerRightTextures = fbiRightDefuseBomb
+                playerLeftTextures = fbiLeftDefuseBomb
             } else if condition == "fbi-cancel-defusing"{
-                playerRightTextures = gameScene.getFBITextures(type: "delay")
-                playerLeftTextures = gameScene.getFBITextures(type: "delay")
+                playerRightTextures = fbiDefuseDelayTexture
+                playerLeftTextures = fbiDefuseDelayTexture
             }
         }
         // Add latestTexture for animateNotWalking with last index of textures's array
@@ -332,7 +398,7 @@ class PlayerModel: ObservableObject {
     }
     
     func cancelDefuseAnimation(){
-        self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: gameScene.getFBITextures(type: "delay"), timePerFrame: 0.1)), withKey: "delayCancelling")
+        self.playerNode.run(SKAction.repeatForever(SKAction.animate(with: fbiDefuseDelayTexture, timePerFrame: 0.1)), withKey: "delayCancelling")
     }
     
     func stopDefusingBombAnimation(){

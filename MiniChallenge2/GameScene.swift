@@ -44,32 +44,29 @@ class GameScene: SKScene, ObservableObject {
     private var defuseTimerStartTime: Date?
     private var defuseCooldownStartTime: Date?
     
-    private var fbiNode = SKSpriteNode(imageNamed: "fbi-borgol")
-    private var terroristNode = SKSpriteNode(imageNamed: "terrorist-bomb")
-    
-    private var fbiRightTextures: [SKTexture] = []
-    private var fbiLeftTextures: [SKTexture] = []
-    
-    private var terroristRightTextures: [SKTexture] = []
-    private var terroristLeftTextures: [SKTexture] = []
-    
-    // custom textures
-    private var fbiRightTang: [SKTexture] = []
-    private var fbiLeftTang: [SKTexture] = []
-    
-    private var fbiRightDefuseBomb: [SKTexture] = []
-    private var fbiLeftDefuseBomb: [SKTexture] = []
-    
-    private var fbiDefuseDelayTexture: [SKTexture] = []
-    
-    private var terroristRightNone: [SKTexture] = []
-    private var terroristLeftNone: [SKTexture] = []
-    
-    private var terroristRightPentungan: [SKTexture] = []
-    private var terroristLeftPentungan: [SKTexture] = []
-    
-    private var terroristRightPlantBomb: [SKTexture] = []
-    private var terroristLeftPlantBomb: [SKTexture] = []
+//    private var fbiRightTextures: [SKTexture] = []
+//    private var fbiLeftTextures: [SKTexture] = []
+//    
+//    private var terroristRightTextures: [SKTexture] = []
+//    private var terroristLeftTextures: [SKTexture] = []
+//    
+//    // custom textures
+//    private var fbiRightTang: [SKTexture] = []
+//    private var fbiLeftTang: [SKTexture] = []
+//    
+//    private var fbiRightDefuseBomb: [SKTexture] = []
+//    private var fbiLeftDefuseBomb: [SKTexture] = []
+//    
+//    private var fbiDefuseDelayTexture: [SKTexture] = []
+//    
+//    private var terroristRightNone: [SKTexture] = []
+//    private var terroristLeftNone: [SKTexture] = []
+//    
+//    private var terroristRightPentungan: [SKTexture] = []
+//    private var terroristLeftPentungan: [SKTexture] = []
+//    
+//    private var terroristRightPlantBomb: [SKTexture] = []
+//    private var terroristLeftPlantBomb: [SKTexture] = []
     
     private var joystick: SKSpriteNode?
     private var joystickKnob: SKSpriteNode?
@@ -86,7 +83,7 @@ class GameScene: SKScene, ObservableObject {
     
     private var plantButton = SKSpriteNode(imageNamed: "plantButton")
     private var isPlantButtonEnabled = false
-    private var defuseButton = SKSpriteNode(imageNamed: "tang")
+    private var defuseButton = SKSpriteNode(imageNamed: "defuseButton")
     private var isDefuseButtonEnabled = false
     
     private var isBombPlanted = false
@@ -128,9 +125,10 @@ class GameScene: SKScene, ObservableObject {
         physicsWorld.contactDelegate = self
         isGameFinished = false
         
-        // Load Textures and Setting Players
-        loadFBITextures()
-        loadTerroristsTextures()
+//         Load Textures and Setting Players
+//        thisPlayer.loadFBITextures()
+//        thisPlayer.loadTerroristsTextures()
+        
         createPlayers()
         setThisPlayer()
         
@@ -162,160 +160,160 @@ class GameScene: SKScene, ObservableObject {
         addChild(player2Model.playerNode)
     }
     
-    func loadFBITextures(){
-        //general textures
-        //right
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "fbi-borgol-right-\(i)")
-            fbiRightTextures.append(texture)
-        }
+//    func loadFBITextures(){
+//        //general textures
+//        //right
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "fbi-borgol-right-\(i)")
+//            fbiRightTextures.append(texture)
+//        }
+//    
+//        //left
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "fbi-borgol-left-\(i)")
+//            fbiLeftTextures.append(texture)
+//        }
+//        
+//        //Tang textures
+//        //right
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "fbi-tang-right-\(i)")
+//            fbiRightTang.append(texture)
+//        }
+//        
+//        //left
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "fbi-tang-left-\(i)")
+//            fbiLeftTang.append(texture)
+//        }
+//        
+//        //Defusing bomb textures
+//        //right
+//        for i in 1...4 {
+//            let texture = SKTexture(imageNamed: "fbi-defuse-right-\(i)")
+//            fbiRightDefuseBomb.append(texture)
+//        }
+//        
+//        //left
+//        for i in 1...4 {
+//            let texture = SKTexture(imageNamed: "fbi-defuse-left-\(i)")
+//            fbiLeftDefuseBomb.append(texture)
+//        }
+//        
+//        // defuse delay texture
+//        for i in 1...4 {
+//            let texture = SKTexture(imageNamed: "delayed-texture-\(i)")
+//            fbiDefuseDelayTexture.append(texture)
+//        }
+//    }
+//    
+//    func loadTerroristsTextures(){
+//        //general textures
+//        //right
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "terrorist-bom-rightt-\(i)")
+//            terroristRightTextures.append(texture)
+//        }
+//        
+//        //left
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "terrorist-bom-left-\(i)")
+//            terroristLeftTextures.append(texture)
+//        }
+//        
+//        //none textures
+//        //right
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "terrorist-none-right-\(i)")
+//            terroristRightNone.append(texture)
+//        }
+//        
+//        //left
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "terrorist-none-left-\(i)")
+//            terroristLeftNone.append(texture)
+//        }
+//        
+//        //pentungan textures
+//        //right
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "terrorist-pentungan-right-\(i)")
+//            terroristRightPentungan.append(texture)
+//        }
+//        
+//        //left
+//        for i in 1...5 {
+//            let texture = SKTexture(imageNamed: "terrorist-pentungan-left-\(i)")
+//            terroristLeftPentungan.append(texture)
+//        }
+//        
+//        //planting bomb textures
+//        //right
+//        for i in 1...4 {
+//            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-right-\(i)")
+//            terroristRightPlantBomb.append(texture)
+//        }
+//        
+//        //left
+//        for i in 1...4 {
+//            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-left-\(i)")
+//            terroristLeftPlantBomb.append(texture)
+//        }
+//    }
     
-        //left
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "fbi-borgol-left-\(i)")
-            fbiLeftTextures.append(texture)
-        }
-        
-        //Tang textures
-        //right
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "fbi-tang-right-\(i)")
-            fbiRightTang.append(texture)
-        }
-        
-        //left
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "fbi-tang-left-\(i)")
-            fbiLeftTang.append(texture)
-        }
-        
-        //Defusing bomb textures
-        //right
-        for i in 1...4 {
-            let texture = SKTexture(imageNamed: "fbi-defuse-right-\(i)")
-            fbiRightDefuseBomb.append(texture)
-        }
-        
-        //left
-        for i in 1...4 {
-            let texture = SKTexture(imageNamed: "fbi-defuse-left-\(i)")
-            fbiLeftDefuseBomb.append(texture)
-        }
-        
-        // defuse delay texture
-        for i in 1...4 {
-            let texture = SKTexture(imageNamed: "delayed-texture-\(i)")
-            fbiDefuseDelayTexture.append(texture)
-        }
-    }
-    
-    func loadTerroristsTextures(){
-        //general textures
-        //right
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "terrorist-bom-rightt-\(i)")
-            terroristRightTextures.append(texture)
-        }
-        
-        //left
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "terrorist-bom-left-\(i)")
-            terroristLeftTextures.append(texture)
-        }
-        
-        //none textures
-        //right
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "terrorist-none-right-\(i)")
-            terroristRightNone.append(texture)
-        }
-        
-        //left
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "terrorist-none-left-\(i)")
-            terroristLeftNone.append(texture)
-        }
-        
-        //pentungan textures
-        //right
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "terrorist-pentungan-right-\(i)")
-            terroristRightPentungan.append(texture)
-        }
-        
-        //left
-        for i in 1...5 {
-            let texture = SKTexture(imageNamed: "terrorist-pentungan-left-\(i)")
-            terroristLeftPentungan.append(texture)
-        }
-        
-        //planting bomb textures
-        //right
-        for i in 1...4 {
-            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-right-\(i)")
-            terroristRightPlantBomb.append(texture)
-        }
-        
-        //left
-        for i in 1...4 {
-            let texture = SKTexture(imageNamed: "terrorsit-plantbomb-left-\(i)")
-            terroristLeftPlantBomb.append(texture)
-        }
-    }
-    
-    func getFBITextures(type: String) -> [SKTexture]{
-        if type == "tang-right"{
-            return fbiRightTang
-        } else if type == "tang-left"{
-            return fbiLeftTang
-        } else if type == "borgol-right"{
-            return fbiRightTextures
-        } else if type == "borgol-left"{
-            return fbiLeftTextures
-        } else if type == "defuse-right"{
-            return fbiRightDefuseBomb
-        } else if type == "defuse-left"{
-            return fbiLeftDefuseBomb
-        } else if type == "delay"{
-            return fbiDefuseDelayTexture
-        }
-        return fbiRightTextures
-    }
-    
-    func getTerroristTextures(type: String) -> [SKTexture]{
-        if type == "none-right"{
-            return terroristRightNone
-        } else if type == "none-left"{
-            return terroristLeftNone
-        } else if type == "pentungan-right"{
-            return terroristRightPentungan
-        } else if type == "pentungan-left"{
-            return terroristLeftPentungan
-        } else if type == "bomb-right"{
-            return terroristRightTextures
-        } else if type == "bomb-left"{
-            return terroristLeftTextures
-        } else if type == "plantbomb-right"{
-            return terroristRightPlantBomb
-        } else if type == "plantbomb-left"{
-            return terroristLeftPlantBomb
-        }
-        return terroristRightTextures
-    }
+//    func getFBITextures(type: String) -> [SKTexture]{
+//        if type == "tang-right"{
+//            return fbiRightTang
+//        } else if type == "tang-left"{
+//            return fbiLeftTang
+//        } else if type == "borgol-right"{
+//            return fbiRightTextures
+//        } else if type == "borgol-left"{
+//            return fbiLeftTextures
+//        } else if type == "defuse-right"{
+//            return fbiRightDefuseBomb
+//        } else if type == "defuse-left"{
+//            return fbiLeftDefuseBomb
+//        } else if type == "delay"{
+//            return fbiDefuseDelayTexture
+//        }
+//        return fbiRightTextures
+//    }
+//    
+//    func getTerroristTextures(type: String) -> [SKTexture]{
+//        if type == "none-right"{
+//            return terroristRightNone
+//        } else if type == "none-left"{
+//            return terroristLeftNone
+//        } else if type == "pentungan-right"{
+//            return terroristRightPentungan
+//        } else if type == "pentungan-left"{
+//            return terroristLeftPentungan
+//        } else if type == "bomb-right"{
+//            return terroristRightTextures
+//        } else if type == "bomb-left"{
+//            return terroristLeftTextures
+//        } else if type == "plantbomb-right"{
+//            return terroristRightPlantBomb
+//        } else if type == "plantbomb-left"{
+//            return terroristLeftPlantBomb
+//        }
+//        return terroristRightTextures
+//    }
     
     func createPlayers(){
         // Initialize player models
         if let player1Id = player1Id, let player2Id = player2Id {
             player1Model = PlayerModel(
                 id: player1Id,
-                playerRightTextures: fbiRightTextures,
-                playerLeftTextures: fbiLeftTextures,
+//                playerRightTextures: fbiRightTextures,
+//                playerLeftTextures: fbiLeftTextures,
                 gameScene: self
             )
             player2Model = PlayerModel(
                 id: player2Id, 
-                playerRightTextures: terroristRightTextures,
-                playerLeftTextures: terroristLeftTextures,
+//                playerRightTextures: terroristRightTextures,
+//                playerLeftTextures: terroristLeftTextures,
                 gameScene: self
             )
         } else {
@@ -778,10 +776,6 @@ class GameScene: SKScene, ObservableObject {
         
     }
     
-    
-    
-    
-    
     func gameOverByExplodingBomb(){
         self.winner = player2Model // terrorist win
         
@@ -822,14 +816,6 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func isNotMoving() -> Bool{
-        if thisPlayer.playerNode.physicsBody?.velocity == CGVector(dx: 0, dy: 0){
-            return true
-        }
-        
-        return false
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
@@ -855,7 +841,7 @@ class GameScene: SKScene, ObservableObject {
                     self.terroristCondition = "terrorist-planting-bomb"
                     
                     //run planting animation
-                    thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                    thisPlayer.updatePlayerTextures(condition: terroristCondition, role: thisPlayer.role)
                     thisPlayer.animatePlantingBombAnimation()
                     
                     // sending to multipeer
@@ -884,7 +870,7 @@ class GameScene: SKScene, ObservableObject {
                     self.isDefusing = true
                     
                     //run defuse animation
-                    thisPlayer.updatePlayerTextures(condition: fbiCondition)
+                    thisPlayer.updatePlayerTextures(condition: fbiCondition, role: thisPlayer.role)
                     thisPlayer.animateDefusingBomb()
                     
                     // sending to multipeer
@@ -949,7 +935,6 @@ class GameScene: SKScene, ObservableObject {
         for touch in touches {
             let location = touch.location(in: self)
             
-            
             if !isPlantButtonPressed && !isDefuseButtonPressed {
                 if let joystick = joystick, let joystickKnob = joystickKnob, let camera = cameraNode {
                     let convertedLocation = camera.convert(location, from: self)
@@ -1002,7 +987,7 @@ class GameScene: SKScene, ObservableObject {
                         
                         // change terrorist condition from terrorist-planting-bomb to terrorist-initial
                         self.terroristCondition = "terrorist-initial"
-                        thisPlayer.updatePlayerTextures(condition: terroristCondition)
+                        thisPlayer.updatePlayerTextures(condition: terroristCondition, role: thisPlayer.role)
                         
                         // remove planting animation
                         thisPlayer.stopPlantingBombAnimation()
@@ -1295,7 +1280,7 @@ class GameScene: SKScene, ObservableObject {
             }else {
                 
             }
-            // mpManager.session.disconnect()
+             mpManager.session.disconnect()
         }
     }
     
@@ -1303,31 +1288,34 @@ class GameScene: SKScene, ObservableObject {
         switch bomb.bomb {
         case .planting:
             print("planting")
-            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            updateOtherPlayerTextures(otherPlayerCondition: bomb.playerBombCondition)
             player2Model.animatePlantingBombAnimation() // terrorist animate planting bomb
+            
         case .cancelledPlanting:
             print("cancel planting")
             player2Model.stopPlantingBombAnimation() // terrorist stop animate planting bomb
-            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            updateOtherPlayerTextures(otherPlayerCondition: bomb.playerBombCondition)
+            
         case .planted:
             print("planted")
-            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            updateOtherPlayerTextures(otherPlayerCondition: bomb.playerBombCondition)
             player2Model.stopPlantingBombAnimation() // terrorist stop animate planting bomb
             synchronizeOtherPlayerBombCondition(isDefused: false)
-//            updatePlayerVulnerability()
+            
         case .approachedByPlayers:
             print("bomb approached by players")
-            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            updateOtherPlayerTextures(otherPlayerCondition: bomb.playerBombCondition)
+            
         case .defusing:
             print("defusing")
-            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            updateOtherPlayerTextures(otherPlayerCondition: bomb.playerBombCondition)
             player1Model.animateDefusingBomb() // fbi animate defusing bomb
 
         case .cancelledDefusing:
             print("cancelled defusing")
             player1Model.cancelDefuseAnimation() // there's delay when cancelled defusing bomb
             player1Model.stopDefusingBombAnimation() // fbi stop animate defusing bomb
-            updateOtherPlayerTextures(condition: bomb.playerBombCondition)
+            updateOtherPlayerTextures(otherPlayerCondition: bomb.playerBombCondition)
             
         case .defused:
             print("defused")
@@ -1357,9 +1345,18 @@ class GameScene: SKScene, ObservableObject {
     func moveOtherPlayer(id: String, pos: CGPoint, orientation: String) {
         if id == player1Id {
             player1Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, condition: terroristCondition)
-        }
-        else {
+        } else {
             player2Model.synchronizeOtherPlayerPosition(position: pos, orientation: orientation, condition: fbiCondition)
+        }
+    }
+    
+    func updateOtherPlayerTextures(otherPlayerCondition: String){
+        if thisPlayer.id == player1Id {
+            // other player is terrorist
+            player2Model.updatePlayerTextures(condition: otherPlayerCondition, role: player2Model.role)
+        } else {
+            // other player is fbi
+            player1Model.updatePlayerTextures(condition: otherPlayerCondition, role: player1Model.role)
         }
     }
     
@@ -1368,47 +1365,6 @@ class GameScene: SKScene, ObservableObject {
             self.defuseBombNode()
         }else{
             self.addBombNode()
-        }
-    }
-    
-    func updateOtherPlayerTextures(condition: String){
-        if thisPlayer.role == "fbi"{
-            // other player is terrorist
-            print("DEBUG: condition for updateOtherPlayer \(condition)")
-            if condition == "terrorist-planted-bomb"{
-                print("DEBUG: went in the if")
-                player2Model.playerRightTextures = terroristRightNone
-                player2Model.playerLeftTextures = terroristLeftNone
-            } else if condition == "terrorist-near-bomb"{
-                player2Model.playerRightTextures = terroristRightPentungan
-                player2Model.playerLeftTextures = terroristLeftPentungan
-            } else if condition == "terrorist-planting-bomb"{
-                player2Model.playerRightTextures = terroristRightPlantBomb
-                player2Model.playerLeftTextures = terroristLeftPlantBomb
-            } else if condition == "terrorist-initial"{
-                player2Model.playerRightTextures = terroristRightTextures
-                player2Model.playerLeftTextures = terroristLeftTextures
-            }
-            player2Model.latestTextureLeft = player2Model.playerLeftTextures[player2Model.playerLeftTextures.count - 1]
-            player2Model.latestTextureRight = player2Model.playerRightTextures[player2Model.playerRightTextures.count - 1]
-        } else {
-            // other player is fbi
-            if condition == "fbi-near-bomb"{
-                player1Model.playerRightTextures = fbiRightTang
-                player1Model.playerLeftTextures = fbiLeftTang
-            } else if condition == "fbi-defusing-bomb"{
-                player1Model.playerRightTextures = fbiRightDefuseBomb
-                player1Model.playerLeftTextures = fbiLeftDefuseBomb
-            } else if condition == "fbi-cancel-defusing"{
-                // not yet defined left and right
-                player1Model.playerRightTextures = fbiDefuseDelayTexture
-                player1Model.playerLeftTextures = fbiDefuseDelayTexture
-            }  else {
-                player1Model.playerRightTextures = fbiRightTextures
-                player1Model.playerLeftTextures = fbiLeftTextures
-            }
-            player1Model.latestTextureLeft = player1Model.playerLeftTextures[player1Model.playerLeftTextures.count - 1]
-            player1Model.latestTextureRight = player1Model.playerRightTextures[player1Model.playerRightTextures.count - 1]
         }
     }
 }
@@ -1437,7 +1393,6 @@ extension GameScene: SKPhysicsContactDelegate{
     }
     
     func handlePlayerCollision() {
-//        thisPlayer.updatePlayerVulnerability()
         
         if thisPlayer.role == "fbi"{
             print("DEBUG handleplayercollision: vulnerable \(player1Model.isVulnerable), role: \(player1Model.role)")

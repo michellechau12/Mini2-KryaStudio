@@ -213,10 +213,14 @@ struct PlayerPairingView: View {
                         // player1 is FBI
                         if gameScene.player1Id == mpManager.myConnectionId.displayName {
                             FBIInstructionView()
+                                .environmentObject(mpManager)
+                                .environmentObject(gameScene)
                         }
                         // player2 is Terrorist
                         else{
                             TerroristInstructionView()
+                                .environmentObject(mpManager)
+                                .environmentObject(gameScene)
                         }
                         // GameView()
                     }
