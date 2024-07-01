@@ -42,6 +42,7 @@
 		ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC192C2C1975CB0059276B /* GameScene.swift */; };
 		ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC192E2C19790E0059276B /* PlayerModel.swift */; };
 		ECCC19342C1A3F890059276B /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCC19332C1A3F890059276B /* GameView.swift */; };
+		EF0F384D2C326CED00B51B81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF0F384C2C326CED00B51B81 /* AppDelegate.swift */; };
 		EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF18C2A62C241CDB000B7808 /* YourNameView.swift */; };
 		EF7A022C2C28596000457237 /* MazeTileSet.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF7A022B2C28596000457237 /* MazeTileSet.sks */; };
 		EF7A022E2C28596500457237 /* MazeScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF7A022D2C28596500457237 /* MazeScene.sks */; };
@@ -88,6 +89,7 @@
 		ECCC192E2C19790E0059276B /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
 		ECCC19322C1A38BB0059276B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		ECCC19332C1A3F890059276B /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		EF0F384C2C326CED00B51B81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EF18C2A62C241CDB000B7808 /* YourNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourNameView.swift; sourceTree = "<group>"; };
 		EF7A022B2C28596000457237 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeTileSet.sks; sourceTree = "<group>"; };
 		EF7A022D2C28596500457237 /* MazeScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MazeScene.sks; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				ECCC189F2C1833140059276B /* MiniChallenge2App.swift */,
 				ECCC18A12C1833140059276B /* ContentView.swift */,
 				2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */,
+				EF0F384C2C326CED00B51B81 /* AppDelegate.swift */,
 				ECCC19352C1AA9A20059276B /* Model */,
 				ECCC19362C1AA9B50059276B /* View */,
 				ECCC19322C1A38BB0059276B /* Info.plist */,
@@ -315,6 +318,7 @@
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
 				0B91B2032C2A6BC3005E7F99 /* AudioManager.swift in Sources */,
 				0B91B1F92C296FBA005E7F99 /* ColorExtensions.swift in Sources */,
+				EF0F384D2C326CED00B51B81 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,7 +448,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = 6P2G97Y26J;
+				DEVELOPMENT_TEAM = 9HR48NXTG8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -458,7 +462,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -483,7 +487,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MiniChallenge2/Preview Content\"";
-				DEVELOPMENT_TEAM = 6P2G97Y26J;
+				DEVELOPMENT_TEAM = 9HR48NXTG8;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -497,7 +501,7 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";

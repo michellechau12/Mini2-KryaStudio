@@ -9,7 +9,10 @@ import SwiftUI
 
 @main
 struct MiniChallenge2App: App {
-    //    @StateObject var mpManager = MultipeerConnectionManager(playerName: "sample")
+        // Integrate the custom AppDelegate with SwiftUI
+        @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+        // @StateObject var mpManager = MultipeerConnectionManager(playerName: "sample")
         @StateObject var mpManager = MultipeerConnectionManager(playerId: UUID())
         @StateObject var gameScene = GameScene(fileNamed: "MazeScene")!
         
@@ -34,6 +37,13 @@ struct MiniChallenge2App: App {
             ContentView()
                 .environmentObject(mpManager)
                 .environmentObject(gameScene)
+                .onAppear{
+                    AppDelegate.orientationLock = .landscape
+                    UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                                            windowScene.windows.first?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+                    }
+                }
         }
     }
 }
