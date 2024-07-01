@@ -102,16 +102,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		ECCC18932C1833140059276B = {
+		0B26A1872C32075000A8C753 /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				0BB1337F2C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 */,
 				0BB133812C2BB4FF00B0AFD6 /* defusing-bomb-sfx.mp3 */,
 				0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */,
 				0BB133802C2BB4FF00B0AFD6 /* vo-gamestart-fbi-sfx.mp3 */,
 				0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */,
 				0BB1337D2C2BB4FF00B0AFD6 /* defusing-delay-sfx.mp3 */,
 				0BB1337E2C2BB4FF00B0AFD6 /* walk-step-faster-sfx.mp3 */,
+				0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */,
+				0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */,
+				2FA1EAA22C2AD2560051B0A9 /* walk-sfx.mp3 */,
+				0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */,
+				0B91B2052C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 */,
+				0BB1337F2C2BB4FF00B0AFD6 /* 60sec-beep-bomb-sfx.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		ECCC18932C1833140059276B = {
+			isa = PBXGroup;
+			children = (
 				ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */,
 				ECCC192C2C1975CB0059276B /* GameScene.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
@@ -137,11 +149,7 @@
 				ECCC19322C1A38BB0059276B /* Info.plist */,
 				0B91B1F62C296EFC005E7F99 /* PixelifySans.ttf */,
 				0B91B1F82C296FBA005E7F99 /* ColorExtensions.swift */,
-				0B91B20F2C2AB782005E7F99 /* police-sirene-sfx.mp3 */,
-				0B91B20D2C2A90E0005E7F99 /* explode-bomb-sfx.mp3 */,
-				2FA1EAA22C2AD2560051B0A9 /* walk-sfx.mp3 */,
-				0B91B2092C2A837F005E7F99 /* Famicom Battle-bgm.mp3 */,
-				0B91B2052C2A6C4F005E7F99 /* Hot-Wet-and-Happy-bgm.mp3 */,
+				0B26A1872C32075000A8C753 /* Audio */,
 				0B91B2022C2A6BC3005E7F99 /* AudioManager.swift */,
 				ECCC192B2C194FA70059276B /* MultipeerConnectivity */,
 				ECCC18A32C1833160059276B /* Assets.xcassets */,
