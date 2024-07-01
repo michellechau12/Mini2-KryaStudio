@@ -44,8 +44,10 @@ struct ContentView: View {
                     Spacer()
                     ZStack {
                         Button {
-                            //                            showNameInput = true
-                            startGame = true
+                            showNameInput = true
+                            
+//                            Uncomment if not using showNameInputOverlay
+//                            startGame = true
                             
                         } label: {
                             Image("button-play")
@@ -68,13 +70,11 @@ struct ContentView: View {
                             isMuted.toggle()
                             AudioManager.shared.toggleMute()
                         } label: {
-                            Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.2.fill")
+                            Image(isMuted ? "button-mute" : "button-unmute")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 40)
+                                .frame(width: 55)
                                 .padding()
-                                .background(Color.white.opacity(0.7))
-                                .clipShape(Circle())
                         }
                         .offset(x: -500)
                         
@@ -90,9 +90,9 @@ struct ContentView: View {
                 //                mpManager.stopAdvertising()
             }
             .navigationBarBackButtonHidden(true)
-            //            .overlay(
-            //                showNameInput ? NameInputOverlay(showNameInput: $showNameInput, newName: $newName, startGame: $startGame) : nil
-            //            )
+                        .overlay(
+                            showNameInput ? NameInputOverlay(showNameInput: $showNameInput, newName: $newName, startGame: $startGame) : nil
+                        )
             .overlay(
                 showCredit ? CreditOverlay(showCredit: $showCredit) : nil
             )
