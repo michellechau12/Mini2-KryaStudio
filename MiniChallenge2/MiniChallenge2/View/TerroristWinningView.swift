@@ -12,6 +12,7 @@ struct TerroristWinningView: View {
     @State private var textPosition: CGFloat = -500
     @State private var showBlackScreen: Bool = false
     @State private var terroristImagePosition: CGFloat = UIScreen.main.bounds.width
+    @State private var playAgain: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -26,26 +27,36 @@ struct TerroristWinningView: View {
                         .edgesIgnoringSafeArea(.all)
                 }
                 
-                Image("text-win-terrorist")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 800)
-                    .offset(y: textPosition)
-                    .onAppear {
-                        withAnimation(.easeOut(duration: 1).delay(1.5)) {
-                            textPosition = 0
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            withAnimation {
-                                showBlackScreen = true
+                VStack{
+                    Image("text-win-terrorist")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 800)
+                        .offset(y: textPosition)
+                        .onAppear {
+                            withAnimation(.easeOut(duration: 1).delay(1.5)) {
+                                textPosition = 0
                             }
                             
-                            withAnimation(.easeOut(duration: 1).delay(1.8)) {
-                                terroristImagePosition = 500
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                withAnimation {
+                                    showBlackScreen = true
+                                }
+                                
+                                withAnimation(.easeOut(duration: 1).delay(1.8)) {
+                                    terroristImagePosition = 500
+                                }
                             }
                         }
+                    Button{
+                        playAgain = true
+                    } label: {
+                        Image("button-playagain")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100)
                     }
+                }
                 
                 Image("terrorist-none-strokewhite 1")
                     .resizable()
@@ -54,7 +65,10 @@ struct TerroristWinningView: View {
                     .offset(x: terroristImagePosition)
                     .offset(y: 300)
             }
-        }                 
+            .navigationDestination(isPresented: $playAgain) {
+                ContentView()
+            }
+        }
         .onAppear(){
             AudioManager.shared.stopWalkSound()
             AudioManager.shared.stopBombTimerSound()

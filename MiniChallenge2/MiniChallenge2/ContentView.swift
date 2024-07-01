@@ -9,8 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @EnvironmentObject var mpManager: MultipeerConnectionManager
-    @EnvironmentObject var gameScene: GameScene
+    @StateObject var mpManager = MultipeerConnectionManager(playerId: UUID())
+    @StateObject var gameScene = GameScene(fileNamed: "MazeScene")!
+    
+    init(){
+        _mpManager = StateObject(
+            wrappedValue: MultipeerConnectionManager(
+                playerId: UUID()
+            )
+        )
+        _gameScene = StateObject(
+            wrappedValue: GameScene(fileNamed: "MazeScene") ?? GameScene()
+        )
+//            BACKGROUND MUSIC
+        AudioManager.shared.playBackgroundMusic()
+    }
     
     @State var startGame: Bool = false
     
@@ -81,8 +94,8 @@ struct ContentView: View {
 
             .navigationDestination(isPresented: $startGame) {
                 PlayerPairingView()
-//                    .environmentObject(mpManager)
-//                    .environmentObject(gameScene)
+                    .environmentObject(mpManager)
+                    .environmentObject(gameScene)
         }
 
         }
@@ -91,7 +104,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-//        .environmentObject(MultipeerConnectionManager(playerName: "sample"))
-//        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
-//        .environmentObject(GameScene())
 }
