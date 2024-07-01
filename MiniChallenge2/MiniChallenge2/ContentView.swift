@@ -19,7 +19,10 @@ struct ContentView: View {
     @State private var showCredit: Bool = false
     @State private var userName: String = ""
     @State private var newName = ""
-
+    
+    // State variable to track mute button state
+    @State private var isMuted: Bool = false
+    
     
     var body: some View {
         NavigationStack {
@@ -41,9 +44,9 @@ struct ContentView: View {
                     Spacer()
                     ZStack {
                         Button {
-//                            showNameInput = true
-                              startGame = true
-
+                            //                            showNameInput = true
+                            startGame = true
+                            
                         } label: {
                             Image("button-play")
                                 .resizable()
@@ -60,6 +63,21 @@ struct ContentView: View {
                                 .frame(width: 55)
                         } .offset(x: 500)
                         
+                        // Mute button to toggle mute state
+                        Button {
+                            isMuted.toggle()
+                            AudioManager.shared.toggleMute()
+                        } label: {
+                            Image(systemName: isMuted ? "speaker.slash.fill" : "speaker.2.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40)
+                                .padding()
+                                .background(Color.white.opacity(0.7))
+                                .clipShape(Circle())
+                        }
+                        .offset(x: -500)
+                        
                     }
                     Spacer()
                         .frame(height:50)
@@ -67,31 +85,31 @@ struct ContentView: View {
             }
             .onAppear() {
                 startGame = false
-//                mpManager.availablePlayers.removeAll()
-//                mpManager.stopBrowsing()
-//                mpManager.stopAdvertising()
+                //                mpManager.availablePlayers.removeAll()
+                //                mpManager.stopBrowsing()
+                //                mpManager.stopAdvertising()
             }
             .navigationBarBackButtonHidden(true)
-//            .overlay(
-//                showNameInput ? NameInputOverlay(showNameInput: $showNameInput, newName: $newName, startGame: $startGame) : nil
-//            )
+            //            .overlay(
+            //                showNameInput ? NameInputOverlay(showNameInput: $showNameInput, newName: $newName, startGame: $startGame) : nil
+            //            )
             .overlay(
                 showCredit ? CreditOverlay(showCredit: $showCredit) : nil
             )
-
+            
             .navigationDestination(isPresented: $startGame) {
                 PlayerPairingView()
-//                    .environmentObject(mpManager)
-//                    .environmentObject(gameScene)
-        }
-
+                // .environmentObject(mpManager)
+                // .environmentObject(gameScene)
+            }
+            
         }
     }
 }
 
 #Preview {
     ContentView()
-//        .environmentObject(MultipeerConnectionManager(playerName: "sample"))
-//        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
-//        .environmentObject(GameScene())
+    //        .environmentObject(MultipeerConnectionManager(playerName: "sample"))
+    //        .environmentObject(MultipeerConnectionManager(playerId: UUID()))
+    //        .environmentObject(GameScene())
 }
