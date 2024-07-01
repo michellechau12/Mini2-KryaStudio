@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isLandscape = UIDevice.current.orientation.isLandscape
     
     @EnvironmentObject var mpManager: MultipeerConnectionManager
     @EnvironmentObject var gameScene: GameScene
@@ -70,6 +71,20 @@ struct ContentView: View {
 //                mpManager.availablePlayers.removeAll()
 //                mpManager.stopBrowsing()
 //                mpManager.stopAdvertising()
+                
+                // Listen for device orientation changes
+                NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification, object: nil, queue: .main) { _ in
+                    if UIDevice.current.orientation.isPortrait {
+                        // Force landscape if the device is rotated to portrait
+                        UIDevice.current.setValue(UIInterfaceOrientation.landscapeLeft.rawValue, forKey: "orientation")
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                            windowScene.windows.first?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+                        }
+                    }
+                }
+            }
+            .onDisappear {
+                NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
             }
             .navigationBarBackButtonHidden(true)
 //            .overlay(
