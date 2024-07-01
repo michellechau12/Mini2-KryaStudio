@@ -12,6 +12,7 @@ struct FBIWinningView: View {
     @State private var textPosition: CGFloat = -500
     @State private var showBlackScreen: Bool = false
     @State private var fbiImagePosition: CGFloat = UIScreen.main.bounds.width
+    @State private var playAgain: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -26,26 +27,37 @@ struct FBIWinningView: View {
                         .edgesIgnoringSafeArea(.all)
                 }
                 
-                Image("text-win-fbi")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 800)
-                    .offset(y: textPosition)
-                    .onAppear {
-                        withAnimation(.easeOut(duration: 1).delay(1.5)) {
-                            textPosition = 0
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            withAnimation {
-                                showBlackScreen = true
+                VStack{
+                    Image("text-win-fbi")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 800)
+                        .offset(y: textPosition)
+                        .onAppear {
+                            withAnimation(.easeOut(duration: 1).delay(1.5)) {
+                                textPosition = 0
                             }
                             
-                            withAnimation(.easeOut(duration: 1).delay(1.8)) {
-                                fbiImagePosition = 500
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                withAnimation {
+                                    showBlackScreen = true
+                                }
+                                
+                                withAnimation(.easeOut(duration: 1).delay(1.8)) {
+                                    fbiImagePosition = 500
+                                }
                             }
                         }
+                    
+                    Button{
+                        playAgain = true
+                    } label: {
+                        Image("button-playagain")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100)
                     }
+                }
                 
                 Image("fbi-none-strokewhite 1")
                     .resizable()
@@ -53,6 +65,9 @@ struct FBIWinningView: View {
                     .frame(width: 600)
                     .offset(x: fbiImagePosition)
                     .offset(y: 300)
+            }
+            .navigationDestination(isPresented: $playAgain) {
+                ContentView()
             }
         }
         .onAppear(){
