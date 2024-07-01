@@ -18,7 +18,7 @@ struct GameView: View {
     
     var body: some View {
         NavigationStack{
-            SpriteView(scene: gameScene)
+            SpriteView(gameScene: gameScene)
                 .environmentObject(gameScene)
                 .environmentObject(mpManager)
                 .ignoresSafeArea()
@@ -36,8 +36,10 @@ struct GameView: View {
 //                    print("DEBUG isGameFinished : \(isGameFinished)")
 //                }
                 .onAppear(){
-                    AudioManager.shared.stopMusic()
-                    AudioManager.shared.playGameMusic()
+                    // Stop Background Music
+                     AudioManager.shared.stopMusic()
+                    // Game Music
+                    // AudioManager.shared.playGameMusic()
 
                 }
 //                .onReceive(gameScene.$isGameFinished, perform: { _ in

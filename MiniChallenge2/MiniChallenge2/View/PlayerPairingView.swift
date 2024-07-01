@@ -133,11 +133,11 @@ struct PlayerPairingView: View {
                                 }
                             }
                             // Waiting for response alert
-                            .alert("Waiting for response", isPresented: $waitingForResponse) {
+                            .alert("Invitation has been sent", isPresented: $waitingForResponse) {
                                 Button {
                                     waitingForResponse = false
                                 } label: {
-                                    Text("Cancel")
+                                    Text("OK")
                                 }
                             } message: {
                                 Text("Waiting for response from \(gameScene.player2Id ?? "other player")")
