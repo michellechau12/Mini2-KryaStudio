@@ -34,6 +34,11 @@
 		EC3846C72C34126C000DCA56 /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C62C34126C000DCA56 /* Joystick.swift */; };
 		EC3846C92C341498000DCA56 /* TimerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C82C341498000DCA56 /* TimerLabel.swift */; };
 		EC3846CB2C34152B000DCA56 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846CA2C34152B000DCA56 /* ProgressBar.swift */; };
+		EC3846CD2C3419DC000DCA56 /* SabotageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846CC2C3419DC000DCA56 /* SabotageButton.swift */; };
+		EC3846CF2C341AFD000DCA56 /* SprintButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846CE2C341AFD000DCA56 /* SprintButton.swift */; };
+		EC3846D12C341B10000DCA56 /* PlantButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846D02C341B10000DCA56 /* PlantButton.swift */; };
+		EC3846D32C341B22000DCA56 /* DefuseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846D22C341B22000DCA56 /* DefuseButton.swift */; };
+		EC3846D52C341CA1000DCA56 /* PhysicsContactDelegateExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846D42C341CA1000DCA56 /* PhysicsContactDelegateExt.swift */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -82,6 +87,11 @@
 		EC3846C62C34126C000DCA56 /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Joystick.swift; path = ../../../../../../Downloads/Joystick.swift; sourceTree = "<group>"; };
 		EC3846C82C341498000DCA56 /* TimerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TimerLabel.swift; path = ../../../../../../Downloads/TimerLabel.swift; sourceTree = "<group>"; };
 		EC3846CA2C34152B000DCA56 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProgressBar.swift; path = ../../../../../../Downloads/ProgressBar.swift; sourceTree = "<group>"; };
+		EC3846CC2C3419DC000DCA56 /* SabotageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SabotageButton.swift; path = ../../../../../../Downloads/SabotageButton.swift; sourceTree = "<group>"; };
+		EC3846CE2C341AFD000DCA56 /* SprintButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SprintButton.swift; path = ../../../../../../Downloads/SprintButton.swift; sourceTree = "<group>"; };
+		EC3846D02C341B10000DCA56 /* PlantButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PlantButton.swift; path = ../../../../../../Downloads/PlantButton.swift; sourceTree = "<group>"; };
+		EC3846D22C341B22000DCA56 /* DefuseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DefuseButton.swift; path = ../../../../../../Downloads/DefuseButton.swift; sourceTree = "<group>"; };
+		EC3846D42C341CA1000DCA56 /* PhysicsContactDelegateExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PhysicsContactDelegateExt.swift; path = "../../Mini2-KryaStudio - play again/MiniChallenge2/PhysicsContactDelegateExt.swift"; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
@@ -143,6 +153,10 @@
 				EC3846C62C34126C000DCA56 /* Joystick.swift */,
 				EC3846C82C341498000DCA56 /* TimerLabel.swift */,
 				EC3846CA2C34152B000DCA56 /* ProgressBar.swift */,
+				EC3846CC2C3419DC000DCA56 /* SabotageButton.swift */,
+				EC3846CE2C341AFD000DCA56 /* SprintButton.swift */,
+				EC3846D02C341B10000DCA56 /* PlantButton.swift */,
+				EC3846D22C341B22000DCA56 /* DefuseButton.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -152,6 +166,7 @@
 			children = (
 				ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */,
 				ECCC192C2C1975CB0059276B /* GameScene.swift */,
+				EC3846D42C341CA1000DCA56 /* PhysicsContactDelegateExt.swift */,
 				ECCC189E2C1833140059276B /* MiniChallenge2 */,
 				ECCC189D2C1833140059276B /* Products */,
 			);
@@ -323,16 +338,21 @@
 				EC3846C92C341498000DCA56 /* TimerLabel.swift in Sources */,
 				ECCC192A2C1941030059276B /* MultipeerModel.swift in Sources */,
 				0B91B1FD2C297276005E7F99 /* TerroristInstructionView.swift in Sources */,
+				EC3846CD2C3419DC000DCA56 /* SabotageButton.swift in Sources */,
+				EC3846D32C341B22000DCA56 /* DefuseButton.swift in Sources */,
+				EC3846D52C341CA1000DCA56 /* PhysicsContactDelegateExt.swift in Sources */,
 				0B91B2012C2972EF005E7F99 /* TerroristWinningView.swift in Sources */,
 				2F4D4A822C2DDD7700D24EB9 /* ViewController.swift in Sources */,
 				EC3846CB2C34152B000DCA56 /* ProgressBar.swift in Sources */,
 				0B91B1F32C296ED2005E7F99 /* NameInputOverlay.swift in Sources */,
 				ECCC192F2C19790E0059276B /* PlayerModel.swift in Sources */,
 				0B91B1FF2C2972B0005E7F99 /* FBIWinningView.swift in Sources */,
+				EC3846D12C341B10000DCA56 /* PlantButton.swift in Sources */,
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				EC3846C32C340F71000DCA56 /* Map.swift in Sources */,
 				EC3846C72C34126C000DCA56 /* Joystick.swift in Sources */,
+				EC3846CF2C341AFD000DCA56 /* SprintButton.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
 				ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */,
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,

@@ -74,13 +74,7 @@ class GameScene: SKScene, ObservableObject {
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
     
-    private var sabotageButton: SKSpriteNode?
-    private var isSabotageButtonEnabled = true
-    private var sabotageButtonPressCount = 0
-    
-    private var plantButton = SKSpriteNode(imageNamed: "plantButton")
     private var isPlantButtonEnabled = false
-    private var defuseButton = SKSpriteNode(imageNamed: "tang")
     private var isDefuseButtonEnabled = false
     
     private var isBombPlanted = false
@@ -102,7 +96,6 @@ class GameScene: SKScene, ObservableObject {
     var sabotageOneTimeTapfunction = false
     var sprintOneTimeTapfunction = false
     
-    private var sprintButton = SKSpriteNode(imageNamed: "sprint-button")
     private var isSprintButtonEnabled: Bool = true
     private var sprintButtonPressCount = 0
     
@@ -121,6 +114,10 @@ class GameScene: SKScene, ObservableObject {
     private var joystick = Joystick()
     private var timerLabel = TimerLabel()
     private var progressBar = ProgressBar()
+    private var sabotageButton = SabotageButton()
+    private var sprintButton = SprintButton()
+    private var plantButton = PlantButton()
+    private var defuseButton = DefuseButton()
 
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -135,6 +132,7 @@ class GameScene: SKScene, ObservableObject {
         // Setting up the map
         map.setupMapPhysics(map: (childNode(withName: "Maze") as? SKTileMapNode)!)
         
+        // Setting up bombsites
         for child in self.children {
             if child.name == "BombSite" { //Di setup di MazeScene
                 if let child = child as? SKSpriteNode {
@@ -158,17 +156,22 @@ class GameScene: SKScene, ObservableObject {
         cameraNode?.addChild(progressBar.progressBarBackground!)
         cameraNode?.addChild(progressBar.progressBar!)
         
-        setupSabotageButton()
-        setupSprintButton()
+        sabotageButton.setupSabotageButton()
+        cameraNode?.addChild(sabotageButton.sabotageButton!)
+        
+        sprintButton.setupSprintButton()
+        cameraNode?.addChild(sprintButton.sprintButton)
         
         if thisPlayer.role == "terrorist"{
             //Audio starting terrorist
             AudioManager.shared.playTerroristStartingMusic()
-            setupPlantButton()
+            plantButton.setupPlantButton()
+            cameraNode?.addChild(plantButton.plantButton)
         }else{
             //Audio starting FBI
             AudioManager.shared.playFbiStartingMusic()
-            setupDefuseButton()
+            defuseButton.setupDefuseButton()
+            cameraNode?.addChild(defuseButton.defuseButton)
         }
         
         AudioManager.shared.playGameMusic()
@@ -376,19 +379,6 @@ class GameScene: SKScene, ObservableObject {
         progressBar.progressBar?.size.width = 100 * progress
     }
     
-    func setupSabotageButton() {
-        let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
-        sabotageButton.position = CGPoint(x: 450, y: -280 )
-//        sabotageButton.position = CGPoint(x: 350, y: -280 )
-        sabotageButton.size = CGSize(width: 180, height: 180)
-        sabotageButton.alpha = 1.2
-        sabotageButton.zPosition = 25
-        sabotageButton.name = "sabotageButton"
-        
-        cameraNode?.addChild(sabotageButton)
-        
-        self.sabotageButton = sabotageButton
-    }
     
     func setupSabotagedView() {
            maskNode = SKShapeNode(circleOfRadius: 1000)
@@ -451,7 +441,7 @@ class GameScene: SKScene, ObservableObject {
 
 
         _ = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] timer in
-               self?.isSabotageButtonEnabled = true
+            self?.sabotageButton.isSabotageButtonEnabled = true
         
            }
         }
@@ -471,7 +461,7 @@ class GameScene: SKScene, ObservableObject {
             cameraNode?.addChild(shapeNode)
             
             //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
-            sabotageButton?.alpha = 0.45
+            sabotageButton.sabotageButton?.alpha = 0.45
             
             let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
                 let percentage = elapsedTime / 20.0
@@ -479,8 +469,8 @@ class GameScene: SKScene, ObservableObject {
             }
             shapeNode.run(animation) {
                 shapeNode.removeFromParent()
-                self.isSabotageButtonEnabled = true
-                self.sabotageButton?.alpha = 1
+                self.sabotageButton.isSabotageButtonEnabled = true
+                self.sabotageButton.sabotageButton?.alpha = 1
             }
         }
     }
@@ -562,40 +552,6 @@ class GameScene: SKScene, ObservableObject {
             run(sequenceAction3)
     }
     
-    func setupSprintButton() {
-        sprintButton.position = CGPoint(x: 300, y: -220 )
-        sprintButton.size = CGSize(width: 130, height: 130)
-        sprintButton.alpha = 1.2
-        sprintButton.zPosition = 25
-        sprintButton.name = "plantButton"
-        
-        cameraNode?.addChild(sprintButton)
-    }
-
-    
-    func setupPlantButton(){
-        plantButton.position = CGPoint(x: 450, y: -110 )
-        plantButton.size = CGSize(width: 130, height: 130)
-        plantButton.alpha = 0.2
-        plantButton.zPosition = 25
-        plantButton.name = "plantButton"
-        
-        cameraNode?.addChild(plantButton)
-        }
-    
-    
-    func setupDefuseButton(){
-        defuseButton.position = CGPoint(x: 450, y: -110 )
-        defuseButton.size = CGSize(width: 130, height: 130)
-        defuseButton.alpha = 0.2
-        defuseButton.zPosition = 25
-        defuseButton.name = "defuseButton"
-        
-        cameraNode?.addChild(defuseButton)
-        
-//        self.plantButton = plantButton
-    }
-    
     func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
         let dx = charPosition.x - bombPosition.x
         let dy = charPosition.y - bombPosition.y
@@ -666,10 +622,6 @@ class GameScene: SKScene, ObservableObject {
         
     }
     
-    
-    
-    
-    
     func gameOverByExplodingBomb(){
         self.winner = player2Model // terrorist win
         
@@ -690,15 +642,6 @@ class GameScene: SKScene, ObservableObject {
                 
                 node.removeFromParent()
             }
-        }
-    }
-    
-    func removeSabotageButtonAfterUse(){
-        sabotageButtonPressCount += 1
-
-        if sabotageButtonPressCount == 2 {
-            sabotageButton?.removeFromParent()
-//            sabotageButton = nil
         }
     }
     
@@ -784,9 +727,9 @@ class GameScene: SKScene, ObservableObject {
             }
         }
         
-        if let sabotageButton = sabotageButton, let camera = cameraNode {
+        if let sabotageButton = self.sabotageButton.sabotageButton, let camera = cameraNode {
             let convertedLocation = camera.convert(location, from: self)
-            if sabotageButton.contains(convertedLocation) && isSabotageButtonEnabled {
+            if sabotageButton.contains(convertedLocation) && self.sabotageButton.isSabotageButtonEnabled {
                 
                 // sending to multipeer
                 let playerCondition = MPPlayerModel(action: .sabotagedView, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: thisPlayer.id)
@@ -796,14 +739,14 @@ class GameScene: SKScene, ObservableObject {
                 print("sabotageButton tapped")
                 
                 //Button Cooldown
-                isSabotageButtonEnabled = false
+                self.sabotageButton.isSabotageButtonEnabled = false
                 //Function cooldownTimer
                 animateSabotageCooldownTimer()
                 //function to remove sabotage button after 2x tap
-                removeSabotageButtonAfterUse()
+                self.sabotageButton.removeSabotageButtonAfterUse()
                 
             }
-            else if sabotageButton.contains(convertedLocation) && !isSabotageButtonEnabled{
+            else if sabotageButton.contains(convertedLocation) && !self.sabotageButton.isSabotageButtonEnabled{
                 print("Button in cooldown")
             }
         }
@@ -1297,73 +1240,6 @@ class GameScene: SKScene, ObservableObject {
             }
             player1Model.latestTextureLeft = player1Model.playerLeftTextures[player1Model.playerLeftTextures.count - 1]
             player1Model.latestTextureRight = player1Model.playerRightTextures[player1Model.playerRightTextures.count - 1]
-        }
-    }
-}
-
-extension GameScene: SKPhysicsContactDelegate{
-    func didBegin(_ contact: SKPhysicsContact) {
-        
-        let bodyA = contact.bodyA
-        let bodyB = contact.bodyB
-        
-        if (bodyA.categoryBitMask == BitMaskCategory.player1 && bodyB.categoryBitMask == BitMaskCategory.player2) ||
-            (bodyA.categoryBitMask == BitMaskCategory.player2 && bodyB.categoryBitMask == BitMaskCategory.player1) {
-            print("Player 1 and Player 2 collided")
-            handlePlayerCollision()
-            
-            // Handle collision between player1 and player2
-        } else if (bodyA.categoryBitMask == BitMaskCategory.player1 && bodyB.categoryBitMask == BitMaskCategory.maze) ||
-                    (bodyA.categoryBitMask == BitMaskCategory.maze && bodyB.categoryBitMask == BitMaskCategory.player1) {
-            print("Player 1 collided with the maze")
-            // Handle collision between player1 and the maze
-        } else if (bodyA.categoryBitMask == BitMaskCategory.player2 && bodyB.categoryBitMask == BitMaskCategory.maze) ||
-                    (bodyA.categoryBitMask == BitMaskCategory.maze && bodyB.categoryBitMask == BitMaskCategory.player2) {
-            print("Player 2 collided with the maze")
-            // Handle collision between player2 and the maze
-        }
-    }
-    
-    func handlePlayerCollision() {
-//        thisPlayer.updatePlayerVulnerability()
-        
-        if thisPlayer.role == "fbi"{
-            print("DEBUG handleplayercollision: vulnerable \(player1Model.isVulnerable), role: \(player1Model.role)")
-            if player1Model.isVulnerable{
-                print("DEBUG_COL : you (fbi) lose")
-                gameOverByCollision(winner: "terrorist", playerRole: thisPlayer.role)
-            } else {
-                print("DEBUG_COL : you (fbi) win")
-                gameOverByCollision(winner: "fbi", playerRole: thisPlayer.role)
-            }
-        }
-    }
-    
-    func gameOverByCollision(winner: String, playerRole: String){
-        self.isGameFinished = true
-        
-        if winner == "fbi"{
-            self.winner = player1Model //fbi wins
-            
-//            sending multipeer
-            let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
-            
-            mpManager.send(player: playerCondition)
-            
-            statementGameOver = "FBI_WIN"
-        } else {
-            self.winner = player2Model // terrorist wins
-            
-//            sending multipeer
-            let playerCondition = MPPlayerModel(action: .end, playerId: thisPlayer.id, playerPosition: thisPlayer.playerNode.position, playerOrientation: thisPlayer.orientation, isVulnerable: thisPlayer.isVulnerable, winnerId: self.winner.id)
-            
-            mpManager.send(player: playerCondition)
-            
-            statementGameOver = "TERRORIST_WIN"
-        }
-        
-        if self.isGameFinished{
-            removeAllNodes()
         }
     }
 }
