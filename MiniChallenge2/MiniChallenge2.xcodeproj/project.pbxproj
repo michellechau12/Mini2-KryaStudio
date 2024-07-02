@@ -31,6 +31,7 @@
 		2F4D4A822C2DDD7700D24EB9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */; };
 		EC3846C32C340F71000DCA56 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C22C340F71000DCA56 /* Map.swift */; };
 		EC3846C52C340F84000DCA56 /* BombSite.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C42C340F84000DCA56 /* BombSite.swift */; };
+		EC3846C72C34126C000DCA56 /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C62C34126C000DCA56 /* Joystick.swift */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -76,6 +77,7 @@
 		2FA1EAA22C2AD2560051B0A9 /* walk-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "walk-sfx.mp3"; sourceTree = "<group>"; };
 		EC3846C22C340F71000DCA56 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Map.swift; path = ../../../../../../Downloads/Map.swift; sourceTree = "<group>"; };
 		EC3846C42C340F84000DCA56 /* BombSite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BombSite.swift; path = ../../../../../../Downloads/BombSite.swift; sourceTree = "<group>"; };
+		EC3846C62C34126C000DCA56 /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Joystick.swift; path = ../../../../../../Downloads/Joystick.swift; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 			children = (
 				EC3846C22C340F71000DCA56 /* Map.swift */,
 				EC3846C42C340F84000DCA56 /* BombSite.swift */,
+				EC3846C62C34126C000DCA56 /* Joystick.swift */,
 			);
 			path = Component;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
 				EC3846C32C340F71000DCA56 /* Map.swift in Sources */,
+				EC3846C72C34126C000DCA56 /* Joystick.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
 				ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */,
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,

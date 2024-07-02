@@ -71,9 +71,6 @@ class GameScene: SKScene, ObservableObject {
     private var terroristRightPlantBomb: [SKTexture] = []
     private var terroristLeftPlantBomb: [SKTexture] = []
     
-    private var joystick: SKSpriteNode?
-    private var joystickKnob: SKSpriteNode?
-    private var joystickTouchArea : SKShapeNode?
     private var cameraNode: SKCameraNode?
     private var maskNode: SKShapeNode?
     private var cropNode: SKCropNode?
@@ -125,6 +122,7 @@ class GameScene: SKScene, ObservableObject {
     // Accessing Components
     private var map = Map()
     private var bombSite = BombSite()
+    private var joystick = Joystick()
 
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -142,7 +140,12 @@ class GameScene: SKScene, ObservableObject {
         
         // Setting up Game Components that follows the users camera
         createCamera()
-        createJoystick()
+        joystick.createJoystick()
+        
+        cameraNode?.addChild(joystick.joystickBase!)
+        cameraNode?.addChild(joystick.joystickKnob!)
+        cameraNode?.addChild(joystick.joystickTouchArea!)
+        
         setUpTimerLabel()
         setupProgressBar()
         setupSabotageButton()
@@ -356,39 +359,6 @@ class GameScene: SKScene, ObservableObject {
             let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
             camera.run(zoomInAction)
         }
-    }
-    
-    func createJoystick() {
-        //Otak-atik posisi Joystick
-        let joystickBase = SKSpriteNode(imageNamed: "joystickBase6")
-        joystickBase.position = CGPoint(x: -430, y: -230)
-        joystickBase.setScale(2.5)
-        joystickBase.alpha = 0.15
-        joystickBase.zPosition = 80
-        joystickBase.name = "joystickBase5"
-        
-        let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob3")
-        joystickKnob.position = CGPoint(x: -430, y: -230)
-        joystickKnob.setScale(2.0)
-        joystickBase.alpha = 2.0
-        joystickKnob.zPosition = 88
-        joystickKnob.name = "joystickKnob3"
-        
-        cameraNode?.addChild(joystickBase)
-        cameraNode?.addChild(joystickKnob)
-        
-        self.joystick = joystickBase
-        self.joystickKnob = joystickKnob
-        
-        let joystickTouchArea = SKShapeNode (circleOfRadius: 400)
-        joystickTouchArea.position = joystickBase.position
-        joystickTouchArea.zPosition = 19
-        joystickTouchArea.strokeColor = .clear
-        joystickTouchArea.fillColor = .clear
-        joystickTouchArea.name = "joystickTouchArea"
-        cameraNode?.addChild(joystickTouchArea)
-        
-        self.joystickTouchArea = joystickTouchArea
     }
     
     func setUpTimerLabel(){
@@ -772,9 +742,9 @@ class GameScene: SKScene, ObservableObject {
         let location = touch.location(in: self)
         
         // Assigning joystickknob to the touch location
-        if let joystick = joystick, joystick.contains(location) {
+        if let joystick = self.joystick.joystickBase, joystick.contains(location) {
             let convertedLocation = camera?.convert(location, from: self) ?? location
-            joystickKnob?.position = convertedLocation
+            self.joystick.joystickKnob?.position = convertedLocation
         }
         
         // Detecting touch on plant button
@@ -888,9 +858,9 @@ class GameScene: SKScene, ObservableObject {
             
             
             if !isPlantButtonPressed && !isDefuseButtonPressed {
-                if let joystick = joystick, let joystickKnob = joystickKnob, let camera = cameraNode {
+                if let joystick = self.joystick.joystickBase, let joystickKnob = self.joystick.joystickKnob, let camera = cameraNode {
                     let convertedLocation = camera.convert(location, from: self)
-                    if let unwrappedJoystickTouchArea = joystickTouchArea {
+                    if let unwrappedJoystickTouchArea = self.joystick.joystickTouchArea {
                         if unwrappedJoystickTouchArea.contains(convertedLocation) {
                             let maxDistance: CGFloat = 50.0
                             
@@ -919,7 +889,7 @@ class GameScene: SKScene, ObservableObject {
         for touch in touches {
             let location = touch.location(in: self)
             
-            if let joystickKnob = joystickKnob, let joystick = joystick {
+            if let joystickKnob = self.joystick.joystickKnob, let joystick = joystick.joystickBase {
                 let moveBack = SKAction.move(to: joystick.position, duration: 0.1)
                 moveBack.timingMode = .easeOut
                 joystickKnob.run(moveBack)
@@ -988,7 +958,7 @@ class GameScene: SKScene, ObservableObject {
     
     override func update(_ currentTime: TimeInterval) {
         
-        guard let joystick = joystick, let joystickKnob = joystickKnob else { return }
+        guard let joystick = self.joystick.joystickBase, let joystickKnob = self.joystick.joystickKnob else { return }
         
         let displacement = CGVector(dx: joystickKnob.position.x - joystick.position.x, dy: joystickKnob.position.y - joystick.position.y)
         let velocity = CGVector(dx: displacement.dx * thisPlayer.speedMultiplier, dy: displacement.dy * thisPlayer.speedMultiplier)
