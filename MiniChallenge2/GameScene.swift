@@ -30,7 +30,6 @@ class GameScene: SKScene, ObservableObject {
     @Published var host: Bool = false
     @Published var role: String = ""
     
-    private var timerLabel: SKLabelNode?
     var timerIsRunning = false
     
     var timer: Timer?
@@ -90,9 +89,6 @@ class GameScene: SKScene, ObservableObject {
     private var isPlantButtonTapped = false
     private var isDefuseButtonTapped = false
     
-    private var progressBar: SKSpriteNode?
-    private var progressBarBackground: SKSpriteNode?
-    
     private var plantDuration = 3.0
     private var defuseDuration = 4.0
     
@@ -123,6 +119,8 @@ class GameScene: SKScene, ObservableObject {
     private var map = Map()
     private var bombSite = BombSite()
     private var joystick = Joystick()
+    private var timerLabel = TimerLabel()
+    private var progressBar = ProgressBar()
 
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -136,7 +134,14 @@ class GameScene: SKScene, ObservableObject {
         
         // Setting up the map
         map.setupMapPhysics(map: (childNode(withName: "Maze") as? SKTileMapNode)!)
-        bombSite.setupBombSites()
+        
+        for child in self.children {
+            if child.name == "BombSite" { //Di setup di MazeScene
+                if let child = child as? SKSpriteNode {
+                    bombSite.setupBombSites(child: child)
+                }
+            }
+        }
         
         // Setting up Game Components that follows the users camera
         createCamera()
@@ -146,8 +151,13 @@ class GameScene: SKScene, ObservableObject {
         cameraNode?.addChild(joystick.joystickKnob!)
         cameraNode?.addChild(joystick.joystickTouchArea!)
         
-        setUpTimerLabel()
-        setupProgressBar()
+        timerLabel.setUpTimerLabel()
+        cameraNode?.addChild(timerLabel.timerLabel!)
+        
+        progressBar.setupProgressBar()
+        cameraNode?.addChild(progressBar.progressBarBackground!)
+        cameraNode?.addChild(progressBar.progressBar!)
+        
         setupSabotageButton()
         setupSprintButton()
         
@@ -361,38 +371,9 @@ class GameScene: SKScene, ObservableObject {
         }
     }
     
-    func setUpTimerLabel(){
-        let timerLabel = SKLabelNode(fontNamed: "Palatino-Bold")
-        timerLabel.fontSize = 40
-        timerLabel.fontColor = .white
-        timerLabel.position = CGPoint(x: -6, y: 307)
-        timerLabel.zPosition = 100
-        
-        self.timerLabel = timerLabel
-        self.timerLabel?.text = ""
-        self.timerLabel?.isHidden = false
-        cameraNode?.addChild(timerLabel)
-    }
-    
-    func setupProgressBar() {
-        progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
-        progressBarBackground?.zPosition = 30
-        progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
-        progressBarBackground?.position = CGPoint(x: -52, y: 245)
-        cameraNode?.addChild(progressBarBackground!)
-        progressBarBackground?.isHidden = true
-        
-        progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
-        progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
-        progressBar?.position = CGPoint(x: -52, y: 245)
-        progressBar?.zPosition = 31
-        cameraNode?.addChild(progressBar!)
-        progressBar?.isHidden = true
-    }
-    
     func updateProgressBar(elapsedTime: TimeInterval, totalTime: TimeInterval) {
         let progress = min(CGFloat(elapsedTime / totalTime), 1.0)
-        progressBar?.size.width = 100 * progress
+        progressBar.progressBar?.size.width = 100 * progress
     }
     
     func setupSabotageButton() {
@@ -649,17 +630,17 @@ class GameScene: SKScene, ObservableObject {
     
     func startTimer() {
         timeLeft = 60
-        timerLabel?.text = "\(timeLeft)"
-        timerLabel?.isHidden = false
+        timerLabel.timerLabel?.text = "\(timeLeft)"
+        timerLabel.timerLabel?.isHidden = false
         
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
             guard let self = self else { return }
             self.timeLeft -= 1
-            self.timerLabel?.text = "\(self.timeLeft)"
+            self.timerLabel.timerLabel?.text = "\(self.timeLeft)"
             
             if self.timeLeft <= 0 {
                 timer.invalidate()
-                self.timerLabel?.isHidden = true
+                self.timerLabel.timerLabel?.isHidden = true
                 self.timerCover.isHidden = true
                 
                 if let bombNode = self.childNode(withName: "bomb"){
@@ -756,8 +737,8 @@ class GameScene: SKScene, ObservableObject {
                     print("lagi plant...")
                     
                     // show progress bar
-                    progressBarBackground?.isHidden = false
-                    progressBar?.isHidden = false
+                    progressBar.progressBarBackground?.isHidden = false
+                    progressBar.progressBar?.isHidden = false
                     
                     self.terroristCondition = "terrorist-planting-bomb"
                     
@@ -784,8 +765,8 @@ class GameScene: SKScene, ObservableObject {
                     print("lagi defuse...")
                     
                     // show progress bar
-                    progressBarBackground?.isHidden = false
-                    progressBar?.isHidden = false
+                    progressBar.progressBarBackground?.isHidden = false
+                    progressBar.progressBar?.isHidden = false
                     
                     self.fbiCondition = "fbi-defusing-bomb"
                     self.isDefusing = true
@@ -904,8 +885,8 @@ class GameScene: SKScene, ObservableObject {
                         self.bombPlantTimerStartTime = nil
                         
                         // remove progress bar
-                        progressBarBackground?.isHidden = true
-                        progressBar?.isHidden = true
+                        progressBar.progressBarBackground?.isHidden = true
+                        progressBar.progressBar?.isHidden = true
                         
                         // change terrorist condition from terrorist-planting-bomb to terrorist-initial
                         self.terroristCondition = "terrorist-initial"
@@ -929,8 +910,8 @@ class GameScene: SKScene, ObservableObject {
                         self.defuseTimerStartTime = nil
                         
                         // remove progress bar
-                        progressBarBackground?.isHidden = true
-                        progressBar?.isHidden = true
+                        progressBar.progressBarBackground?.isHidden = true
+                        progressBar.progressBar?.isHidden = true
                         
                         // change fbi condition from fbi-defusing-bomb to fbi-cancel-defusing
                         self.fbiCondition = "fbi-cancel-defusing"
@@ -1076,8 +1057,8 @@ class GameScene: SKScene, ObservableObject {
                     self.bombPlantTimerStartTime = nil
                     
                     //remove the progress bar
-                    progressBarBackground?.isHidden = true
-                    progressBar?.isHidden = true
+                    progressBar.progressBarBackground?.isHidden = true
+                    progressBar.progressBar?.isHidden = true
                     
                     //remove planting animation
                     thisPlayer.stopPlantingBombAnimation()
@@ -1100,8 +1081,8 @@ class GameScene: SKScene, ObservableObject {
                     self.defuseTimerStartTime = nil
                     
                     //remove the progress bar
-                    progressBarBackground?.isHidden = true
-                    progressBar?.isHidden = true
+                    progressBar.progressBarBackground?.isHidden = true
+                    progressBar.progressBar?.isHidden = true
                     
                     //remove defusing animation
                     thisPlayer.playerNode.removeAction(forKey: "defusingAnimation")
@@ -1151,7 +1132,7 @@ class GameScene: SKScene, ObservableObject {
     func defuseBombNode(){
         
         self.defuseButton.isHidden = true
-        self.timerLabel?.isHidden = true
+        self.timerLabel.timerLabel?.isHidden = true
         if let bombNode = self.childNode(withName: "bomb") {
             bombNode.removeFromParent()
         }
