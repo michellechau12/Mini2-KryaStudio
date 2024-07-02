@@ -82,8 +82,6 @@ class GameScene: SKScene, ObservableObject {
     private var isSabotageButtonEnabled = true
     private var sabotageButtonPressCount = 0
     
-    private var bombSites: [BombSiteModel] = []
-    
     private var plantButton = SKSpriteNode(imageNamed: "plantButton")
     private var isPlantButtonEnabled = false
     private var defuseButton = SKSpriteNode(imageNamed: "tang")
@@ -123,6 +121,10 @@ class GameScene: SKScene, ObservableObject {
     
     private var isPlantButtonPressed = false
     private var isDefuseButtonPressed = false
+    
+    // Accessing Components
+    private var map = Map()
+    private var bombSite = BombSite()
 
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -135,8 +137,8 @@ class GameScene: SKScene, ObservableObject {
         setThisPlayer()
         
         // Setting up the map
-        setupMapPhysics()
-        setupBombSites()
+        map.setupMapPhysics(map: (childNode(withName: "Maze") as? SKTileMapNode)!)
+        bombSite.setupBombSites()
         
         // Setting up Game Components that follows the users camera
         createCamera()
@@ -336,71 +338,6 @@ class GameScene: SKScene, ObservableObject {
         }
         else if playerPeerId == player2Id {
             self.thisPlayer = player2Model
-        }
-    }
-    
-    func setupMapPhysics() {
-        guard let map = childNode(withName: "Maze") as? SKTileMapNode else {
-            print("DEBUG: SKTileMapNode 'Maze' not found.")
-//            createMaze()
-            return
-        }
-        
-        let tileMap = map // the tile map to be given physics body
-        let tileSize = tileMap.tileSize // the size of each tile map
-        let halfWidth = CGFloat(tileMap.numberOfColumns) / 2.0 * tileSize.width // half width of tile map
-        let halfHeight = CGFloat(tileMap.numberOfRows) / 2.0 * tileSize.height // half height of tile map
-        
-        for col in 0..<tileMap.numberOfColumns {
-            for row in 0..<tileMap.numberOfRows {
-                
-                if let tileDefinition = tileMap.tileDefinition(atColumn: col, row: row) {
-                    
-                    let isEdgeTile = tileDefinition.userData?["AddBody"] as? Int
-                    if isEdgeTile == 1 {
-                        let tileArray = tileDefinition.textures //get the tile textures in array
-                        let tileTexture = tileArray[0] //get the first texture
-                        let x = CGFloat(col) * tileSize.width - halfWidth + (tileSize.width/2)
-                        let y = CGFloat(row) * tileSize.height - halfHeight + (tileSize.height/2)
-                        let tileNode = SKNode()
-                        
-                        tileNode.position = CGPoint(x: x, y: y)
-                        tileNode.physicsBody = SKPhysicsBody(texture: tileTexture, size: tileTexture.size())
-                        tileNode.physicsBody?.affectedByGravity = false
-                        tileNode.physicsBody?.allowsRotation = false
-                        tileNode.physicsBody?.restitution = 0
-                        tileNode.physicsBody?.isDynamic = false
-                        
-                        //friction = semakin strict objectnya, sehingga lebih baik dibuat 0 saja
-                        //tileNode.physicsBody?.friction = 20.0
-                        
-                        tileNode.physicsBody?.mass = 30.0
-                        
-                        tileNode.physicsBody?.categoryBitMask = BitMaskCategory.maze
-                        tileNode.physicsBody?.collisionBitMask = BitMaskCategory.player1 | BitMaskCategory.player2
-                        tileNode.physicsBody?.contactTestBitMask = BitMaskCategory.player1 | BitMaskCategory.player2
-                        tileMap.addChild(tileNode)
-                    }
-                }
-            }
-        }
-    }
-    
-    func setupBombSites() {
-        for child in self.children {
-            if child.name == "BombSite" { //Di setup di MazeScene
-                if let child = child as? SKSpriteNode {
-                    let bombSitePosition = child.position
-                    let bombSiteSize = child.size
-                    let bombSite = BombSiteModel(
-                        position: bombSitePosition,
-                        size: bombSiteSize)
-                    bombSites.append(bombSite)
-                    
-                    //Debugging print:
-                    print("bombsite position is: \(bombSitePosition) and size is: \(bombSiteSize)")
-                }
-            }
         }
     }
     
@@ -724,7 +661,7 @@ class GameScene: SKScene, ObservableObject {
     
     //Check if player enters the bombsite area
     func isPlayerInBombSite() -> Bool {
-        for bombSite in bombSites {
+        for bombSite in bombSite.bombSites {
             let bombSiteRect = CGRect(
                 origin: CGPoint(
                     x: bombSite.position.x - bombSite.size.width/2,

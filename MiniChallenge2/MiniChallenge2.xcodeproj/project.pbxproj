@@ -29,6 +29,8 @@
 		0BB133892C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133822C2BB4FF00B0AFD6 /* vo-bomb-planted-sfx.mp3 */; };
 		0BB1338A2C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */; };
 		2F4D4A822C2DDD7700D24EB9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */; };
+		EC3846C32C340F71000DCA56 /* Map.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C22C340F71000DCA56 /* Map.swift */; };
+		EC3846C52C340F84000DCA56 /* BombSite.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3846C42C340F84000DCA56 /* BombSite.swift */; };
 		ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */; };
 		ECA3DFA02C24527100708CF4 /* BombSiteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */; };
 		ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA3DFBC2C2808A600708CF4 /* GameOverView.swift */; };
@@ -72,6 +74,8 @@
 		0BB133832C2BB4FF00B0AFD6 /* vo-gamestart-terrorist-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "vo-gamestart-terrorist-sfx.mp3"; sourceTree = "<group>"; };
 		2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		2FA1EAA22C2AD2560051B0A9 /* walk-sfx.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "walk-sfx.mp3"; sourceTree = "<group>"; };
+		EC3846C22C340F71000DCA56 /* Map.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Map.swift; path = ../../../../../../Downloads/Map.swift; sourceTree = "<group>"; };
+		EC3846C42C340F84000DCA56 /* BombSite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BombSite.swift; path = ../../../../../../Downloads/BombSite.swift; sourceTree = "<group>"; };
 		ECA3DF9D2C244AD700708CF4 /* BitMaskCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitMaskCategory.swift; sourceTree = "<group>"; };
 		ECA3DF9F2C24527100708CF4 /* BombSiteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BombSiteModel.swift; sourceTree = "<group>"; };
 		ECA3DFA12C2452EF00708CF4 /* MazeTileSet.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = MazeTileSet.sks; path = "../../../../../../../Downloads/Mini2-KryaStudio-gameMap2/MiniChallenge2/MiniChallenge2/MazeTileSet.sks"; sourceTree = "<group>"; };
@@ -125,6 +129,15 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
+		EC3846C12C340F1C000DCA56 /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				EC3846C22C340F71000DCA56 /* Map.swift */,
+				EC3846C42C340F84000DCA56 /* BombSite.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		ECCC18932C1833140059276B = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +163,7 @@
 				ECCC18A12C1833140059276B /* ContentView.swift */,
 				2F4D4A812C2DDD7700D24EB9 /* ViewController.swift */,
 				EF0F384C2C326CED00B51B81 /* AppDelegate.swift */,
+				EC3846C12C340F1C000DCA56 /* Component */,
 				ECCC19352C1AA9A20059276B /* Model */,
 				ECCC19362C1AA9B50059276B /* View */,
 				ECCC19322C1A38BB0059276B /* Info.plist */,
@@ -306,6 +320,7 @@
 				0B91B1FF2C2972B0005E7F99 /* FBIWinningView.swift in Sources */,
 				ECCC18A22C1833140059276B /* ContentView.swift in Sources */,
 				ECCC19342C1A3F890059276B /* GameView.swift in Sources */,
+				EC3846C32C340F71000DCA56 /* Map.swift in Sources */,
 				ECCC19282C18CB8D0059276B /* MultipeerConnectionManager.swift in Sources */,
 				ECA3DF9E2C244AD700708CF4 /* BitMaskCategory.swift in Sources */,
 				ECCC19262C18C72B0059276B /* PlayerPairingView.swift in Sources */,
@@ -314,6 +329,7 @@
 				ECCC192D2C1975CB0059276B /* GameScene.swift in Sources */,
 				0B91B1FB2C29724C005E7F99 /* FBIInstructionView.swift in Sources */,
 				EF18C2A72C241CDB000B7808 /* YourNameView.swift in Sources */,
+				EC3846C52C340F84000DCA56 /* BombSite.swift in Sources */,
 				ECA3DFBD2C2808A600708CF4 /* GameOverView.swift in Sources */,
 				ECCC18A02C1833140059276B /* MiniChallenge2App.swift in Sources */,
 				0B91B2032C2A6BC3005E7F99 /* AudioManager.swift in Sources */,
