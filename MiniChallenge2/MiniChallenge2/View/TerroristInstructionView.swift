@@ -18,77 +18,67 @@ struct TerroristInstructionView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                Image("instruction-bg-img")
-                    .resizable()
-                    .scaledToFill()
-                    .edgesIgnoringSafeArea(.all)
-                
-                VStack {
-                    Spacer()
-                    Image("text-terrorist")
+            GeometryReader { geometry in
+                ZStack {
+                    Image("instruction-bg-img3")
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 800)
-                    Text("Beat FBI to win the game !")
-                        .font(Font.custom("PixelifySans-Regular", size: 32))
-                        .foregroundColor(.white)
-                        .padding(.bottom, 10)
-                    Spacer()
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Image("img-objective-terrorist")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 600, alignment: .topLeading)
-                                .padding(.bottom, 72)
-                        }
-                        .padding(.leading, 72)
-                        
+                        .scaledToFill()
+                        .frame(height: geometry.size.height*1.06)
+                        .edgesIgnoringSafeArea(.all)
+                    VStack {
                         Spacer()
-                        
-                        VStack {
-                            ZStack {
-                                Image("terrorist-none-left-1")
+                        Image("text-terrorist")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: geometry.size.width * 0.7)
+                        Text("Beat FBI to win the game !")
+                            .font(Font.custom("PixelifySans-Regular", size: geometry.size.width * 0.03))
+                            .foregroundColor(.white)
+                            .padding(.bottom, geometry.size.height * 0.01)
+                        Spacer()
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Image("img-objective-terrorist")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 360)
-                                    .padding(.bottom, 150)
-                                    .padding(.trailing, 100)
-                                
-                                VStack {
-                                    ProgressView(value: progress, total: 1.0)
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                        .scaleEffect(3)
-                                    
-                                    Text("Loading...")
-                                        .font(Font.custom("PixelifySans-Regular", size: 18))
-                                        .foregroundColor(.white)
-                                        .offset(y: 30)
-                                }
-                                .offset(y:260)
-                                .offset(x:140)
-                                
+                                    .frame(width: geometry.size.width * 0.5, alignment: .topLeading)
+                                    .padding(.bottom, geometry.size.height * 0.1)
                             }
+                            .padding(.leading, geometry.size.width * 0.07)
                             
+                            Spacer()
+                                ZStack {
+                                    VStack {
+                                        ProgressView(value: progress, total: 1.0)
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .scaleEffect(geometry.size.width*0.002)
+                                        
+                                        Text("Loading...")
+                                            .font(Font.custom("PixelifySans-Regular", size: geometry.size.width * 0.018))
+                                            .foregroundColor(.white)
+                                            .offset(y: geometry.size.height * 0.04)
+                                    }
+                                    .offset(y: geometry.size.height * 0.26)
+                                    .offset(x: -geometry.size.width * 0.05)
+                                }
                         }
+                        Spacer()
                     }
-                    
-                    Spacer()
                 }
-            }
-            .onAppear(){
-                mpManager.setupGame(gameScene: gameScene)
+                .onAppear(){
+                    //                mpManager.setupGame(gameScene: gameScene)
+                    //
+                    //                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    //                    navigateToGameView = true
+                    //                    print("DEBUG: heree!")
+                    //                }
+                }
+                .navigationDestination(isPresented: $navigateToGameView) {
+                    GameView()
+                    //                    .environmentObject(mpManager)
+                    //                    .environmentObject(gameScene)
+                }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    navigateToGameView = true
-                    print("DEBUG: heree!")
-                }
-            }
-            .navigationDestination(isPresented: $navigateToGameView) {
-                GameView()
-                    .environmentObject(mpManager)
-                    .environmentObject(gameScene)
             }
         }
         .navigationBarBackButtonHidden(true)
