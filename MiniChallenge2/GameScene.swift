@@ -123,6 +123,11 @@ class GameScene: SKScene, ObservableObject {
     
     private var isPlantButtonPressed = false
     private var isDefuseButtonPressed = false
+    
+    let systemNameChecker = UIDevice.current.systemName
+    
+    let displayWidth = UIScreen.main.bounds.width
+    let displayHeight = UIScreen.main.bounds.height
 
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -160,6 +165,8 @@ class GameScene: SKScene, ObservableObject {
         
         addChild(player1Model.playerNode)
         addChild(player2Model.playerNode)
+        
+        print("DEBUG : systemName | \(systemNameChecker)")
     }
     
     func loadFBITextures(){
@@ -412,46 +419,91 @@ class GameScene: SKScene, ObservableObject {
             camera.position = thisPlayer.playerNode.position
             addChild(camera)
             
-            //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
-            camera.setScale(1.5)
-            
-            //Supaya bisa abrupt view dari mapnya (Animation)
-            let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
-            camera.run(zoomInAction)
+            if(systemNameChecker == "iOS"){
+                //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
+                camera.setScale(1)
+                //Supaya bisa abrupt view dari mapnya (Animation)
+                let zoomInAction = SKAction.scale(to: 0.5, duration: 0.5)
+                camera.run(zoomInAction)
+            }
+            else if(systemNameChecker == "iPadOS"){
+                //Initial Map Zoom (Camera Scale) -> nanti bisa dibuat testing
+                camera.setScale(1.5)
+                //Supaya bisa abrupt view dari mapnya (Animation)
+                let zoomInAction = SKAction.scale(to: 0.3, duration: 0.5)
+                camera.run(zoomInAction)
+            }
         }
     }
     
     func createJoystick() {
-        //Otak-atik posisi Joystick
-        let joystickBase = SKSpriteNode(imageNamed: "joystickBase6")
-        joystickBase.position = CGPoint(x: -430, y: -230)
-        joystickBase.setScale(2.5)
-        joystickBase.alpha = 0.15
-        joystickBase.zPosition = 80
-        joystickBase.name = "joystickBase5"
-        
-        let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob3")
-        joystickKnob.position = CGPoint(x: -430, y: -230)
-        joystickKnob.setScale(2.0)
-        joystickBase.alpha = 2.0
-        joystickKnob.zPosition = 88
-        joystickKnob.name = "joystickKnob3"
-        
-        cameraNode?.addChild(joystickBase)
-        cameraNode?.addChild(joystickKnob)
-        
-        self.joystick = joystickBase
-        self.joystickKnob = joystickKnob
-        
-        let joystickTouchArea = SKShapeNode (circleOfRadius: 400)
-        joystickTouchArea.position = joystickBase.position
-        joystickTouchArea.zPosition = 19
-        joystickTouchArea.strokeColor = .clear
-        joystickTouchArea.fillColor = .clear
-        joystickTouchArea.name = "joystickTouchArea"
-        cameraNode?.addChild(joystickTouchArea)
-        
-        self.joystickTouchArea = joystickTouchArea
+        if(systemNameChecker == "iOS"){
+            //Otak-atik posisi Joystick
+            let joystickBase = SKSpriteNode(imageNamed: "joystickBase6")
+            joystickBase.position = CGPoint(x: -250, y: -100)
+            joystickBase.setScale(2.2)
+            joystickBase.alpha = 0.15
+            joystickBase.zPosition = 80
+            joystickBase.name = "joystickBase5"
+            
+            let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob3")
+            joystickKnob.position = CGPoint(x: displayWidth * -0.25, y: -100)
+            joystickKnob.setScale(1.7)
+            joystickBase.alpha = 2.0
+            joystickKnob.zPosition = 88
+            joystickKnob.name = "joystickKnob3"
+            
+            cameraNode?.addChild(joystickBase)
+            cameraNode?.addChild(joystickKnob)
+            
+            self.joystick = joystickBase
+            self.joystickKnob = joystickKnob
+            
+            let joystickTouchArea = SKShapeNode (circleOfRadius: 200)
+            joystickTouchArea.position = joystickBase.position
+            joystickTouchArea.zPosition = 19
+            joystickTouchArea.strokeColor = .clear
+            joystickTouchArea.fillColor = .clear
+            joystickTouchArea.name = "joystickTouchArea"
+            cameraNode?.addChild(joystickTouchArea)
+            
+            self.joystickTouchArea = joystickTouchArea
+            
+            print("DEBUG : systemName | width : \(displayWidth) | height : \(displayHeight)")
+        }
+        else if(systemNameChecker == "iPadOS"){
+            //Otak-atik posisi Joystick
+            let joystickBase = SKSpriteNode(imageNamed: "joystickBase6")
+            joystickBase.position = CGPoint(x: -430, y: -230)
+            joystickBase.setScale(2.5)
+            joystickBase.alpha = 0.15
+            joystickBase.zPosition = 80
+            joystickBase.name = "joystickBase5"
+            
+            let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob3")
+            joystickKnob.position = CGPoint(x: -430, y: -230)
+            joystickKnob.setScale(2.0)
+            joystickBase.alpha = 2.0
+            joystickKnob.zPosition = 88
+            joystickKnob.name = "joystickKnob3"
+            
+            cameraNode?.addChild(joystickBase)
+            cameraNode?.addChild(joystickKnob)
+            
+            self.joystick = joystickBase
+            self.joystickKnob = joystickKnob
+            
+            let joystickTouchArea = SKShapeNode (circleOfRadius: 400)
+            joystickTouchArea.position = joystickBase.position
+            joystickTouchArea.zPosition = 19
+            joystickTouchArea.strokeColor = .clear
+            joystickTouchArea.fillColor = .clear
+            joystickTouchArea.name = "joystickTouchArea"
+            cameraNode?.addChild(joystickTouchArea)
+            
+            self.joystickTouchArea = joystickTouchArea
+        }
+            
     }
     
     func setUpTimerLabel(){
@@ -489,17 +541,32 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setupSabotageButton() {
-        let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
-        sabotageButton.position = CGPoint(x: 450, y: -280 )
-//        sabotageButton.position = CGPoint(x: 350, y: -280 )
-        sabotageButton.size = CGSize(width: 180, height: 180)
-        sabotageButton.alpha = 1.2
-        sabotageButton.zPosition = 25
-        sabotageButton.name = "sabotageButton"
-        
-        cameraNode?.addChild(sabotageButton)
-        
-        self.sabotageButton = sabotageButton
+        if(systemNameChecker == "iOS"){
+            let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
+            sabotageButton.position = CGPoint(x: 300, y: -140 )
+    //        sabotageButton.position = CGPoint(x: 350, y: -280 )
+            sabotageButton.size = CGSize(width: 100, height: 100)
+            sabotageButton.alpha = 1.2
+            sabotageButton.zPosition = 25
+            sabotageButton.name = "sabotageButton"
+            
+            cameraNode?.addChild(sabotageButton)
+            
+            self.sabotageButton = sabotageButton
+        }
+        else if(systemNameChecker == "iPadOS"){
+            let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
+            sabotageButton.position = CGPoint(x: 450, y: -280 )
+    //        sabotageButton.position = CGPoint(x: 350, y: -280 )
+            sabotageButton.size = CGSize(width: 180, height: 180)
+            sabotageButton.alpha = 1.2
+            sabotageButton.zPosition = 25
+            sabotageButton.name = "sabotageButton"
+            
+            cameraNode?.addChild(sabotageButton)
+            
+            self.sabotageButton = sabotageButton
+        }
     }
     
     func setupSabotagedView() {
@@ -675,37 +742,72 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setupSprintButton() {
-        sprintButton.position = CGPoint(x: 300, y: -220 )
-        sprintButton.size = CGSize(width: 130, height: 130)
-        sprintButton.alpha = 1.2
-        sprintButton.zPosition = 25
-        sprintButton.name = "plantButton"
-        
-        cameraNode?.addChild(sprintButton)
+        if(systemNameChecker == "iOS"){
+            sprintButton.position = CGPoint(x: 200, y: -80 )
+            sprintButton.size = CGSize(width: 100, height: 100)
+            sprintButton.alpha = 1.2
+            sprintButton.zPosition = 25
+            sprintButton.name = "plantButton"
+            
+            cameraNode?.addChild(sprintButton)
+        }
+        else if(systemNameChecker == "iPadOS"){
+            sprintButton.position = CGPoint(x: 300, y: -220 )
+            sprintButton.size = CGSize(width: 130, height: 130)
+            sprintButton.alpha = 1.2
+            sprintButton.zPosition = 25
+            sprintButton.name = "plantButton"
+            
+            cameraNode?.addChild(sprintButton)
+        }
     }
 
     
     func setupPlantButton(){
-        plantButton.position = CGPoint(x: 450, y: -110 )
-        plantButton.size = CGSize(width: 130, height: 130)
-        plantButton.alpha = 0.2
-        plantButton.zPosition = 25
-        plantButton.name = "plantButton"
-        
-        cameraNode?.addChild(plantButton)
+        if(systemNameChecker == "iOS"){
+            plantButton.position = CGPoint(x: 300, y: -20 )
+            plantButton.size = CGSize(width: 100, height: 100)
+            plantButton.alpha = 0.2
+            plantButton.zPosition = 25
+            plantButton.name = "plantButton"
+            
+            cameraNode?.addChild(plantButton)
         }
+        else if(systemNameChecker == "iPadOS"){
+            plantButton.position = CGPoint(x: 450, y: -110 )
+            plantButton.size = CGSize(width: 130, height: 130)
+            plantButton.alpha = 0.2
+            plantButton.zPosition = 25
+            plantButton.name = "plantButton"
+            
+            cameraNode?.addChild(plantButton)
+        }
+    }
     
     
     func setupDefuseButton(){
-        defuseButton.position = CGPoint(x: 450, y: -110 )
-        defuseButton.size = CGSize(width: 130, height: 130)
-        defuseButton.alpha = 0.2
-        defuseButton.zPosition = 25
-        defuseButton.name = "defuseButton"
-        
-        cameraNode?.addChild(defuseButton)
-        
-//        self.plantButton = plantButton
+        if(systemNameChecker == "iOS"){
+            defuseButton.position = CGPoint(x: 300, y: -20 )
+            defuseButton.size = CGSize(width: 100, height: 100)
+            defuseButton.alpha = 0.2
+            defuseButton.zPosition = 25
+            defuseButton.name = "defuseButton"
+            
+            cameraNode?.addChild(defuseButton)
+            
+    //        self.plantButton = plantButton
+        }
+        else if(systemNameChecker == "iPadOS"){
+            defuseButton.position = CGPoint(x: 450, y: -110 )
+            defuseButton.size = CGSize(width: 130, height: 130)
+            defuseButton.alpha = 0.2
+            defuseButton.zPosition = 25
+            defuseButton.name = "defuseButton"
+            
+            cameraNode?.addChild(defuseButton)
+            
+    //        self.plantButton = plantButton
+        }
     }
     
     func calculateDistance(from charPosition: CGPoint, to bombPosition: CGPoint) -> CGFloat {
@@ -980,8 +1082,6 @@ class GameScene: SKScene, ObservableObject {
         isDefuseButtonPressed = false
 
         for touch in touches {
-            let location = touch.location(in: self)
-            
             if let joystickKnob = joystickKnob, let joystick = joystick {
                 let moveBack = SKAction.move(to: joystick.position, duration: 0.1)
                 moveBack.timingMode = .easeOut

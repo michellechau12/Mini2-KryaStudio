@@ -44,40 +44,39 @@ struct PlayerPairingView: View {
                                     Image("back-button")
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: 140)
-                                    
+                                        .frame(width: 70)
                                 }) .padding(.leading,50)
                             Spacer()
                         }
                         Image("text-pairing")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 800)
+                            .frame(width: 400)
                         Text("Make sure your Bluetooth and Wi-Fi are on")
-                            .font(Font.custom("PixelifySans-Regular", size: 32))
+                            .font(Font.custom("PixelifySans-Regular", size: 16))
                             .foregroundColor(.white)
                             .padding()
-                        Spacer()
-                            .frame(height: 80)
+//                        Spacer()
+//                            .frame(height: 80)
                         HStack {
                             Spacer()
-                                .frame(width: 200)
+                                .frame(width: 100)
                             VStack {
                                 Image("circle-fbi-right")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 200)
+                                    .frame(width: 100)
                                 Text("\(mpManager.myConnectionId.displayName)")
-                                    .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))
+                                    .font(Font.custom("PixelifySans-Regular_SemiBold", size: 28))
                                     .foregroundColor(.white)
                                     .padding()
-                            } .frame(width:300)
+                            } .frame(width:150)
                             Image("text-vs")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 200)
+                                .frame(width: 100)
                             ScrollView(.horizontal) {
-                                HStack (spacing: 5) {
+                                HStack (spacing: 2) {
                                     ForEach(mpManager.availablePlayers, id: \.self) { player in
                                         AvailablePlayerCard(playerName: player.displayName, imageName: "circle-fbi-left")
                                             .onTapGesture {
@@ -172,7 +171,7 @@ struct PlayerPairingView: View {
                                 }
                             }
                         }
-                        .padding(.bottom, 120)
+                        //.padding(.bottom, 120)
                         Spacer()
                     }
                     //                .overlay(sendInvitation ? ProgressView().progressViewStyle(CircularProgressViewStyle()) : nil
@@ -239,13 +238,13 @@ struct AvailablePlayerCard: View {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 200)
+                    .frame(width: 100)
             }
             Text(playerName)
-                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 56))
+                .font(Font.custom("PixelifySans-Regular_SemiBold", size: 28))
                 .foregroundColor(.white)
                 .padding()
-        } .frame(width:300)
+        } .frame(width:150)
     }
 }
 
