@@ -43,9 +43,11 @@ struct ContentView: View {
                     Image("bg-homeview")
                         .resizable()
                         .scaledToFill()
-                        .frame(height: geometry.size.height*1.06)
+                        .frame(height: geometry.size.height*1.06) // 1.06
                         .edgesIgnoringSafeArea(.all)
                     VStack {
+                        Spacer()
+                            .frame(height:50)
                         Image("title-homeview")
                             .resizable()
                             .scaledToFit()
@@ -53,7 +55,7 @@ struct ContentView: View {
                             .offset(y: textPosition)
                             .onAppear {
                                 withAnimation(.easeOut(duration: 1.5).delay(0)) {
-                                    textPosition = geometry.size.height * 0.16}
+                                    textPosition = geometry.size.height * 0.16} // 0.16
                             }
                         Spacer()
                         ZStack {

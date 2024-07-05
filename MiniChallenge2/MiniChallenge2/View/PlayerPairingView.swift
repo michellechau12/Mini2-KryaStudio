@@ -31,6 +31,7 @@ struct PlayerPairingView: View {
                 VStack {
                     VStack {
                         Spacer()
+                            .frame(height: 100)
                         HStack{
                             Button(
                                 role: .cancel,

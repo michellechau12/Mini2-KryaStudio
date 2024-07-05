@@ -440,15 +440,17 @@ class GameScene: SKScene, ObservableObject {
         if(systemNameChecker == "iOS"){
             //Otak-atik posisi Joystick
             let joystickBase = SKSpriteNode(imageNamed: "joystickBase6")
-            joystickBase.position = CGPoint(x: -250, y: -100)
-            joystickBase.setScale(2.2)
+            //joystickBase.position = CGPoint(x: -250, y: -100)
+            joystickBase.position = CGPoint(x: displayWidth * -0.37, y: displayHeight * -0.2)
+            joystickBase.setScale(2)
             joystickBase.alpha = 0.15
             joystickBase.zPosition = 80
             joystickBase.name = "joystickBase5"
             
             let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob3")
-            joystickKnob.position = CGPoint(x: displayWidth * -0.25, y: -100)
-            joystickKnob.setScale(1.7)
+            //joystickBase.position = CGPoint(x: -250, y: -100)
+            joystickKnob.position = CGPoint(x: displayWidth * -0.37, y: displayHeight * -0.2)
+            joystickKnob.setScale(1.5)
             joystickBase.alpha = 2.0
             joystickKnob.zPosition = 88
             joystickKnob.name = "joystickKnob3"
@@ -474,14 +476,16 @@ class GameScene: SKScene, ObservableObject {
         else if(systemNameChecker == "iPadOS"){
             //Otak-atik posisi Joystick
             let joystickBase = SKSpriteNode(imageNamed: "joystickBase6")
-            joystickBase.position = CGPoint(x: -430, y: -230)
+            // joystickBase.position = CGPoint(x: -430, y: -230)
+            joystickBase.position = CGPoint(x: displayWidth * -0.37, y: displayHeight * -0.2)
             joystickBase.setScale(2.5)
             joystickBase.alpha = 0.15
             joystickBase.zPosition = 80
             joystickBase.name = "joystickBase5"
             
             let joystickKnob = SKSpriteNode(imageNamed: "joystickKnob3")
-            joystickKnob.position = CGPoint(x: -430, y: -230)
+            // joystickKnob.position = CGPoint(x: -430, y: -230)
+            joystickKnob.position = CGPoint(x: displayWidth * -0.37, y: displayHeight * -0.2)
             joystickKnob.setScale(2.0)
             joystickBase.alpha = 2.0
             joystickKnob.zPosition = 88
@@ -507,32 +511,63 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func setUpTimerLabel(){
-        let timerLabel = SKLabelNode(fontNamed: "Palatino-Bold")
-        timerLabel.fontSize = 40
-        timerLabel.fontColor = .white
-        timerLabel.position = CGPoint(x: -6, y: 307)
-        timerLabel.zPosition = 100
-        
-        self.timerLabel = timerLabel
-        self.timerLabel?.text = ""
-        self.timerLabel?.isHidden = false
-        cameraNode?.addChild(timerLabel)
+        if(systemNameChecker == "iOS"){
+            let timerLabel = SKLabelNode(fontNamed: "Palatino-Bold")
+            timerLabel.fontSize = 40
+            timerLabel.fontColor = .white
+            timerLabel.position = CGPoint(x: 0, y: 92)
+            timerLabel.zPosition = 100
+            
+            self.timerLabel = timerLabel
+            self.timerLabel?.text = ""
+            self.timerLabel?.isHidden = false
+            cameraNode?.addChild(timerLabel)
+        }
+        else if(systemNameChecker == "iPadOS"){
+            let timerLabel = SKLabelNode(fontNamed: "Palatino-Bold")
+            timerLabel.fontSize = 40
+            timerLabel.fontColor = .white
+            timerLabel.position = CGPoint(x: -6, y: 307)
+            timerLabel.zPosition = 100
+            
+            self.timerLabel = timerLabel
+            self.timerLabel?.text = ""
+            self.timerLabel?.isHidden = false
+            cameraNode?.addChild(timerLabel)
+        }
     }
     
     func setupProgressBar() {
-        progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
-        progressBarBackground?.zPosition = 30
-        progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
-        progressBarBackground?.position = CGPoint(x: -52, y: 245)
-        cameraNode?.addChild(progressBarBackground!)
-        progressBarBackground?.isHidden = true
-        
-        progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
-        progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
-        progressBar?.position = CGPoint(x: -52, y: 245)
-        progressBar?.zPosition = 31
-        cameraNode?.addChild(progressBar!)
-        progressBar?.isHidden = true
+        if(systemNameChecker == "iOS"){
+            progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
+            progressBarBackground?.zPosition = 30
+            progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
+            progressBarBackground?.position = CGPoint(x: 0, y: 12)
+            cameraNode?.addChild(progressBarBackground!)
+            progressBarBackground?.isHidden = true
+            
+            progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
+            progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
+            progressBar?.position = CGPoint(x: 0, y: 12)
+            progressBar?.zPosition = 31
+            cameraNode?.addChild(progressBar!)
+            progressBar?.isHidden = true
+        }
+        else if(systemNameChecker == "iPadOS"){
+            progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
+            progressBarBackground?.zPosition = 30
+            progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
+            progressBarBackground?.position = CGPoint(x: -52, y: 245)
+            cameraNode?.addChild(progressBarBackground!)
+            progressBarBackground?.isHidden = true
+            
+            progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
+            progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
+            progressBar?.position = CGPoint(x: -52, y: 245)
+            progressBar?.zPosition = 31
+            cameraNode?.addChild(progressBar!)
+            progressBar?.isHidden = true
+        }
     }
     
     func updateProgressBar(elapsedTime: TimeInterval, totalTime: TimeInterval) {
@@ -543,8 +578,8 @@ class GameScene: SKScene, ObservableObject {
     func setupSabotageButton() {
         if(systemNameChecker == "iOS"){
             let sabotageButton = SKSpriteNode(imageNamed: "sabotageButton")
-            sabotageButton.position = CGPoint(x: 300, y: -140 )
-    //        sabotageButton.position = CGPoint(x: 350, y: -280 )
+            // sabotageButton.position = CGPoint(x: 300, y: -140)
+            sabotageButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.3)
             sabotageButton.size = CGSize(width: 100, height: 100)
             sabotageButton.alpha = 1.2
             sabotageButton.zPosition = 25
@@ -636,65 +671,120 @@ class GameScene: SKScene, ObservableObject {
         }
     
     func animateSabotageCooldownTimer() {
-        
-        if !sabotageOneTimeTapfunction {
-            sabotageOneTimeTapfunction = true
-            
-            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 68, startAngle: 0, endAngle:.pi * 2, clockwise: true)
-            let shapeNode = SKShapeNode(path: path.cgPath)
-            shapeNode.fillColor = .clear
-            shapeNode.strokeColor = .gray
-            shapeNode.lineWidth = 11
-            shapeNode.position = CGPoint(x: 448, y: -259)
-            shapeNode.zPosition = 10
-            cameraNode?.addChild(shapeNode)
-            
-            //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
-            sabotageButton?.alpha = 0.45
-            
-            let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
-                let percentage = elapsedTime / 20.0
-                shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 68, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+        if(systemNameChecker == "iOS"){
+            if !sabotageOneTimeTapfunction {
+                sabotageOneTimeTapfunction = true
+                // RADIUS AWAL 68
+                let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 64, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+                let shapeNode = SKShapeNode(path: path.cgPath)
+                shapeNode.fillColor = .clear
+                shapeNode.strokeColor = .gray
+                shapeNode.lineWidth = 11
+                // shapeNode.position = CGPoint(x: 300, y: -140)
+                shapeNode.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.3)
+                
+                shapeNode.zPosition = 10
+                cameraNode?.addChild(shapeNode)
+                
+                //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
+                sabotageButton?.alpha = 0.45
+                
+                let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                    let percentage = elapsedTime / 20.0
+                    shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 64, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+                }
+                shapeNode.run(animation) {
+                    shapeNode.removeFromParent()
+                    self.isSabotageButtonEnabled = true
+                    self.sabotageButton?.alpha = 1
+                }
             }
-            shapeNode.run(animation) {
-                shapeNode.removeFromParent()
-                self.isSabotageButtonEnabled = true
-                self.sabotageButton?.alpha = 1
+        }
+        else if(systemNameChecker == "iPadOS"){
+            if !sabotageOneTimeTapfunction {
+                sabotageOneTimeTapfunction = true
+                
+                let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 68, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+                let shapeNode = SKShapeNode(path: path.cgPath)
+                shapeNode.fillColor = .clear
+                shapeNode.strokeColor = .gray
+                shapeNode.lineWidth = 11
+                shapeNode.position = CGPoint(x: 448, y: -259)
+                shapeNode.zPosition = 10
+                cameraNode?.addChild(shapeNode)
+                
+                //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sabotageButton menjadi 0.2
+                sabotageButton?.alpha = 0.45
+                
+                let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                    let percentage = elapsedTime / 20.0
+                    shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 68, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+                }
+                shapeNode.run(animation) {
+                    shapeNode.removeFromParent()
+                    self.isSabotageButtonEnabled = true
+                    self.sabotageButton?.alpha = 1
+                }
             }
         }
     }
     
     func animateSprintCooldownTimer() {
-        
-        if !sprintOneTimeTapfunction {
-            sprintOneTimeTapfunction = true
-            
-            let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 52.3, startAngle: 0, endAngle:.pi * 2, clockwise: true)
-            let shapeNode = SKShapeNode(path: path.cgPath)
-            shapeNode.fillColor = .clear
-            shapeNode.strokeColor = .gray
-            shapeNode.lineWidth = 9
-            shapeNode.position = CGPoint(x: 300, y: -216 )
-            shapeNode.zPosition = 10
-            cameraNode?.addChild(shapeNode)
-            
-            //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sprintButton menjadi 0.2
-            sprintButton.alpha = 0.3
-            
-            let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
-                let percentage = elapsedTime / 20.0
-                shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 52, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
-            }
-            shapeNode.run(animation) {
-                shapeNode.removeFromParent()
-                self.isSprintButtonEnabled = true
-                self.sprintButton.alpha = 1
+        if(systemNameChecker == "iOS"){
+            if !sprintOneTimeTapfunction {
+                sprintOneTimeTapfunction = true
+                
+                let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 48, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+                let shapeNode = SKShapeNode(path: path.cgPath)
+                shapeNode.fillColor = .clear
+                shapeNode.strokeColor = .gray
+                shapeNode.lineWidth = 9
+                // shapeNode.position = CGPoint(x: 200, y: -80)
+                shapeNode.position = CGPoint(x: displayWidth * 0.23, y: displayHeight * -0.2)
+                shapeNode.zPosition = 10
+                cameraNode?.addChild(shapeNode)
+                
+                //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sprintButton menjadi 0.2
+                sprintButton.alpha = 0.3
+                
+                let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                    let percentage = elapsedTime / 20.0
+                    shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 48, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+                }
+                shapeNode.run(animation) {
+                    shapeNode.removeFromParent()
+                    self.isSprintButtonEnabled = true
+                    self.sprintButton.alpha = 1
+                }
             }
         }
-        
-        
-        
-        
+        else if(systemNameChecker == "iPadOS"){
+            if !sprintOneTimeTapfunction {
+                sprintOneTimeTapfunction = true
+                
+                let path = UIBezierPath(arcCenter: CGPoint.zero, radius: 52.3, startAngle: 0, endAngle:.pi * 2, clockwise: true)
+                let shapeNode = SKShapeNode(path: path.cgPath)
+                shapeNode.fillColor = .clear
+                shapeNode.strokeColor = .gray
+                shapeNode.lineWidth = 9
+                shapeNode.position = CGPoint(x: 300, y: -216 )
+                shapeNode.zPosition = 10
+                cameraNode?.addChild(shapeNode)
+                
+                //Dalam function ini, ketika dijalankan, otomatis membuat alpha dari sprintButton menjadi 0.2
+                sprintButton.alpha = 0.3
+                
+                let animation = SKAction.customAction(withDuration: 20.0) { node, elapsedTime in
+                    let percentage = elapsedTime / 20.0
+                    shapeNode.path = UIBezierPath(arcCenter: CGPoint.zero, radius: 52, startAngle: 0, endAngle:.pi * 2 * (1 - percentage), clockwise: true).cgPath
+                }
+                shapeNode.run(animation) {
+                    shapeNode.removeFromParent()
+                    self.isSprintButtonEnabled = true
+                    self.sprintButton.alpha = 1
+                }
+            }
+        }
     }
     
     func stopSprintCondition(){
@@ -743,7 +833,8 @@ class GameScene: SKScene, ObservableObject {
     
     func setupSprintButton() {
         if(systemNameChecker == "iOS"){
-            sprintButton.position = CGPoint(x: 200, y: -80 )
+            // sprintButton.position = CGPoint(x: 200, y: -80 )
+            sprintButton.position = CGPoint(x: displayWidth * 0.23, y: displayHeight * -0.2)
             sprintButton.size = CGSize(width: 100, height: 100)
             sprintButton.alpha = 1.2
             sprintButton.zPosition = 25
@@ -765,7 +856,8 @@ class GameScene: SKScene, ObservableObject {
     
     func setupPlantButton(){
         if(systemNameChecker == "iOS"){
-            plantButton.position = CGPoint(x: 300, y: -20 )
+            // plantButton.position = CGPoint(x: 300, y: -20)
+            plantButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.02)
             plantButton.size = CGSize(width: 100, height: 100)
             plantButton.alpha = 0.2
             plantButton.zPosition = 25
@@ -787,7 +879,8 @@ class GameScene: SKScene, ObservableObject {
     
     func setupDefuseButton(){
         if(systemNameChecker == "iOS"){
-            defuseButton.position = CGPoint(x: 300, y: -20 )
+            // defuseButton.position = CGPoint(x: 300, y: -20 )
+            defuseButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.02)
             defuseButton.size = CGSize(width: 100, height: 100)
             defuseButton.alpha = 0.2
             defuseButton.zPosition = 25
@@ -868,20 +961,27 @@ class GameScene: SKScene, ObservableObject {
     }
     
     func startTimerCover() {
-        
-        timerCover.position = CGPoint(x: -6, y: 320)
-        timerCover.setScale(0.1)
-        timerCover.alpha = 0.8
-        timerCover.zPosition = 12
-        timerCover.name = "timerCover"
-        cameraNode?.addChild(timerCover)
-        
-        timerCover.isHidden = false
-        
+        if(systemNameChecker == "iOS"){
+            timerCover.position = CGPoint(x: 0, y: 100)
+            timerCover.setScale(0.1)
+            timerCover.alpha = 0.8
+            timerCover.zPosition = 12
+            timerCover.name = "timerCover"
+            cameraNode?.addChild(timerCover)
+            
+            timerCover.isHidden = false
+        }
+        else if(systemNameChecker == "iPadOS"){
+            timerCover.position = CGPoint(x: -6, y: 320)
+            timerCover.setScale(0.1)
+            timerCover.alpha = 0.8
+            timerCover.zPosition = 12
+            timerCover.name = "timerCover"
+            cameraNode?.addChild(timerCover)
+            
+            timerCover.isHidden = false
+        }
     }
-    
-    
-    
     
     
     func gameOverByExplodingBomb(){
