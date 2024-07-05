@@ -39,7 +39,7 @@ struct GameView: View {
                     // Stop Background Music
                      AudioManager.shared.stopMusic()
                     // Game Music
-                    // AudioManager.shared.playGameMusic()
+                    AudioManager.shared.playGameMusic()
 
                 }
 //                .onReceive(gameScene.$isGameFinished, perform: { _ in

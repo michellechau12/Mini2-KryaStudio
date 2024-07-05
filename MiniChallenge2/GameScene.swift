@@ -513,9 +513,9 @@ class GameScene: SKScene, ObservableObject {
     func setUpTimerLabel(){
         if(systemNameChecker == "iOS"){
             let timerLabel = SKLabelNode(fontNamed: "Palatino-Bold")
-            timerLabel.fontSize = 40
+            timerLabel.fontSize = 30
             timerLabel.fontColor = .white
-            timerLabel.position = CGPoint(x: 0, y: 92)
+            timerLabel.position = CGPoint(x: 0, y: 120)
             timerLabel.zPosition = 100
             
             self.timerLabel = timerLabel
@@ -542,13 +542,13 @@ class GameScene: SKScene, ObservableObject {
             progressBarBackground = SKSpriteNode(color: .gray, size: CGSize(width: 100, height: 15))
             progressBarBackground?.zPosition = 30
             progressBarBackground?.anchorPoint = CGPoint(x: 0, y: 0.5)
-            progressBarBackground?.position = CGPoint(x: 0, y: 12)
+            progressBarBackground?.position = CGPoint(x: -50, y: 50)
             cameraNode?.addChild(progressBarBackground!)
             progressBarBackground?.isHidden = true
             
             progressBar = SKSpriteNode(color: .green, size: CGSize(width: 0, height: 15))
             progressBar?.anchorPoint = CGPoint(x: 0, y: 0.5) //to make it grow from left to right
-            progressBar?.position = CGPoint(x: 0, y: 12)
+            progressBar?.position = CGPoint(x: -50, y: 50)
             progressBar?.zPosition = 31
             cameraNode?.addChild(progressBar!)
             progressBar?.isHidden = true
@@ -962,8 +962,8 @@ class GameScene: SKScene, ObservableObject {
     
     func startTimerCover() {
         if(systemNameChecker == "iOS"){
-            timerCover.position = CGPoint(x: 0, y: 100)
-            timerCover.setScale(0.1)
+            timerCover.position = CGPoint(x: 0, y: 130)
+            timerCover.setScale(0.07)
             timerCover.alpha = 0.8
             timerCover.zPosition = 12
             timerCover.name = "timerCover"
