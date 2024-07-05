@@ -740,7 +740,7 @@ class GameScene: SKScene, ObservableObject {
                 shapeNode.strokeColor = .gray
                 shapeNode.lineWidth = 9
                 // shapeNode.position = CGPoint(x: 200, y: -80)
-                shapeNode.position = CGPoint(x: displayWidth * 0.23, y: displayHeight * -0.2)
+                shapeNode.position = CGPoint(x: displayWidth * 0.21, y: displayHeight * -0.2)
                 shapeNode.zPosition = 10
                 cameraNode?.addChild(shapeNode)
                 
@@ -834,7 +834,7 @@ class GameScene: SKScene, ObservableObject {
     func setupSprintButton() {
         if(systemNameChecker == "iOS"){
             // sprintButton.position = CGPoint(x: 200, y: -80 )
-            sprintButton.position = CGPoint(x: displayWidth * 0.23, y: displayHeight * -0.2)
+            sprintButton.position = CGPoint(x: displayWidth * 0.21, y: displayHeight * -0.2)
             sprintButton.size = CGSize(width: 100, height: 100)
             sprintButton.alpha = 1.2
             sprintButton.zPosition = 25
@@ -857,7 +857,7 @@ class GameScene: SKScene, ObservableObject {
     func setupPlantButton(){
         if(systemNameChecker == "iOS"){
             // plantButton.position = CGPoint(x: 300, y: -20)
-            plantButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.02)
+            plantButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.01)
             plantButton.size = CGSize(width: 100, height: 100)
             plantButton.alpha = 0.2
             plantButton.zPosition = 25
@@ -880,7 +880,7 @@ class GameScene: SKScene, ObservableObject {
     func setupDefuseButton(){
         if(systemNameChecker == "iOS"){
             // defuseButton.position = CGPoint(x: 300, y: -20 )
-            defuseButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.02)
+            defuseButton.position = CGPoint(x: displayWidth * 0.35, y: displayHeight * -0.01)
             defuseButton.size = CGSize(width: 100, height: 100)
             defuseButton.alpha = 0.2
             defuseButton.zPosition = 25

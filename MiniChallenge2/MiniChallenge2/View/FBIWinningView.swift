@@ -69,6 +69,7 @@ struct FBIWinningView: View {
             .navigationDestination(isPresented: $playAgain) {
                 ContentView()
             }
+            .navigationBarBackButtonHidden(true)
         }
         .onAppear(){
             AudioManager.shared.stopWalkSound()
