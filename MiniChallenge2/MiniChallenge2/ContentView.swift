@@ -27,6 +27,7 @@ struct ContentView: View {
         AudioManager.shared.playBackgroundMusic()
     }
     
+
     @State var startGame: Bool = false
     
     @State private var textPosition: CGFloat = -500
@@ -34,13 +35,15 @@ struct ContentView: View {
     @State private var showCredit: Bool = false
     @State private var userName: String = ""
     @State private var newName = ""
+    @State private var isMuted: Bool = false
+
 
     
     var body: some View {
         NavigationStack {
             GeometryReader{ geometry in
                 ZStack {
-                    Image("bg-homeview")
+                    Image("bg-img")
                         .resizable()
                         .scaledToFill()
                         .frame(height: geometry.size.height*1.06) // 1.06
@@ -55,7 +58,7 @@ struct ContentView: View {
                             .offset(y: textPosition)
                             .onAppear {
                                 withAnimation(.easeOut(duration: 1.5).delay(0)) {
-                                    textPosition = geometry.size.height * 0.16} // 0.16
+                                    textPosition = geometry.size.height * 0.16}
                             }
                         Spacer()
                         ZStack {
@@ -76,8 +79,20 @@ struct ContentView: View {
                                 Image("button-credit")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.0)
+                                    .frame(width: geometry.size.width * 0.06)
                             } .offset(x: geometry.size.width * 0.25)
+                            
+                            Button {
+                                isMuted.toggle()
+                                AudioManager.shared.toggleMute()
+                            } label: {
+                                Image(isMuted ? "button-mute" : "button-unmute")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: geometry.size.width * 0.06)
+                                    .padding()
+                            }
+                            .offset(x: -geometry.size.width * 0.25)
                             
                         }
                         Spacer()

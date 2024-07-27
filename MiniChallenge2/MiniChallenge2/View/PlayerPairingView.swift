@@ -24,7 +24,7 @@ struct PlayerPairingView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Image("pairing-bg-img")
+                Image("bg-img")
                     .resizable()
                     .scaledToFill()
                     .edgesIgnoringSafeArea(.all)
