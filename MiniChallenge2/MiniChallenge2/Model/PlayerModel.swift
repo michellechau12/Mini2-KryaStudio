@@ -51,15 +51,15 @@ class PlayerModel: ObservableObject {
         
         if(self.id == gameScene.player1Id){
             playerNode.name = "Player1"
-            playerNode.position = CGPoint(x: 3.57, y: 945.85)
-//          playerNode.position = CGPoint(x: -269, y: -31)
+//            playerNode.position = CGPoint(x: 3.57, y: 945.85)
+          playerNode.position = CGPoint(x: -269, y: -31)
             speedMultiplier = 1.9
             isVulnerable = false
             role = "fbi"
         } else {
             playerNode.name = "Player2"
-            playerNode.position = CGPoint(x: 48.57, y: -350)
-//            playerNode.position = CGPoint(x: -335, y: -116)
+//            playerNode.position = CGPoint(x: 48.57, y: -350)
+            playerNode.position = CGPoint(x: -335, y: -116)
             speedMultiplier = 1.8
             isVulnerable = true
             role = "terrorist"
@@ -88,7 +88,7 @@ class PlayerModel: ObservableObject {
         playerNode.physicsBody?.usesPreciseCollisionDetection = true
     }
     
-    func movePlayer(velocity: CGVector, mpManager: MultipeerConnectionManager, condition: String) {
+    func movePlayer(velocity: CGVector, mpManager: MultipeerConnectionManager, condition: String, defuseButton: DefuseButton) {
         
         playerNode.physicsBody?.velocity = velocity
         
@@ -144,16 +144,16 @@ class PlayerModel: ObservableObject {
 //        } else {
 //            self.isVulnerable = false
 //        }
-//        
-        print("FBI is defusing? \(gameScene.isDefusing)")
-        print ("FBI is delaying? \(gameScene.isDelayingMove)")
+//
+        print("FBI is defusing? \(defuseButton.isDefusing)")
+        print ("FBI is delaying? \(defuseButton.isDelayingMove)")
         
 //        print("role? \(role)")
         if role == "fbi" {
-            if gameScene.isDefusing {
+            if defuseButton.isDefusing {
                 self.isVulnerable = true
             }
-            else if gameScene.isDelayingMove {
+            else if defuseButton.isDelayingMove {
                 self.isVulnerable = true
             }
             else {
@@ -184,7 +184,7 @@ class PlayerModel: ObservableObject {
                 playerPosition: playerNode.position,
                 playerOrientation: self.orientation,
                 isVulnerable: self.isVulnerable,
-                winnerId: "_NaN_")
+                winnerId: "NaN")
         mpManager.send(player: playerCondition)
     }
     
@@ -337,12 +337,12 @@ class PlayerModel: ObservableObject {
     
     func stopDefusingBombAnimation(){
         self.playerNode.removeAction(forKey: "defusingAnimation")
+        self.playerNode.texture = latestTextureRight
     }
     
     func synchronizeOtherPlayerPosition(position: CGPoint, orientation: String, condition: String) {
         playerNode.position = position
         
-//        updatePlayerTextures(condition: condition)
         animateWalking(orientation: orientation, condition: condition)
     }
 }
