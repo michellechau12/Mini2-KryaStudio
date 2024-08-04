@@ -24,13 +24,13 @@ struct ContentView: View {
             wrappedValue: GameScene(fileNamed: "MazeScene") ?? GameScene()
         )
 //            BACKGROUND MUSIC
-        AudioManager.shared.playBackgroundMusic()
+//        AudioManager.shared.playBackgroundMusic()
     }
     
 
     @State var startGame: Bool = false
     
-    @State private var textPosition: CGFloat = -500
+    @State private var textPosition: CGFloat = 0
     @State private var showNameInput: Bool = false
     @State private var showCredit: Bool = false
     @State private var userName: String = ""
@@ -46,57 +46,74 @@ struct ContentView: View {
                     Image("bg-img")
                         .resizable()
                         .scaledToFill()
-                        .frame(height: geometry.size.height*1.06) // 1.06
+                        .frame(height: geometry.size.height*1.06)
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                        Spacer()
-                            .frame(height:50)
                         Image("title-homeview")
                             .resizable()
                             .scaledToFit()
                             .frame(width: geometry.size.width * 0.8)
                             .offset(y: textPosition)
                             .onAppear {
+                                textPosition = -geometry.size.height
                                 withAnimation(.easeOut(duration: 1.5).delay(0)) {
-                                    textPosition = geometry.size.height * 0.16}
+                                    textPosition = geometry.size.height * 0.18}
                             }
                         Spacer()
                         ZStack {
-                            Button {
-    //                            showNameInput = true
-                                  startGame = true
+                            ZStack {
+                                Button {
+        //                            showNameInput = true
+                                      startGame = true
 
-                            } label: {
-                                Image("button-play")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.15)
+                                } label: {
+                                    Image("button-play")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: geometry.size.width * 0.15)
+
+                                }
+                                
+                                Button {
+                                    showCredit = true
+                                } label: {
+                                    Image("button-credit")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: geometry.size.width * 0.06)
+
+                                } .offset(x: geometry.size.width * 0.12, y: geometry.size.height * 0.06)
+                                
+                                Button {
+                                    isMuted.toggle()
+                                    AudioManager.shared.toggleMute()
+                                } label: {
+                                    Image(isMuted ? "button-mute" : "button-unmute")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: geometry.size.width * 0.06)
+                                }
+                                .offset(x: -geometry.size.width * 0.12, y: geometry.size.height * 0.06)
                             }
-                            
-                            Button {
-                                showCredit = true
-                            } label: {
-                                Image("button-credit")
+                            .offset(y: -geometry.size.height*0.1)
+                            ZStack {
+                                Image("fbi-none-1")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.06)
-                            } .offset(x: geometry.size.width * 0.25)
-                            
-                            Button {
-                                isMuted.toggle()
-                                AudioManager.shared.toggleMute()
-                            } label: {
-                                Image(isMuted ? "button-mute" : "button-unmute")
+                                    .frame(width: geometry.size.width * 0.32)
+                                    .offset(x: geometry.size.width * 0.2)
+
+                                Image("terrorist-none-right-1")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: geometry.size.width * 0.06)
-                                    .padding()
+                                    .frame(width: geometry.size.width * 0.32)
+                                    .offset(x: -geometry.size.width * 0.2)
+                                
+
                             }
-                            .offset(x: -geometry.size.width * 0.25)
-                            
+                            .offset(y:geometry.size.height*0.3)
                         }
                         Spacer()
-                            .frame(height:50)
                     }
                 }
                 .onAppear() {
