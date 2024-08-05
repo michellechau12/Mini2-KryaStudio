@@ -24,7 +24,7 @@ struct ContentView: View {
             wrappedValue: GameScene(fileNamed: "MazeScene") ?? GameScene()
         )
 //            BACKGROUND MUSIC
-//        AudioManager.shared.playBackgroundMusic()
+        AudioManager.shared.playBackgroundMusic()
     }
     
 
